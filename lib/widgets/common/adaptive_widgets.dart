@@ -242,7 +242,11 @@ class AdaptiveIconButtonGroup extends StatelessWidget {
                   // 触摸热区撑满整块高度，玻璃层由外层 GlassCard 提供，
                   // 这里**不用** GlassIconButton（避免嵌套折射层）。
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    // 垂直内边距决定玻璃容器的**高度**。图标放大到 24 后，
+                    // 4 的留白让容器显得比图标矮一截、比例失调；
+                    // 提到 7 后容器高 ≈ 24 + 14 = 38，接近方形，
+                    // 与左侧时间框（两行文字 + padding）视觉重量相当。
+                    padding: const EdgeInsets.symmetric(vertical: 7),
                     child: Icon(
                       children[i].icon,
                       // 整组默认 iconSize；单项给了 size 则以单项为准。

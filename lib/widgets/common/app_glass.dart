@@ -30,8 +30,14 @@ class AppGlass {
   const AppGlass._();
 
   /// 库预设的光学参数。四个玻璃件共用，保证质感完全一致。
-  static const double thickness = 30;
-  static const double blur = 3;
+  ///
+  /// 在库默认值基础上降低了几档折射与模糊（库默认 thickness 30 / blur 3），
+  /// 配合更低的底纱浓度一起达到「更透明、背景更能透出来」的效果：
+  /// - `thickness` 决定折射强度（源码注释：thicker surfaces refract more
+  ///   intensely），30 → 18 让边缘折射不那么厚；
+  /// - `blur` 是霜化半径，3 → 2 减少背景被抹糊的程度。
+  static const double thickness = 18;
+  static const double blur = 2;
   static const double chromaticAberration = 0.3;
   static const double lightIntensity = 0.6;
   static const double refractiveIndex = 1.59;
@@ -63,15 +69,16 @@ class AppGlass {
     );
   }
 
-  /// 深色底纱：近黑，0xB3 ≈ 70% 不透明。
+  /// 深色底纱：近黑，0x6B ≈ 42% 不透明。
   ///
-  /// 深色下必须够实才能读出「药丸浮在内容之上」；又留三成让课表背景透出，
-  /// 避免变成一块死黑板。
-  static const Color darkTint = Color(0xB3141416);
+  /// 深色下要够实才读得出「药丸浮在内容之上」，但用户要求**更透明**
+  /// —— 底下的课表内容要能透出来。历次调整：0xB3(70%) → 0x6B(42%)。
+  static const Color darkTint = Color(0x6B141416);
 
-  /// 浅色底纱：冷白 0x8C ≈ 55%。
+  /// 浅色底纱：冷白 0x4D ≈ 30%（库默认 `0x3DFFFFFF` 是 24%）。
   ///
   /// 不用纯白：纯白在浅色背景上会显脏。略偏冷的浅灰白
   /// （248/250/252）在高亮度彩色背景（课表图）上也能看出玻璃边界。
-  static const Color lightTint = Color(0x8CF8FAFC);
+  /// 历次调整：0x8C(55%) → 0x4D(30%)，接近库默认的通透度。
+  static const Color lightTint = Color(0x4DF8FAFC);
 }

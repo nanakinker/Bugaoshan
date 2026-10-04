@@ -253,12 +253,12 @@ class CoursePageTopBar extends StatelessWidget {
               // 三个操作按钮成组：Material 3 下是普通图标按钮，液态玻璃下
               // 包裹进同一块玻璃容器，视觉上是一个整体。
               AdaptiveIconButtonGroup(
-                // 图标 21 + spacing 10：比左侧时间框（titleSmall/bodySmall，
-                // 约 14/12）**大一点点**，同时三个控件之间不挤
-                // （用户反馈「3 个控件整体有点小了」+「太挤」）。
-                iconSize: 21,
-                spacing: 10,
-                horizontalPadding: 9,
+                // 图标 24 + spacing 12：比左侧时间框（titleSmall/bodySmall，
+                // 约 14/12）明显大一号，玻璃容器也随之更宽，
+                // 在顶栏上有足够的视觉重量（用户反馈「再调大一点」）。
+                iconSize: 24,
+                spacing: 12,
+                horizontalPadding: 11,
                 children: [
                   AdaptiveIconAction(
                     icon: Icons.download_rounded,
