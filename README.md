@@ -55,6 +55,40 @@
 </div>
 
 
+## 🎨 界面风格
+
+应用采用**毛玻璃（磨砂玻璃）**视觉语言，核心是「让背景透出来，但被柔化」：
+
+- **磨砂层**：底部 Dock 与侧边导航使用半透明磨砂材质，背景内容透过它被均匀柔化，
+  仍能分辨出背后的课表格子、列表等层次，而不是被压成一块灰板
+- **全药丸形**：底部导航呈完整胶囊形悬浮于屏幕下方，左右留出与屏宽成比例的边距，
+  让背景从两侧透出，强化「悬浮的一块玻璃」的观感
+- **滑动玻璃透镜**：选中态不是固定色块，而是一枚**独立于 Dock 本体、在各导航项之间
+  流动的玻璃透镜**。滑动途中它按体积守恒挤压拉伸——宽度增加时高度反向收缩、
+  圆角同步变大，形状由圆角方形过渡为胶囊，停下后回弹
+- **细亮线勾边**：玻璃边缘只留一圈很淡的高光与一条投影。玻璃感来自「透」与「厚」，
+  而不是「亮」——刻意压低了边缘亮度，避免变成发光特效
+- **深浅色自适应**：亮色与暗色主题各自使用匹配的色调层浓度，保证两种模式下都有足够的可读性
+
+### 效果预览
+
+导航条悬浮在课表上方时，磨砂层会把背景的彩色课程块柔化成半透明层次——
+既能看出下方是课表内容，又不影响导航文字的可读性。
+
+<div align="center">
+  <img src="./screenshot/screenshot-dock-phone-dark.webp" width="30%" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="./screenshot/screenshot-dock-phone-light.webp" width="30%" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="./screenshot/screenshot-dock-tablet-dark.webp" width="46%" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="./screenshot/screenshot-dock-tablet-light.webp" width="46%" />
+</div>
+
+*左二：手机端深色 / 浅色；右二：平板与桌面端（侧边导航）深色 / 浅色*
+
+---
+
 ## 📥 下载
 
 **前往 [Release 页面](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases/latest) 下载最新版本**

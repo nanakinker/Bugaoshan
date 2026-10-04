@@ -7,7 +7,7 @@ import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/utils/constants.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
-import 'package:bugaoshan/widgets/common/liquid_glass_dock.dart';
+import 'package:bugaoshan/widgets/common/frosted_glass_dock.dart';
 
 class SetDockPage extends StatefulWidget {
   const SetDockPage({super.key});
@@ -110,12 +110,12 @@ class _SetDockPageState extends State<SetDockPage> {
                 ),
               ),
               const SizedBox(height: 12),
-              // 预览直接复用真实的 LiquidGlassDock，所见即所得。
-              LiquidGlassDock(
-                itemExtent: 64,
+              // 预览直接复用真实的 FrostedGlassDock，所见即所得。
+              FrostedGlassDock(
+                itemExtent: 72,
                 items: previewItems
                     .map(
-                      (item) => LiquidGlassDockItem(
+                      (item) => FrostedGlassDockItem(
                         icon: Icon(item.icon),
                         selectedIcon: Icon(item.selectedIcon),
                         label: item.dockLabel(l10n),

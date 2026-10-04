@@ -16,7 +16,7 @@ import 'package:bugaoshan/services/auth/auth_coordinator.dart';
 import 'package:bugaoshan/services/widget_update_service.dart';
 import 'package:bugaoshan/utils/constants.dart';
 import 'package:bugaoshan/widgets/common/auth_scoped_indexed_stack.dart';
-import 'package:bugaoshan/widgets/common/liquid_glass_dock.dart';
+import 'package:bugaoshan/widgets/common/frosted_glass_dock.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -152,50 +152,68 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       },
                     );
                     return Scaffold(
+                      // 让 body 延伸到 Dock 底下，Dock 的 BackdropFilter 才有
+                      // 内容可以折射。缺这一行时 body 到 Dock 上沿就截止，
+                      // Dock 背后是空背景，玻璃看起来就是一块实心灰板——
+                      // 这正是「透不出课表内容」的原因。
+                      extendBody: true,
                       body: Row(
                         children: [
-                      Offstage(
-                        offstage: !showRail,
-                        child: SizedBox(
-                          width: _railExtent,
-                          child: LiquidGlassDock(
-                            axis: Axis.vertical,
-                            itemExtent: _railExtent,
-                            duration:
-                                appConfig.cardSizeAnimationDuration.value,
-                            items: _buildDockItems(
-                              visibleIds,
-                              hasUpdate,
-                              l10n,
+                          Offstage(
+                            offstage: !showRail,
+                            child: SizedBox(
+                              width: _railExtent,
+                              child: FrostedGlassDock(
+                                axis: Axis.vertical,
+                                itemExtent: _railExtent,
+                                duration:
+                                    appConfig.cardSizeAnimationDuration.value,
+                                items: _buildDockItems(
+                                  visibleIds,
+                                  hasUpdate,
+                                  l10n,
+                                ),
+                                selectedIndex: _currentIndex,
+                                onSelected: (index) {
+                                  setState(() => _currentIndex = index);
+                                },
+                              ),
                             ),
-                            selectedIndex: _currentIndex,
-                            onSelected: (index) {
-                              setState(() => _currentIndex = index);
-                            },
                           ),
-                        ),
+                          // Page content.
+                          //
+                          // 底部不加 SafeArea：它会与 FrostedGlassDock 自己的
+                          // SafeArea 叠加，在 Dock 下方压出一条空白带
+                          // （表现为"多一层黑底"），同时挤小可用高度、
+                          // 引发 RenderFlex overflow。Dock 内部已处理底部安全区。
+                          // 顶部仍需避让状态栏/刘海。
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: MediaQuery.paddingOf(context).top,
+                              ),
+                              child: pageContent,
+                            ),
+                          ),
+                        ],
                       ),
-                      // Page content
-                      Expanded(child: SafeArea(child: pageContent)),
-                    ],
-                  ),
-                  bottomNavigationBar: showBar
-                      ? LiquidGlassDock(
-                          itemExtent: _barItemExtent,
-                          duration:
-                              appConfig.cardSizeAnimationDuration.value,
-                          items: _buildDockItems(
-                            visibleIds,
-                            hasUpdate,
-                            l10n,
-                          ),
-                          selectedIndex: _currentIndex,
-                          onSelected: (index) {
-                            setState(() => _currentIndex = index);
-                          },
-                        )
-                      : null,
-                );
+                      bottomNavigationBar: showBar
+                          ? FrostedGlassDock(
+                              itemExtent: _barItemExtent,
+                              duration:
+                                  appConfig.cardSizeAnimationDuration.value,
+                              items: _buildDockItems(
+                                visibleIds,
+                                hasUpdate,
+                                l10n,
+                              ),
+                              selectedIndex: _currentIndex,
+                              onSelected: (index) {
+                                setState(() => _currentIndex = index);
+                              },
+                            )
+                          : null,
+                    );
                   },
                 );
               },
@@ -217,14 +235,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   /// 侧边 Dock 的固定宽度。
   static const double _railExtent = 84;
 
-  /// 底部 Dock 单个 item 的高度，与原 `NavigationBar` 的默认高度量级一致。
-  static const double _barItemExtent = 64;
+  /// 底部 Dock 单个 item 的高度（即药丸形 Dock 的总高度）。
+  ///
+  /// 取 72 而非原`NavigationBar` 的 64：药丸形两端为半圆，需要更多纵向空间
+  /// 才不会显得拥挤，同时给标签留出呼吸感。
+  static const double _barItemExtent = 72;
 
-  /// 把可见的 Dock 项转换为液态玻璃导航条所需的 item 列表。
+  /// 把可见的 Dock 项转换为毛玻璃导航条所需的 item 列表。
   ///
   /// 底部与侧边共用这一份构建逻辑，仅呈现方向不同。更新提示的 `Badge`
   /// 挂在个人中心项上，与原实现保持一致。
-  List<LiquidGlassDockItem> _buildDockItems(
+  List<FrostedGlassDockItem> _buildDockItems(
     List<String> visibleIds,
     bool hasUpdate,
     AppLocalizations l10n,
@@ -232,7 +253,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return visibleIds.map((id) {
       final config = campusItemConfigById(id);
       final isProfile = id == dockIdProfile;
-      return LiquidGlassDockItem(
+      return FrostedGlassDockItem(
         icon: isProfile
             ? _buildUpdateBadge(showBadge: hasUpdate, child: Icon(config.icon))
             : Icon(config.icon),

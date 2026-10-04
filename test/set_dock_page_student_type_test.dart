@@ -69,6 +69,12 @@ void main() {
       reason: '研究生项默认不在 dock 中',
     );
 
+    // 上面只把标题滚动到可见，Switch 位于 ListTile 的 trailing，可能仍有一半在
+    // 视口外，此时 tap() 会命中不到它（控制台会给出 "would not hit test" 警告）。
+    // 这里再把它本体滚进视口，保证点击落在 Switch 上。
+    await tester.ensureVisible(graduateSwitch);
+    await tester.pumpAndSettle();
+
     await tester.tap(graduateSwitch);
     await tester.pumpAndSettle();
 

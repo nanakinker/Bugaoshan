@@ -52,6 +52,10 @@ class _CourseCurriculumPageState extends State<CourseCurriculumPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      // body 延伸到 Dock 底下，课表格子才能透进玻璃里。
+      // 不开的话 body 到 Dock 上沿就结束，Dock 背后是空白背景，
+      // BackdropFilter 无内容可折射，玻璃看起来是实心灰板。
+      extendBody: true,
       appBar: AppBar(title: Text(l10n.courseCurriculum)),
       body: ListenableBuilder(
         listenable: Listenable.merge([_provider, getIt<ScuAuthProvider>()]),
