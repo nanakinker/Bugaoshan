@@ -331,6 +331,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeColorModeBackgroundImageNotSet => '请先设置背景图片';
 
   @override
+  String get darkMode => '深色模式';
+
+  @override
+  String get themeModeLight => '浅色';
+
+  @override
+  String get themeModeDark => '深色';
+
+  @override
   String get blockPicker => '色块';
 
   @override

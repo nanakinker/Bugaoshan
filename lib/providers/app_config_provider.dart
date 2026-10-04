@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show Colors, Curve, Curves;
+import 'package:flutter/material.dart' show Colors, Curve, Curves, ThemeMode;
 import 'package:bugaoshan/models/background_crop.dart';
 import 'package:bugaoshan/models/student_type.dart';
 import 'package:bugaoshan/models/widget_appearance.dart';
@@ -26,6 +26,7 @@ const String _keyHasUpdateNotification = 'hasUpdateNotification';
 const String _keyVisibleDockIds = 'visibleDockIds';
 const String _keyAcceptedEulaVersion = 'acceptedEulaVersion';
 const String _keyThemeColorMode = 'themeColorMode';
+const String _keyThemeMode = 'themeMode';
 const String _keyWidgetShowTomorrow = 'widget_show_tomorrow';
 const String _keyWidgetColorStyle = 'widget_color_style';
 const String _keyWidgetDensity = 'widget_density';
@@ -85,6 +86,11 @@ class AppConfigProvider {
   final ValueNotifier<int> acceptedEulaVersion = ValueNotifier<int>(0);
   final ValueNotifier<ThemeColorMode> themeColorMode =
       ValueNotifier<ThemeColorMode>(ThemeColorMode.system);
+
+  /// 深色模式：跟随系统 / 浅色 / 深色，驱动 MaterialApp.themeMode。
+  final ValueNotifier<ThemeMode> themeMode = ValueNotifier<ThemeMode>(
+    ThemeMode.system,
+  );
   final ValueNotifier<bool> widgetShowTomorrow = ValueNotifier<bool>(false);
   final ValueNotifier<WidgetColorStyle> widgetColorStyle =
       ValueNotifier<WidgetColorStyle>(WidgetColorStyle.colorful);
@@ -156,6 +162,10 @@ class AppConfigProvider {
     themeColorMode.value = themeColorIndex < ThemeColorMode.values.length
         ? ThemeColorMode.values[themeColorIndex]
         : ThemeColorMode.custom;
+    final themeModeIndex = _sharedPreferences.getInt(_keyThemeMode) ?? 0;
+    themeMode.value = themeModeIndex < ThemeMode.values.length
+        ? ThemeMode.values[themeModeIndex]
+        : ThemeMode.system;
     widgetShowTomorrow.value =
         _sharedPreferences.getBool(_keyWidgetShowTomorrow) ?? false;
     final widgetColorStyleIndex =
@@ -281,6 +291,9 @@ class AppConfigProvider {
     });
     themeColorMode.addListener(() {
       _sharedPreferences.setInt(_keyThemeColorMode, themeColorMode.value.index);
+    });
+    themeMode.addListener(() {
+      _sharedPreferences.setInt(_keyThemeMode, themeMode.value.index);
     });
     widgetShowTomorrow.addListener(() {
       _sharedPreferences.setBool(

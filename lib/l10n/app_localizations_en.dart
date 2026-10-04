@@ -348,6 +348,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please set a background image first';
 
   @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get themeModeLight => 'Light';
+
+  @override
+  String get themeModeDark => 'Dark';
+
+  @override
   String get blockPicker => 'Block';
 
   @override

@@ -13,6 +13,7 @@ import 'package:bugaoshan/pages/settings/set_course_style_page.dart';
 import 'package:bugaoshan/pages/settings/set_font_page.dart';
 import 'package:bugaoshan/pages/settings/set_student_type_page.dart';
 import 'package:bugaoshan/pages/settings/set_theme_color_page.dart';
+import 'package:bugaoshan/pages/settings/set_theme_mode_page.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
 import 'package:bugaoshan/providers/scu_auth_provider.dart';
@@ -83,6 +84,20 @@ class SoftwareSettingPage extends StatelessWidget {
           SectionTitle(title: localizations.settingsStyle),
           InfoCard(
             children: [
+              ValueListenableBuilder<ThemeMode>(
+                valueListenable: appConfig.themeMode,
+                builder: (context, mode, _) => IconTile(
+                  icon: Icons.dark_mode_outlined,
+                  label: localizations.darkMode,
+                  value: switch (mode) {
+                    ThemeMode.system => localizations.followSystem,
+                    ThemeMode.light => localizations.themeModeLight,
+                    ThemeMode.dark => localizations.themeModeDark,
+                  },
+                  onTap: () =>
+                      popupOrNavigate(context, const SetThemeModePage()),
+                ),
+              ),
               IconTile(
                 icon: Icons.color_lens,
                 label: localizations.themeColor,

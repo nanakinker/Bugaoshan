@@ -721,6 +721,24 @@ abstract class AppLocalizations {
   /// **'Please set a background image first'**
   String get themeColorModeBackgroundImageNotSet;
 
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @themeModeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeModeLight;
+
+  /// No description provided for @themeModeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeModeDark;
+
   /// No description provided for @blockPicker.
   ///
   /// In en, this message translates to:
