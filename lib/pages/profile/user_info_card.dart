@@ -132,6 +132,10 @@ class UserInfoCard extends StatelessWidget {
             padding: EdgeInsets.only(right: isLast ? 0 : 12),
             child: Column(
               children: [
+                // 上下留白：整块外边距 14、标签下方再加 14，
+                // 使「图书借阅量 / 校园卡余额 / 网费余额」这块**上下等宽**
+                // （用户反馈：上边够宽了、下边还不够）。
+                const SizedBox(height: 14),
                 Text(
                   valueStr,
                   style: theme.textTheme.titleLarge?.copyWith(
@@ -139,7 +143,7 @@ class UserInfoCard extends StatelessWidget {
                     color: primaryColor,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
                   name,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -147,6 +151,8 @@ class UserInfoCard extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                // 与上方等宽，使这块信息区上下留白一致
+                const SizedBox(height: 14),
               ],
             ),
           ),

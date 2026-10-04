@@ -267,10 +267,7 @@ class _GraduateGradesPageState extends State<GraduateGradesPage> {
     final terms = byTerm.keys.toList()..sort((a, b) => b.compareTo(a));
     return [
       for (final term in terms)
-        (
-          label: byTerm[term]!.first.termName ?? term,
-          rows: byTerm[term]!,
-        ),
+        (label: byTerm[term]!.first.termName ?? term, rows: byTerm[term]!),
     ];
   }
 }

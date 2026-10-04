@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
@@ -252,11 +253,12 @@ class BindRoomDialogState extends State<BindRoomDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (_step > 0)
-                    TextButton(
+                    AdaptiveButton(
+                      text: true,
                       onPressed: isLoading
                           ? null
                           : () => setState(() => _step--),
-                      child: Text(l10n.back),
+                      label: l10n.back,
                     )
                   else
                     const SizedBox(),
@@ -277,11 +279,12 @@ class BindRoomDialogState extends State<BindRoomDialog> {
                           : Text(l10n.next),
                     )
                   else
-                    FilledButton(
+                    AdaptiveButton(
+                      filled: true,
                       onPressed: _canSubmit() && !isLoading
                           ? _verifyAndBind
                           : null,
-                      child: Text(l10n.confirm),
+                      label: l10n.confirm,
                     ),
                 ],
               ),

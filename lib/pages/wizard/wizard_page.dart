@@ -3,6 +3,7 @@ import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/pages/wizard/welcome_page.dart';
@@ -137,9 +138,10 @@ class _WizardPageState extends State<WizardPage> {
           Row(
             children: [
               if (!isFirstPage)
-                TextButton(
+                AdaptiveButton(
+                  text: true,
                   onPressed: _onCompleted,
-                  child: Text(l10n.onboardingSkip),
+                  label: l10n.onboardingSkip,
                 ),
               const Spacer(),
               AnimatedOpacity(
@@ -152,11 +154,12 @@ class _WizardPageState extends State<WizardPage> {
               AnimatedSize(
                 duration: _appConfig.cardSizeAnimationDuration.value,
                 curve: appCurve,
-                child: FilledButton(
+                child: AdaptiveButton(
+                  filled: true,
                   onPressed: isLastPage ? _onCompleted : _goNext,
-                  child: Text(
-                    isLastPage ? l10n.onboardingStart : l10n.onboardingNext,
-                  ),
+                  label: isLastPage
+                      ? l10n.onboardingStart
+                      : l10n.onboardingNext,
                 ),
               ),
             ],

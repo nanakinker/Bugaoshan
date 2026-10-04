@@ -10,6 +10,7 @@ import 'package:bugaoshan/pages/wizard/wizard_page.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/services/background_cache_service.dart';
 import 'package:bugaoshan/theme.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/widgets/common/session_expired_listener.dart';
 import 'package:bugaoshan/widgets/eula_content.dart';
 import 'package:bugaoshan/widgets/route/mouse_back_handler.dart';
@@ -56,39 +57,54 @@ class _MyAppState extends State<MyApp> {
         // （「页面切换动画」开关只控制 Dock 栏切换，不进全局主题）
         _appConfig.cardSizeAnimationDuration,
       ]),
-      builder: (context, _) => MaterialApp(
-        navigatorKey: navigatorKey,
-        locale: _appConfig.locale.value,
-        onGenerateTitle: (ctx) => AppLocalizations.of(ctx)!.bugaoshan,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        theme: _buildTheme(Brightness.light, context),
-        darkTheme: _buildTheme(Brightness.dark, context),
-        themeMode: _appConfig.themeMode.value,
-        builder: (context, child) {
-          final scale = MediaQuery.textScalerOf(context).scale(1.0);
-          final clamped = scale.clamp(1.0, 2.0);
-          return MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: TextScaler.linear(clamped)),
-            child: MouseBackHandler(
-              child: SessionExpiredListener(child: child ?? const SizedBox()),
-            ),
-          );
-        },
-        home: ValueListenableBuilder<int>(
-          valueListenable: _appConfig.acceptedEulaVersion,
-          builder: (_, eulaVersion, _) {
-            if (eulaVersion < currentEulaVersion) {
-              return const EulaGatePage();
-            }
-            return ValueListenableBuilder<bool>(
-              valueListenable: _appConfig.firstLaunchWizardCompleted,
-              builder: (_, completed, _) =>
-                  completed ? const HomePage() : const WizardPage(),
+      builder: (context, _) => ValueListenableBuilder<bool>(
+        // 主题样式（Material 3 / 液态玻璃）变化时重建 MaterialApp，
+        // 让 AdaptiveButton / AdaptiveSearchBar 等封装组件同步切换。
+        valueListenable: _appConfig.usePackageGlassDock,
+        builder: (context, _, __) => MaterialApp(
+          navigatorKey: navigatorKey,
+          locale: _appConfig.locale.value,
+          onGenerateTitle: (ctx) => AppLocalizations.of(ctx)!.bugaoshan,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: _buildTheme(Brightness.light, context),
+          darkTheme: _buildTheme(Brightness.dark, context),
+          themeMode: _appConfig.themeMode.value,
+          builder: (context, child) {
+            final scale = MediaQuery.textScalerOf(context).scale(1.0);
+            final clamped = scale.clamp(1.0, 2.0);
+            return AppConfigScope(
+              usePackageGlassDock: _appConfig.usePackageGlassDock.value,
+              child: MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(clamped)),
+                child: MouseBackHandler(
+                  // liquid_glass_widgets 不提供 Material 祖先。若树中没有
+                  // Material，部分 Text 会显示调试黄色下划线。补一层透明 Material。
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: SessionExpiredListener(
+                      child: child ?? const SizedBox(),
+                    ),
+                  ),
+                ),
+              ),
             );
           },
+          home: ValueListenableBuilder<int>(
+            valueListenable: _appConfig.acceptedEulaVersion,
+            builder: (_, eulaVersion, _) {
+              if (eulaVersion < currentEulaVersion) {
+                return const EulaGatePage();
+              }
+              return ValueListenableBuilder<bool>(
+                valueListenable: _appConfig.firstLaunchWizardCompleted,
+                builder: (_, completed, _) =>
+                    completed ? const HomePage() : const WizardPage(),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/pages/campus/ccyl/ccyl_activity_filter.dart';
 import 'package:bugaoshan/pages/campus/ccyl/ccyl_activity_phase.dart';
@@ -104,7 +105,8 @@ class _CcylActivityFilterSheetState extends State<_CcylActivityFilterSheet> {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: AdaptiveButton(
+                    outlined: true,
                     onPressed: () {
                       setState(() {
                         _phases.clear();
@@ -113,7 +115,7 @@ class _CcylActivityFilterSheetState extends State<_CcylActivityFilterSheet> {
                         _org = '';
                       });
                     },
-                    child: Text(l10n.ccylFilterReset),
+                    label: l10n.ccylFilterReset,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -325,9 +327,10 @@ class _CcylOrgPickerDialogState extends State<_CcylOrgPickerDialog> {
         ),
       ),
       actions: [
-        TextButton(
+        AdaptiveButton(
+          text: true,
           onPressed: () => Navigator.pop(context),
-          child: Text(l10n.cancel),
+          label: l10n.cancel,
         ),
       ],
     );

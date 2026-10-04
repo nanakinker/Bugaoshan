@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/utils/share_utils.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/widgets/common/swipe_page_view.dart';
 import 'file_utils.dart';
 
@@ -426,7 +427,8 @@ class _NoticeDownloadedPageState extends State<NoticeDownloadedPage>
                     ),
                   ),
                   const Spacer(),
-                  TextButton(
+                  AdaptiveButton(
+                    text: true,
                     onPressed: () {
                       setSheetState(() {
                         _changeSort(_SortMode.time);
@@ -434,7 +436,7 @@ class _NoticeDownloadedPageState extends State<NoticeDownloadedPage>
                       });
                       Navigator.pop(context);
                     },
-                    child: Text(l10n.reset),
+                    label: l10n.reset,
                   ),
                 ],
               ),
@@ -541,7 +543,7 @@ class _NoticeDownloadedPageState extends State<NoticeDownloadedPage>
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-      child: SearchBar(
+      child: AdaptiveSearchBar(
         controller: _searchController,
         onChanged: (v) => setState(() => _query = v),
         hintText: AppLocalizations.of(context)!.searchAttachmentsHint,

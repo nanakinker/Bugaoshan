@@ -13,7 +13,9 @@ import 'package:system_theme/system_theme.dart';
 //define key
 const String _keyLocale = 'locale';
 const String _keyCardSizeAnimationDuration = 'cardSizeAnimationDuration';
-const String _keyThemeColor = 'themeColor';
+// 键名带 v2：旧键在已安装设备上仍存着旧值（蓝色主题），
+// 不升版则新的默认主题色永远不会生效。
+const String _keyThemeColor = 'themeColorV2';
 const String _keyColorOpacity = 'colorOpacity';
 const String _keyCourseCardFontSize = 'courseCardFontSize';
 const String _keyShowCourseGrid = 'showCourseGrid';
@@ -28,6 +30,13 @@ const String _keyAcceptedEulaVersion = 'acceptedEulaVersion';
 const String _keyThemeColorMode = 'themeColorMode';
 const String _keyThemeMode = 'themeMode';
 const String _keyWidgetShowTomorrow = 'widget_show_tomorrow';
+
+/// 苹果红，作为默认主题色。
+const Color _appleRed = Color(0xFFFF3B30);
+
+// v2 同理：旧键存着 false（Material 3 路径），会让「只保留液态玻璃」
+// 的改动看不到效果。
+const String _keyUsePackageGlassDock = 'usePackageGlassDockV2';
 const String _keyWidgetColorStyle = 'widget_color_style';
 const String _keyWidgetDensity = 'widget_density';
 const String _keyUsePreviewUpdateSource = 'usePreviewUpdateSource';
@@ -60,9 +69,7 @@ class AppConfigProvider {
   final ValueNotifier<Locale?> locale = ValueNotifier<Locale?>(null);
   final ValueNotifier<Duration> cardSizeAnimationDuration =
       ValueNotifier<Duration>(const Duration(milliseconds: 200));
-  final ValueNotifier<Color> themeColor = ValueNotifier<Color>(
-    Colors.blueAccent,
-  );
+  final ValueNotifier<Color> themeColor = ValueNotifier<Color>(_appleRed);
   final ValueNotifier<double> colorOpacity = ValueNotifier<double>(0.85);
   final ValueNotifier<double> courseCardFontSize = ValueNotifier<double>(13.0);
   final ValueNotifier<bool> showCourseGrid = ValueNotifier<bool>(true);
@@ -92,6 +99,16 @@ class AppConfigProvider {
     ThemeMode.system,
   );
   final ValueNotifier<bool> widgetShowTomorrow = ValueNotifier<bool>(false);
+
+  /// 导航条材质实现选择。
+  ///
+  /// - `false`（默认）：使用仓库内自绘的毛玻璃实现（[FrostedGlassDock]），
+  ///   只做磨砂与边缘勾边，选中态为在项目间流动的透镜；
+  /// - `true`：使用社区包 `liquid_glass_widgets`，折射/色散/形变交给其
+  ///   fragment shader 与 morph 引擎。
+  ///
+  /// 默认保持关闭，便于并排对比观感与性能后再决定取舍。
+  final ValueNotifier<bool> usePackageGlassDock = ValueNotifier<bool>(true);
   final ValueNotifier<WidgetColorStyle> widgetColorStyle =
       ValueNotifier<WidgetColorStyle>(WidgetColorStyle.colorful);
   final ValueNotifier<WidgetDensity> widgetDensity =
@@ -129,7 +146,7 @@ class AppConfigProvider {
           _sharedPreferences.getInt(_keyCardSizeAnimationDuration) ?? 200,
     );
     themeColor.value = Color(
-      _sharedPreferences.getInt(_keyThemeColor) ?? Colors.blueAccent.toARGB32(),
+      _sharedPreferences.getInt(_keyThemeColor) ?? _appleRed.toARGB32(),
     );
     colorOpacity.value = _sharedPreferences.getDouble(_keyColorOpacity) ?? 0.85;
     courseCardFontSize.value =
@@ -168,6 +185,8 @@ class AppConfigProvider {
         : ThemeMode.system;
     widgetShowTomorrow.value =
         _sharedPreferences.getBool(_keyWidgetShowTomorrow) ?? false;
+    usePackageGlassDock.value =
+        _sharedPreferences.getBool(_keyUsePackageGlassDock) ?? true;
     final widgetColorStyleIndex =
         _sharedPreferences.getInt(_keyWidgetColorStyle) ?? 0;
     widgetColorStyle.value =
@@ -299,6 +318,12 @@ class AppConfigProvider {
       _sharedPreferences.setBool(
         _keyWidgetShowTomorrow,
         widgetShowTomorrow.value,
+      );
+    });
+    usePackageGlassDock.addListener(() {
+      _sharedPreferences.setBool(
+        _keyUsePackageGlassDock,
+        usePackageGlassDock.value,
       );
     });
     widgetColorStyle.addListener(() {

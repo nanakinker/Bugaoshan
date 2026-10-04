@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/ccyl_provider.dart';
@@ -279,22 +280,19 @@ class _ActivitiesTabState extends State<ActivitiesTab> {
           child: Row(
             children: [
               Expanded(
-                child: TextField(
+                child: AdaptiveTextField(
                   controller: _searchCtrl,
-                  decoration: InputDecoration(
-                    hintText: l10n.ccylSearchHint,
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchCtrl.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchCtrl.clear();
-                              _loadActivities();
-                            },
-                          )
-                        : null,
-                    border: const OutlineInputBorder(),
-                  ),
+                  hintText: l10n.ccylSearchHint,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: _searchCtrl.text.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchCtrl.clear();
+                            _loadActivities();
+                          },
+                        )
+                      : null,
                   onSubmitted: (_) => _onSearch(),
                 ),
               ),
@@ -391,9 +389,10 @@ class _ActivitiesTabState extends State<ActivitiesTab> {
                   child: Row(spacing: 8, children: chips),
                 ),
               ),
-              TextButton(
+              AdaptiveButton(
+                text: true,
                 onPressed: () => _applyFilter(CcylActivityFilter.empty),
-                child: Text(l10n.ccylFilterClear),
+                label: l10n.ccylFilterClear,
               ),
             ],
           ),
@@ -447,9 +446,10 @@ class _ActivitiesTabState extends State<ActivitiesTab> {
               ),
             ),
             if (_hasMore)
-              TextButton(
+              AdaptiveButton(
+                text: true,
                 onPressed: () => _loadActivities(loadMore: true),
-                child: Text(l10n.ccylLoadMore),
+                label: l10n.ccylLoadMore,
               ),
           ],
         ),
@@ -457,9 +457,10 @@ class _ActivitiesTabState extends State<ActivitiesTab> {
     }
     if (_hasMore) {
       return Center(
-        child: TextButton(
+        child: AdaptiveButton(
+          text: true,
           onPressed: () => _loadActivities(loadMore: true),
-          child: Text(l10n.ccylLoadMore),
+          label: l10n.ccylLoadMore,
         ),
       );
     }

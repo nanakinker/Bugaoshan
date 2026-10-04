@@ -27,8 +27,36 @@ Color campusItemAccent(String id) => switch (id) {
   _ => const Color(0xFF5B8DEF),
 };
 
-/// 强调色对应的图标容器底色：按主题明暗调整透明度，
-/// 保证在 surfaceContainerLow 卡片上柔和不刺眼。
+/// 强调色对应的图标容器底色。
+///
+/// 液态玻璃风格：底色仍带强调色（保留功能类别的可扫读性），
+/// 但透明度大幅降低并改为**上下渐变**——顶部略实、底部更透，
+/// 模拟玻璃受光面，取代原先「一块均匀实色」的观感。
+///
+/// 强调色本身的信息量不能丢，所以不改成中性玻璃，只降不透明度 + 加渐变。
 Color campusItemAccentContainer(Color accent, Brightness brightness) {
-  return accent.withValues(alpha: brightness == Brightness.dark ? 0.24 : 0.14);
+  return accent.withValues(alpha: brightness == Brightness.dark ? 0.16 : 0.10);
+}
+
+/// 图标容器的玻璃修饰：顶部高光边 + 底部内阴影。
+///
+/// 纯色块看起来是「贴纸」，加上高光与内阴影后才有厚度感。
+List<BoxShadow> campusItemAccentShadows(Color accent, Brightness brightness) {
+  final isDark = brightness == Brightness.dark;
+  return [
+    // 顶部高光：模拟玻璃上沿受光
+    BoxShadow(
+      color: Colors.white.withValues(alpha: isDark ? 0.16 : 0.55),
+      blurRadius: 6,
+      offset: const Offset(0, -1),
+      spreadRadius: -3,
+    ),
+    // 底部内阴影：给出体积
+    BoxShadow(
+      color: Colors.black.withValues(alpha: isDark ? 0.30 : 0.10),
+      blurRadius: 5,
+      offset: const Offset(0, 2),
+      spreadRadius: -3,
+    ),
+  ];
 }

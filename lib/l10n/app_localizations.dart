@@ -667,6 +667,36 @@ abstract class AppLocalizations {
   /// **'Theme Color'**
   String get themeColor;
 
+  /// No description provided for @themeStyleSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme style'**
+  String get themeStyleSetting;
+
+  /// No description provided for @themeStyleMaterial3.
+  ///
+  /// In en, this message translates to:
+  /// **'Material 3'**
+  String get themeStyleMaterial3;
+
+  /// No description provided for @themeStyleLiquidGlass.
+  ///
+  /// In en, this message translates to:
+  /// **'Liquid glass'**
+  String get themeStyleLiquidGlass;
+
+  /// No description provided for @themeStyleMaterial3Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Native look built on the system Material 3 design'**
+  String get themeStyleMaterial3Desc;
+
+  /// No description provided for @themeStyleLiquidGlassDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Translucent frosted navigation bar with the content behind it showing through, and a glass lens sliding between items'**
+  String get themeStyleLiquidGlassDesc;
+
   /// No description provided for @changeThemeColor.
   ///
   /// In en, this message translates to:

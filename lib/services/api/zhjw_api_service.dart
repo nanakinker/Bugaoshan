@@ -68,10 +68,7 @@ class ZhjwApiService {
     String body,
     int statusCode,
   ) {
-    const flagged = UnauthenticatedException(
-      '本科教务会话未建立',
-      true,
-    );
+    const flagged = UnauthenticatedException('本科教务会话未建立', true);
     if (statusCode == 302) return flagged;
     if (body.trim().isEmpty) {
       return const UnauthenticatedException('教务系统返回了空响应');

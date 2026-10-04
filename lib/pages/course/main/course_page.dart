@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/academic_calendar.dart';
@@ -147,58 +148,76 @@ class _CoursePageState extends State<CoursePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    // Column 改为 Stack：背景图需要铺满整屏（含顶栏区域），
+    // 而 Column 只能按内容高度排布、无法承载 Positioned。
+    return Stack(
       children: [
-        if (!widget.demoMode && _controller != null)
-          ListenableBuilder(
-            listenable: Listenable.merge([
-              _controller!,
-              courseProvider.allSchedules,
-              courseProvider.scheduleConfig,
-            ]),
-            builder: (context, _) => CoursePageTopBar(
-              visibleWeek: _controller!.visibleWeek,
-              totalWeeks: _controller!.totalWeeks,
-              actualWeek: _controller!.actualWeek,
-              isViewingVacation: _controller!.isViewingVacation,
-              isTodayOnVacation: _controller!.isTodayOnVacation,
-              isNotStarted: _controller!.isNotStarted,
-              canGoPrevious: _controller!.canGoPrevious,
-              canGoNext: _controller!.canGoNext,
-              animationDuration: appConfig.cardSizeAnimationDuration.value,
-              onPreviousWeek: _controller!.goToPreviousPage,
-              onNextWeek: _controller!.goToNextPage,
-              onGoToCurrentWeek: _controller!.goToToday,
-              onImport: _onImport,
-              onExport: _onExport,
-              onAddCourse: _onAddCourse,
-              schedules: courseProvider.allSchedules.value,
-              currentScheduleId: courseProvider.scheduleConfig.value?.id,
-              onSwitchSchedule: (id) => courseProvider.switchSchedule(id),
-              onOpenScheduleManagement: () =>
-                  _openScheduleManagement(logicRootContext),
+        // 背景铺满整屏：原先只在课表区 Stack 内绘制，顶栏下方露出
+        // Scaffold 的纯黑底，导致设置背景图后顶部仍是一条黑。
+        // RepaintBoundary：背景图是全屏不动的图层，隔离后课表格子
+        // 重绘不会连带它一起重新光栅化（大图重绘很贵，是发烫来源之一）。
+        Positioned.fill(
+          child: RepaintBoundary(
+            child: ListenableBuilder(
+              listenable: _bgImageListenable,
+              builder: _buildBackgroundImage,
             ),
           ),
-        Expanded(
-          child: Stack(
-            children: [
+        ),
+        Column(
+          children: [
+            // 顶栏的顶部安全区：home_page 已不再统一加了（会把子页整体下推、
+            // 导致背景图铺不到状态栏），所以需要子页自行处理。
+            // 背景层是最外层 Positioned.fill，仍然铺满整个屏幕包括状态栏。
+            SizedBox(height: MediaQuery.paddingOf(context).top),
+            if (!widget.demoMode && _controller != null)
               ListenableBuilder(
-                listenable: _bgImageListenable,
-                builder: _buildBackgroundImage,
+                listenable: Listenable.merge([
+                  _controller!,
+                  courseProvider.allSchedules,
+                  courseProvider.scheduleConfig,
+                ]),
+                builder: (context, _) => CoursePageTopBar(
+                  visibleWeek: _controller!.visibleWeek,
+                  totalWeeks: _controller!.totalWeeks,
+                  actualWeek: _controller!.actualWeek,
+                  isViewingVacation: _controller!.isViewingVacation,
+                  isTodayOnVacation: _controller!.isTodayOnVacation,
+                  isNotStarted: _controller!.isNotStarted,
+                  canGoPrevious: _controller!.canGoPrevious,
+                  canGoNext: _controller!.canGoNext,
+                  animationDuration: appConfig.cardSizeAnimationDuration.value,
+                  onPreviousWeek: _controller!.goToPreviousPage,
+                  onNextWeek: _controller!.goToNextPage,
+                  onGoToCurrentWeek: _controller!.goToToday,
+                  onImport: _onImport,
+                  onExport: _onExport,
+                  onAddCourse: _onAddCourse,
+                  schedules: courseProvider.allSchedules.value,
+                  currentScheduleId: courseProvider.scheduleConfig.value?.id,
+                  onSwitchSchedule: (id) => courseProvider.switchSchedule(id),
+                  onOpenScheduleManagement: () =>
+                      _openScheduleManagement(logicRootContext),
+                ),
               ),
-              ListenableBuilder(
-                listenable: _gridListenable,
-                builder: (context, _) =>
-                    widget.demoMode || courseProvider.hasSchedule
-                    ? _buildCourseGrid(context, null)
-                    : _buildNoScheduleView(context, null),
+            Expanded(
+              child: Stack(
+                children: [
+                  ListenableBuilder(
+                    listenable: _gridListenable,
+                    builder: (context, _) =>
+                        widget.demoMode || courseProvider.hasSchedule
+                        ? _buildCourseGrid(context, null)
+                        : _buildNoScheduleView(context, null),
+                  ),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: courseProvider.isLoading,
+                    builder: _buildLoadingIndicator,
+                  ),
+                ],
               ),
-              ValueListenableBuilder<bool>(
-                valueListenable: courseProvider.isLoading,
-                builder: _buildLoadingIndicator,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -335,13 +354,15 @@ class _CoursePageState extends State<CoursePage> with WidgetsBindingObserver {
           title: Text(l10n.promptSwitchSemesterTitle),
           content: Text(l10n.promptSwitchSemester),
           actions: [
-            TextButton(
+            AdaptiveButton(
+              text: true,
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: Text(l10n.cancel),
+              label: l10n.cancel,
             ),
-            FilledButton(
+            AdaptiveButton(
+              filled: true,
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text(l10n.switchSchedule),
+              label: l10n.switchSchedule,
             ),
           ],
         ),

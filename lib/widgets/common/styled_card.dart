@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/theme_shape.dart';
 
 /// 统一卡片样式外壳。
@@ -53,6 +55,50 @@ class StyledCard extends StatelessWidget {
     final theme = Theme.of(context);
     final color = backgroundColor ?? theme.colorScheme.surfaceContainerLow;
     final border = borderColor ?? theme.dividerColor.withValues(alpha: 0.1);
+
+    // 液态玻璃风格：改用玻璃卡片，卡片内容随背景折射。
+    // StyledCard 被全项目 80+ 处复用，因此这里一处改动即可全局生效。
+    // 调用方显式指定了 backgroundColor 时视为「刻意要实底」，不套玻璃。
+    if (useLiquidGlass(context) && backgroundColor == null) {
+      // 性能：卡片是**静态内容**（不做形变），用 minimal 档——它不跑自定义
+      // fragment shader，只做 BackdropFilter。全项目 80+ 处复用，若每张卡
+      // 都跑完整 shader，滚动时几十个实例同时光栅化，是掉帧与发热主因。
+      //
+      // minimal 档不跑 shader，**描边与高光要自己给**，否则深色模式下
+      // 玻璃卡会「消失」（用户反馈：描边不清晰、啥都看不见）。
+      final isDark = theme.brightness == Brightness.dark;
+      Widget glassChild = child;
+      if (onTap != null) {
+        glassChild = InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: child,
+        );
+      }
+      return Container(
+        margin: margin,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          // 深色下描边必须更亮才看得见——深灰玻璃配深色描边会糊成一片。
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.16)
+                : Colors.black.withValues(alpha: 0.10),
+            width: 1,
+          ),
+          boxShadow: [
+            // 顶部高光，给玻璃厚度
+            BoxShadow(
+              color: Colors.white.withValues(alpha: isDark ? 0.08 : 0.45),
+              blurRadius: 6,
+              offset: const Offset(0, -1),
+              spreadRadius: -3,
+            ),
+          ],
+        ),
+        child: glassChild,
+      );
+    }
 
     Widget body = child;
     if (padding != null) {

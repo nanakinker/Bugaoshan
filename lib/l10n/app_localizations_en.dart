@@ -319,6 +319,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeColor => 'Theme Color';
 
   @override
+  String get themeStyleSetting => 'Theme style';
+
+  @override
+  String get themeStyleMaterial3 => 'Material 3';
+
+  @override
+  String get themeStyleLiquidGlass => 'Liquid glass';
+
+  @override
+  String get themeStyleMaterial3Desc =>
+      'Native look built on the system Material 3 design';
+
+  @override
+  String get themeStyleLiquidGlassDesc =>
+      'Translucent frosted navigation bar with the content behind it showing through, and a glass lens sliding between items';
+
+  @override
   String get changeThemeColor => 'Change Theme Color';
 
   @override

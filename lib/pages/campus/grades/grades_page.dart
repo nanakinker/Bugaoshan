@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/liquid_title.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/grades_provider.dart';
@@ -84,6 +85,8 @@ class _GradesPageState extends State<GradesPage>
 
         return Scaffold(
           appBar: AppBar(
+            // 标题随下方 Tab 切换横向滑动（与底部共享透镜同一套动效语言）。
+            // 搜索态仍用输入框。
             title: _isSearching
                 ? TextField(
                     controller: _searchController,
@@ -101,7 +104,14 @@ class _GradesPageState extends State<GradesPage>
                       });
                     },
                   )
-                : Text(l10n.gradesStats),
+                : LiquidTitle(
+                    // 标题保持「成绩统计」；滑动提示由 siblings 驱动——
+                    // 组件据 index 变化播放一次横向滑动 + 交叉淡入，
+                    // 与底部共享透镜同一套动效语言。
+                    text: l10n.gradesStats,
+                    index: _currentIndex,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
             actions: [
               if (auth.isLoggedIn)
                 IconButton(

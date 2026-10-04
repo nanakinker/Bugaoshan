@@ -12,9 +12,7 @@ List<GraduateGradeRow> graduateGradeRowsFromJson(List<dynamic> rows) {
 ///
 /// 口径见 [GraduateGradesStats]：计数按有效行，加权均分只算有百分成绩的行，
 /// 通过率按门数占比。
-GraduateGradesStats? graduateGradesStatsFromRows(
-  List<GraduateGradeRow> rows,
-) {
+GraduateGradesStats? graduateGradesStatsFromRows(List<GraduateGradeRow> rows) {
   final valid = rows.where((row) => row.valid).toList();
   if (valid.isEmpty) return null;
 

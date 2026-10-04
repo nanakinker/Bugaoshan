@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/widget_appearance.dart';
@@ -337,16 +338,18 @@ class _AddWidgetContentState extends State<AddWidgetContent>
           title: Text(localizations.pinWidgetFailedTitle),
           content: Text(localizations.pinWidgetFailedDesc),
           actions: [
-            TextButton(
+            AdaptiveButton(
+              text: true,
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(localizations.pinWidgetDismiss),
+              label: localizations.pinWidgetDismiss,
             ),
-            FilledButton(
+            AdaptiveButton(
+              filled: true,
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 getIt<WidgetUpdateService>().openAppSettings();
               },
-              child: Text(localizations.pinWidgetOpenSettings),
+              label: localizations.pinWidgetOpenSettings,
             ),
           ],
         );

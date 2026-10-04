@@ -304,6 +304,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get themeColor => '主题颜色';
 
   @override
+  String get themeStyleSetting => '主题样式';
+
+  @override
+  String get themeStyleMaterial3 => 'Material 3 风格';
+
+  @override
+  String get themeStyleLiquidGlass => '液态玻璃风格';
+
+  @override
+  String get themeStyleMaterial3Desc => '使用系统 Material 3 设计的原生观感';
+
+  @override
+  String get themeStyleLiquidGlassDesc =>
+      '导航栏使用半透明毛玻璃，背景内容可透出；点击时有一枚玻璃透镜在项目间滑动';
+
+  @override
   String get changeThemeColor => '更改主题颜色';
 
   @override

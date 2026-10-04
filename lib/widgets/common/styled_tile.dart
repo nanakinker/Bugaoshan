@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/theme_shape.dart';
 
 /// Base tile with padding and optional InkWell tap.
@@ -34,15 +38,56 @@ class TileIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = color ?? Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primaryColor = color ?? theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
+    final iconChild = Icon(icon, color: primaryColor, size: 20);
+
+    // 液态玻璃风格：图标底衬用玻璃小方块（能透出背后的卡片），
+    // 而不是原先 primary @0.1 的实色圆角矩形——那是实心色块，不通透。
+    if (useLiquidGlass(context)) {
+      // 性能：图标底衬是**静态小方块**，用 minimal 档（不跑自定义
+      // fragment shader）即可。设置页有十几行图标，降级后滚动更顺。
+      // 不能用 RepaintBoundary 包裹：BackdropFilter 需要每帧重新采样
+      // 背后内容，被 RepaintBoundary 缓存后会拿到**过期的（或空的）backdrop**，
+      // 表现为「图标底衬变成黑方块」——用户反馈「进入三级页再退回，
+      // 一半图标变黑」。这里直接渲染，让滤镜正常采样。
+      // 不用 GlassCard：`GlassQuality.minimal` 下部分图标会出现
+      // 底衬渲染成纯黑方块（用户反馈「一半图标变黑」，脚本取色确认
+      // 黑块中心 #463E3C、四周 #FFFBFA → 是底衬黑，不是图标黑）。
+      // 改用自绘 Container：模糊交给 BackdropFilter，描边与底色自己给，
+      // 行为可预测。
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppShapes.medium),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: isDark ? 0.16 : 0.10),
+              borderRadius: BorderRadius.circular(AppShapes.medium),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.14)
+                    : Colors.black.withValues(alpha: 0.08),
+              ),
+            ),
+            child: SizedBox(width: 20, height: 20, child: iconChild),
+          ),
+        ),
+      );
+    }
+
     return Container(
       width: 36,
       height: 36,
       decoration: BoxDecoration(
-        color: primaryColor.withValues(alpha: 0.1),
+        color: primaryColor.withValues(alpha: isDark ? 0.16 : 0.1),
         borderRadius: BorderRadius.circular(AppShapes.medium),
       ),
-      child: Icon(icon, color: primaryColor, size: 20),
+      child: iconChild,
     );
   }
 }

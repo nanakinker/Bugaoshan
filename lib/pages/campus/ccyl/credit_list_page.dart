@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/ccyl_provider.dart';
@@ -140,9 +141,10 @@ class _CreditListPageState extends State<CreditListPage> {
           autofocus: true,
         ),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
+            label: l10n.cancel,
           ),
           ElevatedButton(
             onPressed: () {
@@ -316,11 +318,12 @@ class _SelectionBar extends StatelessWidget {
         child: Row(
           children: [
             TextButton(onPressed: onToggleSelecting, child: Text(l10n.cancel)),
-            TextButton(
+            AdaptiveButton(
+              text: true,
               onPressed: onSelectAll,
-              child: Text(
-                selectedCount == totalCount ? l10n.cancel : l10n.ccylSelectAll,
-              ),
+              label: selectedCount == totalCount
+                  ? l10n.cancel
+                  : l10n.ccylSelectAll,
             ),
             Text(
               '$selectedCount/$totalCount',

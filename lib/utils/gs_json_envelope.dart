@@ -85,9 +85,7 @@ GsPagedEnvelope? gsPagedEnvelope(Object? json) {
     totalSize: _asInt(owner['totalSize']),
     pageNumber: _asInt(owner['pageNumber']),
     pageSize: _asInt(owner['pageSize']),
-    totalPage: _asInt(
-      (owner['extParams'] as Map?)?['totalPage'],
-    ),
+    totalPage: _asInt((owner['extParams'] as Map?)?['totalPage']),
   );
 }
 

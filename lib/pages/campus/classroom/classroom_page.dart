@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/course.dart';
@@ -715,9 +716,10 @@ class _ClassroomPageState extends State<ClassroomPage> {
               ],
             ),
             actions: [
-              TextButton(
+              AdaptiveButton(
+                text: true,
                 onPressed: () => Navigator.pop(context),
-                child: Text(dialogL10n.cancel),
+                label: dialogL10n.cancel,
               ),
               FilledButton(
                 onPressed: () =>

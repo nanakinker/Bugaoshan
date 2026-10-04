@@ -53,6 +53,30 @@ class CampusListCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: containerColor,
                 borderRadius: BorderRadius.circular(AppShapes.large),
+                // 玻璃质感：顶部高光 + 底部内阴影（底色保持不透明以
+                // 保留功能类别的可扫读性，只加厚度感）。
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white.withValues(
+                      alpha: Theme.of(context).brightness == Brightness.dark
+                          ? 0.14
+                          : 0.60,
+                    ),
+                    blurRadius: 7,
+                    offset: const Offset(0, -1),
+                    spreadRadius: -3,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(
+                      alpha: Theme.of(context).brightness == Brightness.dark
+                          ? 0.34
+                          : 0.10,
+                    ),
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                    spreadRadius: -3,
+                  ),
+                ],
               ),
               child: Icon(icon, color: foregroundColor, size: 28),
             ),

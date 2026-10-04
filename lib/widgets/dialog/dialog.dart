@@ -1,7 +1,8 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
@@ -24,11 +25,12 @@ Future showInfoDialog({
         title: Text(title),
         content: Text(content),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(button ?? l10n.confirm),
+            label: button ?? l10n.confirm,
           ),
         ],
       );
@@ -50,17 +52,19 @@ Future<bool?> showYesNoDialog({
         title: Text(title),
         content: Text(content),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-            child: Text(l10n.confirm),
+            label: l10n.confirm,
           ),
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () {
               Navigator.of(context).pop(false);
             },
-            child: Text(l10n.cancel),
+            label: l10n.cancel,
           ),
         ],
       );
@@ -115,12 +119,13 @@ Future showLoadingDialog({
           ),
         ),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () {
               myCancelableFuture.cancel();
               Navigator.of(context).pop();
             },
-            child: Text(button ?? l10n.cancel),
+            label: button ?? l10n.cancel,
           ),
         ],
       );
@@ -190,18 +195,17 @@ Future showLoadingDialogWithErrorString({
           ),
         ),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () {
               if (!isError) {
                 myCancelableFuture.cancel();
               }
               Navigator.of(context).pop();
             },
-            child: Text(
-              isError
-                  ? (onErrorButton ?? l10n.confirm)
-                  : (button ?? l10n.cancel),
-            ),
+            label: isError
+                ? (onErrorButton ?? l10n.confirm)
+                : (button ?? l10n.cancel),
           ),
         ],
       );

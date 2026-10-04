@@ -17,6 +17,7 @@ import 'package:bugaoshan/services/widget_update_service.dart';
 import 'package:bugaoshan/utils/constants.dart';
 import 'package:bugaoshan/widgets/common/auth_scoped_indexed_stack.dart';
 import 'package:bugaoshan/widgets/common/frosted_glass_dock.dart';
+import 'package:bugaoshan/widgets/common/package_glass_dock.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -143,9 +144,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           isAuthenticated: () => authProvider.isLoggedIn,
                           visibleIds: visibleIds,
                           selectedIndex: _currentIndex,
-                          duration: appConfig.cardSizeAnimationDuration.value,
-                          enableAnimation:
-                              appConfig.enableDockSwitchAnimation.value,
+                          // 页面切换改为**瞬时**（用户要求）：课表 / 校园 / 我的 /
+                          // 电费 之间直接跳变，不做横向滑动。
+                          // 动效只保留在底部 Dock 的玻璃透镜上，由
+                          // PackageGlassDock 内部的 liquid morph 实现。
+                          // 原因：页面滑动时整个子页（含课表格子 / 卡片列表）
+                          // 要重新布局与光栅化，是掉帧的主要来源；
+                          // 而 Dock 只是一个固定的小部件，动画开销极低。
+                          duration: Duration.zero,
+                          enableAnimation: false,
                           axis: showRail ? Axis.vertical : Axis.horizontal,
                           pageBuilder: (id) => campusItemConfigById(id).page(),
                         );
@@ -163,7 +170,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             offstage: !showRail,
                             child: SizedBox(
                               width: _railExtent,
-                              child: FrostedGlassDock(
+                              // 侧边导航同样走 PackageGlassDock；包没有 vertical
+                              // 变体，它内部会自行回退到自绘实现。
+                              child: PackageGlassDock(
                                 axis: Axis.vertical,
                                 itemExtent: _railExtent,
                                 duration:
@@ -182,23 +191,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           ),
                           // Page content.
                           //
-                          // 底部不加 SafeArea：它会与 FrostedGlassDock 自己的
+                          // 底部不加 SafeArea：它会与导航条自身的
                           // SafeArea 叠加，在 Dock 下方压出一条空白带
                           // （表现为"多一层黑底"），同时挤小可用高度、
                           // 引发 RenderFlex overflow。Dock 内部已处理底部安全区。
                           // 顶部仍需避让状态栏/刘海。
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(
-                                top: MediaQuery.paddingOf(context).top,
-                              ),
+                              // 不加顶部安全区：加了会把子页整体下推，
+                              // 导致课表背景图铺不到状态栏（用户反馈）。
+                              // 各子页自行处理顶部安全区。
+                              padding: EdgeInsets.zero,
                               child: pageContent,
                             ),
                           ),
                         ],
                       ),
+                      // 导航栏只保留液态玻璃（社区包 liquid_glass_widgets）。
+                      // 原先这里还有一个自绘毛玻璃分支，现已移除——
+                      // 两种材质并存时观感不统一，且容易再次误用。
                       bottomNavigationBar: showBar
-                          ? FrostedGlassDock(
+                          ? PackageGlassDock(
                               itemExtent: _barItemExtent,
                               duration:
                                   appConfig.cardSizeAnimationDuration.value,
@@ -208,9 +221,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 l10n,
                               ),
                               selectedIndex: _currentIndex,
-                              onSelected: (index) {
-                                setState(() => _currentIndex = index);
-                              },
+                              onSelected: _onDockSelected,
+                              axis: Axis.horizontal,
                             )
                           : null,
                     );
@@ -222,6 +234,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         );
       },
     );
+  }
+
+  void _onDockSelected(int index) {
+    setState(() => _currentIndex = index);
   }
 
   void _clampCurrentIndex(List<String> ids) {
@@ -239,6 +255,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   ///
   /// 取 72 而非原`NavigationBar` 的 64：药丸形两端为半圆，需要更多纵向空间
   /// 才不会显得拥挤，同时给标签留出呼吸感。
+  // 导航条单格高度。曾因误读截图（以为是 Dock 挤压）临时加到 84，
+  // 实际用户反馈的是「我的」页信息区太挤，与 Dock 无关，故保持原值。
   static const double _barItemExtent = 72;
 
   /// 把可见的 Dock 项转换为毛玻璃导航条所需的 item 列表。

@@ -617,7 +617,10 @@ class _ImportSchedulePageState extends State<ImportSchedulePage> {
 
     if (widget.mode == ImportMode.online) {
       return Scaffold(
-        appBar: AppBar(title: Text(title)),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text(title),
+        ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(32),
@@ -657,6 +660,7 @@ class _ImportSchedulePageState extends State<ImportSchedulePage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(title),
         actions: [TextButton(onPressed: _import, child: Text(l10n.save))],
       ),

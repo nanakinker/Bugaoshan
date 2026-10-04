@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/course.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
@@ -25,9 +26,10 @@ Future<void> promptForNewScheduleConfig(
         decoration: InputDecoration(hintText: l10n.semesterName),
       ),
       actions: [
-        TextButton(
+        AdaptiveButton(
+          text: true,
           onPressed: () => Navigator.pop(ctx),
-          child: Text(l10n.cancel),
+          label: l10n.cancel,
         ),
         TextButton(
           onPressed: () {

@@ -147,6 +147,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           widget._isCopy
               ? l10n.copyCourseTitle

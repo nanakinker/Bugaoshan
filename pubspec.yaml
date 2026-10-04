@@ -35,6 +35,10 @@ dependencies:
   file_picker: ^12.0.0
   fl_chart: ^1.2.0
   flutter_markdown_plus: ^1.0.7
+  # 导航条玻璃材质：优先使用社区方案而非自绘。
+  # 该包用 Flutter 自定义 GLSL shader + Impeller 实现iOS 风格液态玻璃，
+  # 不依赖 Apple 原生 API，因此在 Android / 桌面端同样可用。
+  liquid_glass_widgets: ^1.8.1
   image_picker: ^1.2.2
   window_manager: ^0.5.1
   screen_retriever: ^0.2.0

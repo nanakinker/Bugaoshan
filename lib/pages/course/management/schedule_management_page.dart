@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bugaoshan/widgets/common/third_center.dart';
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import '../import/import_source_sheet.dart';
@@ -131,9 +132,10 @@ class ScheduleManagementPage extends StatelessWidget {
                                 ),
                               ),
                               actions: [
-                                TextButton(
+                                AdaptiveButton(
+                                  text: true,
                                   onPressed: () => Navigator.pop(context),
-                                  child: Text(l10n.cancel),
+                                  label: l10n.cancel,
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(

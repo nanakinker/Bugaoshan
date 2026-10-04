@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/repair.dart';
@@ -87,13 +88,15 @@ class _RepairDetailPageState extends State<RepairDetailPage> {
         title: Text(l10n.repairWithdraw),
         content: Text(l10n.repairWithdrawConfirm),
         actions: [
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
+            label: l10n.cancel,
           ),
-          TextButton(
+          AdaptiveButton(
+            text: true,
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.confirm),
+            label: l10n.confirm,
           ),
         ],
       ),
@@ -530,15 +533,17 @@ class _EvaluateDialogState extends State<_EvaluateDialog> {
         ),
       ),
       actions: [
-        TextButton(
+        AdaptiveButton(
+          text: true,
           onPressed: _submitting
               ? null
               : () => Navigator.of(context).pop(false),
-          child: Text(l10n.cancel),
+          label: l10n.cancel,
         ),
-        FilledButton(
+        AdaptiveButton(
+          filled: true,
           onPressed: _submitting ? null : _submit,
-          child: Text(l10n.confirm),
+          label: l10n.confirm,
         ),
       ],
     );

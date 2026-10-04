@@ -1,6 +1,7 @@
 import 'package:bugaoshan/pages/about/release_notes_page.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/theme_shape.dart';
@@ -128,18 +129,20 @@ class UpdateDialogContent extends StatelessWidget {
                 spacing: 12,
                 runSpacing: 8,
                 children: [
-                  TextButton(
+                  AdaptiveButton(
+                    text: true,
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text(l10n.neverMind),
+                    label: l10n.neverMind,
                   ),
-                  TextButton(
+                  AdaptiveButton(
+                    text: true,
                     onPressed: () {
                       Navigator.of(context).pop();
                       onStartUpdate();
                     },
-                    child: Text(
-                      isPreview ? l10n.startUpdatePreview : l10n.startUpdate,
-                    ),
+                    label: isPreview
+                        ? l10n.startUpdatePreview
+                        : l10n.startUpdate,
                   ),
                 ],
               ),

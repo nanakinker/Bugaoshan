@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/widgets/common/third_center.dart';
 
@@ -51,9 +52,10 @@ class EmptySchedulePlaceholder extends StatelessWidget {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
+                child: AdaptiveButton(
+                  filled: true,
                   onPressed: () => Navigator.of(context).pop(),
-                  child: Text(l10n.back),
+                  label: l10n.back,
                 ),
               ),
             ],
