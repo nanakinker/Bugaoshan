@@ -70,12 +70,9 @@
   &nbsp;&nbsp;&nbsp;
   <img src="./screenshot/screenshot-dock-campus-dark.webp" width="30%" />
   &nbsp;&nbsp;&nbsp;
-  <img src="./screenshot/screenshot-dock-profile-light.webp" width="30%" />
-  &nbsp;&nbsp;&nbsp;
-  <img src="./screenshot/screenshot-dock-profile-dark.webp" width="30%" />
 </div>
 
-*依次为：课表（浅色 / 深色）、校园（浅色 / 深色）、我的（浅色 / 深色）*
+*依次为：课表（浅色 / 深色）、校园（浅色 / 深色）
 ---
 
 ## ✨ 主要功能
