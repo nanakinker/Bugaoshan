@@ -20,50 +20,69 @@ Future<void> main() async {
     // liquid_glass_widgets 要求用 wrap 包住应用根节点；MaterialApp 需显式
     // 提供 brightnessResolver，否则玻璃层拿不到当前主题亮度。
     runApp(
-      LiquidGlassWidgets.wrap(
-        brightnessResolver: Theme.maybeBrightnessOf,
-        // 覆盖包的暗色变体：默认 dark 是 glassColor 白纱 0.08 + saturation 1.2，
-        // 在本应用纯黑背景上会明显发白（像磨砂塑料）。这里把白纱压到 0.03、
-        // 饱和与高光都调低，让玻璃回到「透」而不是「亮」。
-        // 参考酷安：玻璃本身**几乎不染色**，靠背景透出 + 一圈亮边体现。
-        //   暗色：黑色半透明纱（不是白纱！白纱会让纯黑背景发灰发白）
-        //   浅色：极薄白纱 + 高饱和，让背景色彩透出来
+    LiquidGlassWidgets.wrap(
+      brightnessResolver: Theme.maybeBrightnessOf,
+      // 官方文档推荐 adaptiveQuality: true，但包源码里它标注为
+      // **experimental**（默认 false），会按设备光栅预算自动下调质量档 ——
+      // 而导航栏/顶栏的 premium（折射+色散）正是本应用刻意要的，自动降级
+      // 会把它退回 standard，观感又变成「干净但平」。故保持关闭，由各组件
+      // 显式声明质量档。
+      adaptiveQuality: false,
+      // 自动读取系统「减弱动态效果 / 增强对比度」并降级无障碍表现。
+      respectSystemAccessibility: true,
+        // 全局玻璃主题：**只覆盖 glassColor，其余光学参数全部交回库默认值**。
+        //
+        // 玻璃的「像不像玻璃」由 thickness / blur / fresnel / 折射 / 高光决定，
+        // 这些交给库的原生默认即可（fresnelStrength 1.0、thickness 20、blur 5、
+        // refractiveIndex 1.2、saturation 1.5、glowIntensity 0.75）。
+        //
+        // 唯一必须覆盖的是 glassColor —— 库的默认是**完全透明**
+        //（ARGB(0,255,255,255)），在本应用近乎纯黑的深色背景上会读不出玻璃感，
+        // 所以给一层与背景同档的深炭灰薄纱，让玻璃「透」出来而不是「亮」起来。
+        // 注意浓度要低：0.5 以上会让玻璃变成不透明的灰色板，直接盖住底下的内容。
         theme: const GlassThemeData(
           dark: GlassThemeVariant(
             settings: GlassThemeSettings(
-              thickness: 10.0,
-              blur: 3.0,
-              // 玻璃底纱跟着背景调到同一档深炭灰（#1C1C1E 附近），
-              // 透明度 0.55 —— 比背景略深一点，玻璃才有「实体」感，
-              // 又不至于盖住背景内容。
-              glassColor: Color.fromRGBO(28, 28, 30, 0.55),
-              lightAngle: 2.356,
-              // 打光：之前压到 0.18，玻璃只剩描边没有受光感、像贴纸。
-              // 0.45 是「有光但不刺眼」的中间值。
-              lightIntensity: 0.45,
-              // 边缘光：给玻璃一圈受亮边，是「有厚度」的关键。
-              // 注意 GlassThemeSettings 没有 fresnel 字段，
-              // 只有 LiquidGlassSettings 才有；此处用主题层能设的上限。
-              ambientStrength: 0.10,
-              refractiveIndex: 1.2,
-              saturation: 1.35,
-              chromaticAberration: 0.008,
+              // 深色玻璃底纱：深炭灰，浓度 0.62。
+              //
+              // 为什么必须在**全局主题**里改，而不是给每个组件传
+              // `GlassTabBar(settings: LiquidGlassSettings(...))`：
+              //
+              // 1. 包内部 `kBottomBarGlassDefaults`硬编码
+              //    `glassColor: Color(0x3DFFFFFF)`（~24% 白）且不随主题变化
+              //    → 深色模式下 Dock 药丸会变成「浅白色塑料」。
+              // 2. 但 `tab_bar_bottom_layout.dart:256` 是
+              //    `widget.settings ?? _defaultGlassSettings` ——
+              //    组件级 `settings` 是**整体替换**语义，一旦传入，
+              //    thickness 30 / blur 3 / refractiveIndex 1.59 /
+              //    chromaticAberration 0.3 / lightAngle 0.75π 全部丢失。
+              // 3. `GlassThemeSettings` 才是**部分覆盖**语义
+              //    （`null` = 沿用组件自身默认，见 glass_theme_settings.dart
+              //    开头的说明），且light/dark 自动分流。
+              //
+              // 所以：底纱色交给主题，光学参数一律不碰 —— 玻璃质感与官方
+              // demo 完全一致，只在深色下把白纱换成黑纱。
+              //
+              // 深炭灰而非纯黑：与 lib/theme.dart 的 scaffoldBackgroundColor
+              // 0xFF1C1C1E 同档，玻璃靠背景透出与边缘菲涅尔高光表达质感。
+              //
+              // 浓度 0.82：早期用 0.62 时，玻璃下方的课表背景（图片）透得太
+              // 明显，视觉上像是「背景图压在顶栏之上」而不是顶栏浮在背景之上
+              // （用户反馈「好像不是在图层的最上方」「透明度有点高」）。
+              // 提到 0.82 后底纱足够实，顶栏读起来是明确的一层；
+              // 折射与色散仍由库预设计算，不受影响。
+              glassColor: Color.fromRGBO(20, 20, 22, 0.82),
             ),
           ),
           light: GlassThemeVariant(
             settings: GlassThemeSettings(
-              thickness: 12.0,
-              blur: 3.0,
-              // 浅色只留很薄一层白，背景色彩才能透出来
-              glassColor: Color.fromRGBO(255, 255, 255, 0.34),
-              lightAngle: 2.356,
-              lightIntensity: 0.45,
-              // 亮色玻璃同样需要一点环境光，否则只有描边没有体积
-              ambientStrength: 0.12,
-              refractiveIndex: 1.2,
-              // 饱和度拉高，透出来的课表彩色块更鲜明
-              saturation: 1.6,
-              chromaticAberration: 0.012,
+              // 浅色：0.55 的白纱（原 0.30 太薄）。
+              //
+              // 0.30 在课表这种**高亮度彩色背景**上几乎看不出玻璃边界 ——
+              // 用户反馈「描边不可见，看不出来有玻璃质感」。玻璃需要足够
+              // 浓度才能在亮背景上「浮起来」，但纯白在浅色下又会显脏，
+              // 所以用略偏冷的浅灰白（248/250/252）而不是纯白。
+              glassColor: Color.fromRGBO(248, 250, 252, 0.55),
             ),
           ),
         ),

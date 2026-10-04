@@ -166,9 +166,10 @@ class _CoursePageState extends State<CoursePage> with WidgetsBindingObserver {
         ),
         Column(
           children: [
-            // 顶栏的顶部安全区：home_page 已不再统一加了（会把子页整体下推、
-            // 导致背景图铺不到状态栏），所以需要子页自行处理。
-            // 背景层是最外层 Positioned.fill，仍然铺满整个屏幕包括状态栏。
+            // 顶栏的顶部安全区：只给**内容**加，背景层是最外层的
+            // `Positioned.fill`（在本 Column 之外），所以背景图仍铺满整个
+            // 屏幕包括状态栏。不能挪到 home_page 统一加 —— 那会把背景图
+            // 一起下推，状态栏区域就露出 Scaffold 底色。
             SizedBox(height: MediaQuery.paddingOf(context).top),
             if (!widget.demoMode && _controller != null)
               ListenableBuilder(
@@ -234,14 +235,22 @@ class _CoursePageState extends State<CoursePage> with WidgetsBindingObserver {
   Widget _buildBackgroundImage(BuildContext context, Widget? _) {
     final path = appConfig.backgroundImagePath.value;
     if (path == null) return const SizedBox.shrink();
+    // 这里必须返回普通组件，**不能**返回 Positioned。
+    //
+    // 本组件的父节点链是 Stack → Positioned.fill → RepaintBoundary →
+    // ListenableBuilder → 本返回值。Positioned 只能作为 Stack 的**直接**
+    // 子节点生效（它靠 ParentData 传给 RenderStack）；被 RepaintBoundary
+    // 和 ListenableBuilder 隔开后找不到 RenderStack，父级约束完全落空 →
+    // BackgroundImageView 内 LayoutBuilder 拿到 constraints.biggest 为
+    // Size.zero → 走 isEmpty 分支不渲染 → 背景图永久空白。
+    // 正确做法：Positioned.fill 已经保证了「铺满整屏」，这里只需返回内容本身。
+    //
     // 裁剪参数为 null 时 BackgroundImageView 内部走 BoxFit.cover 分支，
     // 与旧版渲染一致；有参数时按归一化焦点/缩放摆放，超出部分裁掉。
-    return Positioned.fill(
-      child: BackgroundImageView(
-        path: path,
-        crop: appConfig.backgroundImageCrop.value,
-        overlayOpacity: appConfig.backgroundImageOpacity.value,
-      ),
+    return BackgroundImageView(
+      path: path,
+      crop: appConfig.backgroundImageCrop.value,
+      overlayOpacity: appConfig.backgroundImageOpacity.value,
     );
   }
 

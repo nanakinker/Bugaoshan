@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
+import 'app_glass.dart';
 import 'frosted_glass_dock.dart';
 
 /// 竖排（侧边）导航栏的液态玻璃实现。
@@ -27,46 +28,16 @@ class VerticalLiquidGlassDock extends StatelessWidget {
   final double itemExtent;
   final Duration duration;
 
-  /// 与 `PackageGlassDock` 的横向栏同一套参数。
-  static LiquidGlassSettings _surface(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return LiquidGlassSettings(
-      thickness: 10,
-      blur: 3,
-      glassColor: isDark
-          ? const Color.fromRGBO(28, 28, 30, 0.55)
-          : const Color.fromRGBO(255, 255, 255, 0.26),
-      lightIntensity: isDark ? 0.22 : 0.45,
-      ambientStrength: 0.10,
-      fresnelStrength: 0.35,
-      glowIntensity: 0,
-      shadowElevation: 0,
-      refractiveIndex: 1.75,
-      saturation: 1.35,
-      chromaticAberration: 0.075,
-    );
-  }
-
-  /// 选中指示器：与横向栏同逻辑，靠「透度差 + 边缘光」勾出边界，
-  /// 而不是靠实色填充。
-  static LiquidGlassSettings _indicator(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return LiquidGlassSettings(
-      thickness: 8,
-      blur: 2,
-      glassColor: isDark
-          ? const Color.fromRGBO(10, 10, 12, 0.28)
-          : const Color.fromRGBO(236, 234, 233, 0.72),
-      lightIntensity: isDark ? 0.30 : 0.50,
-      ambientStrength: 0.10,
-      fresnelStrength: 0.45,
-      glowIntensity: 0,
-      shadowElevation: 0,
-      refractiveIndex: 1.5,
-      saturation: 0.9,
-      chromaticAberration: 0.055,
-    );
-  }
+  // 刻意不传 `settings` / `indicatorSettings`。
+  //
+  // 底纱色已在 main.dart 的 `GlassThemeData` 里按 light/dark 设好
+  // （`GlassThemeSettings` 是部分覆盖语义：null = 沿用组件自身默认），
+  // 所以这里不需要、也不应该再传 `LiquidGlassSettings` ——
+  // 组件级 settings 是整体替换，会把库的整套光学预设丢掉。
+  //
+  // 也不要图省事写个 `=> null` 的 helper 传进去：`indicatorSettings` 参数
+  // 要求非空 `LiquidGlassSettings`，传可空值会编译失败（踩过一次）。
+  // 「不覆盖」的正确写法就是**整个参数不传**。
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +51,12 @@ class VerticalLiquidGlassDock extends StatelessWidget {
 
     return GlassCard(
       shape: LiquidRoundedRectangle(borderRadius: radius),
-      quality: GlassQuality.standard,
-      settings: _surface(context),
+      quality: GlassQuality.premium,
+      // 自建折射层 + 显式 settings：与顶栏时间框、按钮组同一规格。
+      // 不自建层时 settings 只是 const 占位，浅色主题下等于透明玻璃
+      // （用户反馈「描边不可见」）。数值对齐 Dock 的库预设。
+      useOwnLayer: true,
+      settings: AppGlass.of(context),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: Column(
@@ -93,7 +68,6 @@ class VerticalLiquidGlassDock extends StatelessWidget {
                 selected: i == safeIndex,
                 extent: itemExtent,
                 duration: duration,
-                indicatorSettings: _indicator(context),
                 selectedColor: scheme.primary,
                 unselectedColor: scheme.onSurfaceVariant,
                 onTap: () => onSelected(i),
@@ -111,7 +85,6 @@ class _VerticalTab extends StatelessWidget {
     required this.selected,
     required this.extent,
     required this.duration,
-    required this.indicatorSettings,
     required this.selectedColor,
     required this.unselectedColor,
     required this.onTap,
@@ -121,7 +94,6 @@ class _VerticalTab extends StatelessWidget {
   final bool selected;
   final double extent;
   final Duration duration;
-  final LiquidGlassSettings indicatorSettings;
   final Color selectedColor;
   final Color unselectedColor;
   final VoidCallback onTap;
@@ -140,8 +112,9 @@ class _VerticalTab extends StatelessWidget {
         child: selected
             ? GlassCard(
                 shape: LiquidRoundedRectangle(borderRadius: extent / 2),
-                quality: GlassQuality.standard,
-                settings: indicatorSettings,
+                quality: GlassQuality.premium,
+                useOwnLayer: true,
+                settings: AppGlass.of(context),
                 child: Center(
                   child: _TabContent(item: item, fg: fg),
                 ),

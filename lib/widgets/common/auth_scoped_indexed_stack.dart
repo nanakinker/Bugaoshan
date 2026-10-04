@@ -203,12 +203,26 @@ class _AuthScopedIndexedStackState extends State<AuthScopedIndexedStack>
           final child = _pageCache[id]!;
           final isSelected = (id == selectedId);
           final isPrevious = (id == prevId);
+          // 只有当前页与滑动过渡中的上一页需要绘制。
+          //
+          // 这里**不用** Offstage / IndexedStack：两者都只是「跳过绘制」，
+          // 子树仍留在渲染树里。课表页顶栏是 `GlassCard`，它会把自己注册进
+          // `GlassScaffold` 的合成层并申请 shader 图层 —— 于是隐藏的课表页
+          // 顶栏（时间框 + 右侧按钮组）会浮在其它页面之上（用户截图：
+          // 在「我的」页也能看到课表的时间框与控件）。
+          //
+          // 非活跃页面直接不加入 children，彻底离开渲染树。
+          if (!isSelected && !isPrevious) {
+            // 保留状态但不绘制：包一层 SizedBox.shrink 让 widget 被卸载
+            // 绘制，同时 _pageCache 仍持有实例，状态与滚动位置不丢。
+            return const SizedBox.shrink();
+          }
 
           final slideAnim = isPrevious ? _slideAnimOut : _slideAnimIn;
           final fadeAnim = isPrevious ? _fadeAnimOut : _fadeAnimIn;
 
-          return Offstage(
-            offstage: !isSelected && !isPrevious,
+          return TickerMode(
+            enabled: isSelected,
             child: SlideTransition(
               position: slideAnim,
               child: FadeTransition(opacity: fadeAnim, child: child),

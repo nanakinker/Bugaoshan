@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/campus_item_config.dart';
@@ -130,6 +131,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               builder: (context, hasUpdate, _) {
                 return LayoutBuilder(
                   builder: (context, constraints) {
+                    final theme = Theme.of(context);
                     final isWide = constraints.maxWidth >= 600;
                     final showRail = isWide && visibleIds.length >= 2;
                     final showBar = !isWide && visibleIds.length >= 2;
@@ -158,20 +160,64 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         );
                       },
                     );
-                    return Scaffold(
-                      // 让 body 延伸到 Dock 底下，Dock 的 BackdropFilter 才有
-                      // 内容可以折射。缺这一行时 body 到 Dock 上沿就截止，
-                      // Dock 背后是空背景，玻璃看起来就是一块实心灰板——
-                      // 这正是「透不出课表内容」的原因。
+                    // ── GlassScaffold 而非 Material Scaffold ──
+                    //
+                    // 玻璃要折射出颜色，背后必须有一个**受控的背景源**。
+                    // 官方文档明确要求：带玻璃导航栏的页面必须用
+                    // `GlassScaffold`，它负责背景源、渲染层、z-order、
+                    // 边缘淡出与安全区。用 Material `Scaffold` 塞
+                    // `GlassTabBar` 时这些全都缺失 —— 玻璃没有东西可折射，
+                    // 观感与官方 demo 明显不同。
+                    //
+                    // `extendBody` 在 GlassScaffold 里默认为 true，body 会
+                    // 延伸到导航条下方并自动加顶部占位，取代原先手写的
+                    // extendBody + SizedBox 安全区。
+                    return GlassScaffold(
                       extendBody: true,
+                      // 内容感知亮度：官方用它把 body 包进
+                      // GlassContentAwareContent，让导航栏图标/标签按**背后
+                      // 内容的实际明暗**自动翻转（深色内容转亮色图标）。
+                      // 课表页是彩色格子 + 可选背景图，明暗变化大，开关后
+                      // 滑到深色课程上时图标不会糊成一片。
+                      contentAwareBrightness: true,
+                      // 状态栏图标按主题自动取色：深色背景用浅色图标，浅色
+                      // 背景用深色图标。
+                      //
+                      // 默认值是 `GlassStatusBarStyle.none` —— 完全不干预，
+                      // 状态栏图标颜色由系统决定。深色背景下用系统默认的
+                      // 深色图标会「隐形」（用户截图：左上角时间几乎看不见）。
+                      statusBarStyle: GlassStatusBarStyle.auto,
+                      // 背景色同时用作边缘淡出的目标色。用容器深炭灰而非
+                      // 依赖 CupertinoTheme 默认值（后者在 Material 深色
+                      // 主题下会带一层不预期的暗色wash）。
+                      backgroundColor: theme.scaffoldBackgroundColor,
+                      // 关掉边缘渐变。
+                      //
+                      // `GlassScaffold` 的 edge fade 会用 `backgroundColor`
+                      // 作为渐变**目标色**（源码注释明确写了：设了 `background`
+                      // 时这是 backgroundColor 唯一的可见作用）。本应用深浅色
+                      // 共用同一个 `scaffoldBackgroundColor`（浅色下是近白），
+                      // 于是底部导航条上方会渐变出一层与主题不符的色带 ——
+                      // 浅色主题下表现为「最底部包了一层黑色东西」
+                      // （用户截图），深色下则是一道突兀的深色横条。
+                      //
+                      // 本应用的导航条是悬浮药丸，本就不需要 iOS 那种
+                      // 内容淡出效果，关闭更干净。
+                      edgeFade: false,
                       body: Row(
                         children: [
-                          Offstage(
-                            offstage: !showRail,
-                            child: SizedBox(
+                          // 宽屏侧边栏：**窄屏时完全不创建**，而不是用
+                          // Offstage 隐藏。
+                          //
+                          // Offstage 只跳过布局与绘制，但 `GlassCard` 会把
+                          // 自己注册进 GlassScaffold 的合成层并申请 shader
+                          // 图层；被压到 84px 宽的竖排 Dock 仍会在页面左侧
+                          // 渲染出一块溢出的玻璃碎片（用户截图：左上角出现
+                          // 尖角括号框 + 圆角框的残影）。
+                          // 窄屏压根不构建这条分支，干净。
+                          if (showRail)
+                            SizedBox(
                               width: _railExtent,
-                              // 侧边导航同样走 PackageGlassDock；包没有 vertical
-                              // 变体，它内部会自行回退到自绘实现。
                               child: PackageGlassDock(
                                 axis: Axis.vertical,
                                 itemExtent: _railExtent,
@@ -188,19 +234,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 },
                               ),
                             ),
-                          ),
-                          // Page content.
-                          //
-                          // 底部不加 SafeArea：它会与导航条自身的
-                          // SafeArea 叠加，在 Dock 下方压出一条空白带
-                          // （表现为"多一层黑底"），同时挤小可用高度、
-                          // 引发 RenderFlex overflow。Dock 内部已处理底部安全区。
-                          // 顶部仍需避让状态栏/刘海。
                           Expanded(
                             child: Padding(
-                              // 不加顶部安全区：加了会把子页整体下推，
+                              // 顶部不加安全区：加了会把子页整体下推，
                               // 导致课表背景图铺不到状态栏（用户反馈）。
-                              // 各子页自行处理顶部安全区。
                               padding: EdgeInsets.zero,
                               child: pageContent,
                             ),
@@ -208,9 +245,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         ],
                       ),
                       // 导航栏只保留液态玻璃（社区包 liquid_glass_widgets）。
-                      // 原先这里还有一个自绘毛玻璃分支，现已移除——
-                      // 两种材质并存时观感不统一，且容易再次误用。
-                      bottomNavigationBar: showBar
+                      bottomBar: showBar
                           ? PackageGlassDock(
                               itemExtent: _barItemExtent,
                               duration:

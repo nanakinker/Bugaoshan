@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+import 'package:bugaoshan/widgets/common/app_glass.dart';
 
 /// 全局「是否使用液态玻璃材质」的读取入口。
 ///
@@ -142,19 +143,25 @@ class AdaptiveSearchBar extends StatelessWidget {
 /// 会根据当前主题样式切换外观的图标按钮组。
 ///
 /// 多个图标按钮**成组包裹**在同一块玻璃里（共享一个圆角容器），视觉上是一个
-/// 整体而不是几个散落的按钮。液态玻璃风格下用单块 [GlassCard] 承载，
+/// 液态玻璃风格下改为库原生的 [GlassIconButton] 依次排列（官方 demo 即如此），
 /// Material 3 风格下退化为普通 [IconButton] 依次排列。
 class AdaptiveIconButtonGroup extends StatelessWidget {
   const AdaptiveIconButtonGroup({
     super.key,
     required this.children,
-    this.spacing = 4,
+    // 三个图标挤在一块玻璃里时，间距太小会显得糊成一片（用户反馈
+    // 「3 个控件有点太挤」）。8 与左右各 6 的内边距给出明确的呼吸感。
+    this.spacing = 8,
     this.borderRadius = 16,
-    this.horizontalPadding = 3,
+    this.horizontalPadding = 6,
+    this.iconSize = 20,
   });
 
   final List<AdaptiveIconAction> children;
   final double spacing;
+
+  /// 整组统一图标尺寸；单项可用 [AdaptiveIconAction.size] 覆盖。
+  final double iconSize;
 
   /// 整块玻璃的圆角半径。
   final double borderRadius;
@@ -175,7 +182,11 @@ class AdaptiveIconButtonGroup extends StatelessWidget {
             if (i > 0) SizedBox(width: spacing),
             IconButton(
               onPressed: children[i].onPressed,
-              icon: Icon(children[i].icon, size: children[i].size),
+              // size 现在可空（null = 沿用整组 iconSize），Icon.size 要求非空。
+              icon: Icon(
+                children[i].icon,
+                size: children[i].size ?? iconSize,
+              ),
               tooltip: children[i].tooltip,
               constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
             ),
@@ -184,43 +195,38 @@ class AdaptiveIconButtonGroup extends StatelessWidget {
       );
     }
 
-    // 玻璃风格：**单块玻璃 + 纯图标**。
+    // 玻璃风格：**一整块**玻璃包住三个图标按钮。
     //
-    // 不使用包自带的按钮组 / 图标按钮 —— 它们会给每个按钮自带
-    // 圆形底层，多个并排就会出现「圆底 + 缝合线」，很脏（用户反馈）。
-    // 这里用一块 GlassCard 承载整组图标，内部只放 InkWell，视觉上是一整块玻璃。
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
+    // 为什么不是三个独立 `GlassIconButton`：官方 Rule 2 明确禁止在
+    // `GlassCard` / `GlassContainer` 里嵌套带折射层的玻璃控件（会造成
+    // 双重折射、裁切动画）。若要「一整块玻璃 + 纯图标」，正确做法是
+    // `GlassCard` 里放**非玻璃**的图标按钮 —— 玻璃由容器一层提供，
+    // 按钮只负责点击与图标。
+    //
+    // 这与左侧时间框（`GlassCard`）形态一致，顶栏左右两块的玻璃语言统一。
+    //
+    // 玻璃由外层 GlassCard 一层提供（见上方说明）。
+    //
+    // 刻意不传 `settings`：组件级 settings 是**整体替换**语义，会丢掉库
+    // 的整套光学预设。底纱色由 main.dart 的 `GlassThemeData` 按 light/dark
+    // 部分覆盖（`GlassThemeSettings`，null = 沿用组件默认）。
+    final scheme = Theme.of(context).colorScheme;
+
     return GlassCard(
+      quality: GlassQuality.premium,
+      // useOwnLayer: true —— 自建折射层，切断向祖先 glass 层的 settings
+      // 继承。原因见 course_page_top_bar.dart 里的注释：
+      // grouped 模式下组件的 settings 只是 const 占位，真实参数取自最近祖先
+      // LiquidGlassLayer 的 inherited.settings；不切断就拿不到主题设的
+      // glassColor，浅色主题下会看不见描边。
+      useOwnLayer: true,
+      // useOwnLayer: true 时必须同时给 settings（见 glass_card.dart 的
+      // Standalone Mode 示例）：自建层不继承，settings 为空就是完全透明
+      // 玻璃。数值与顶栏时间框、Dock 的库预设一致。
+      settings: AppGlass.of(context),
       shape: LiquidRoundedRectangle(borderRadius: borderRadius),
       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       clipBehavior: Clip.antiAlias,
-      // 性能：按钮组是**静态内容**（不做形变），用 minimal 档不跑自定义
-      // fragment shader。顶栏常驻课表页，高档位会持续耗电发热。
-      // 注意：quality 是**组件级**参数，不在 LiquidGlassSettings 里。
-      quality: GlassQuality.minimal,
-      // 单独指定玻璃参数：默认走全局暗色主题（深炭灰），压在浅色背景上
-      // 就是一个突兀的深色块。这里让玻璃**接近无色**——按钮组是浮在内容
-      // 之上的薄玻璃层，本身不该有色，只留高光与折射。
-      settings: LiquidGlassSettings(
-        thickness: 8,
-        blur: 2,
-        // 与课表顶栏时间框同一套参数（见 course_page_top_bar.dart 的
-        // _topBarGlass），保证两者在深/浅色下都完全一致。
-        // 与 Dock 栏、时间框同一套数值（暗 0.42 / 亮 0.26）
-        glassColor: isDark
-            ? const Color.fromRGBO(20, 20, 22, 0.24)
-            : const Color.fromRGBO(255, 255, 255, 0.20),
-        lightIntensity: isDark ? 0.40 : 0.55,
-        ambientStrength: 0.10,
-        fresnelStrength: 0.35,
-        glowIntensity: 0,
-        shadowElevation: 0,
-        refractiveIndex: 1.3,
-        saturation: 1.1,
-        chromaticAberration: 0.012,
-      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -228,15 +234,21 @@ class AdaptiveIconButtonGroup extends StatelessWidget {
             if (i > 0) SizedBox(width: spacing),
             Tooltip(
               message: children[i].tooltip ?? '',
-              child: InkWell(
-                onTap: children[i].onPressed,
-                borderRadius: BorderRadius.circular(borderRadius / 2),
-                child: Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Icon(
-                    children[i].icon,
-                    size: children[i].size,
-                    color: scheme.onSurface,
+              child: Semantics(
+                button: true,
+                label: children[i].tooltip,
+                child: InkResponse(
+                  onTap: children[i].onPressed,
+                  // 触摸热区撑满整块高度，玻璃层由外层 GlassCard 提供，
+                  // 这里**不用** GlassIconButton（避免嵌套折射层）。
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Icon(
+                      children[i].icon,
+                      // 整组默认 iconSize；单项给了 size 则以单项为准。
+                      size: children[i].size ?? iconSize,
+                      color: scheme.onSurface,
+                    ),
                   ),
                 ),
               ),
@@ -254,13 +266,15 @@ class AdaptiveIconAction {
     required this.icon,
     required this.onPressed,
     this.tooltip,
-    this.size = 20,
+    this.size,
   });
 
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
-  final double size;
+
+  /// 覆盖 [AdaptiveIconButtonGroup.iconSize]；null 表示沿用整组尺寸。
+  final double? size;
 }
 
 /// 会根据当前主题样式切换外观的输入框。
