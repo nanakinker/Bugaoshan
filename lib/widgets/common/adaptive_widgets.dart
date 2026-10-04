@@ -210,8 +210,8 @@ class AdaptiveIconButtonGroup extends StatelessWidget {
         // _topBarGlass），保证两者在深/浅色下都完全一致。
         // 与 Dock 栏、时间框同一套数值（暗 0.42 / 亮 0.26）
         glassColor: isDark
-            ? const Color.fromRGBO(20, 20, 22, 0.42)
-            : const Color.fromRGBO(255, 255, 255, 0.26),
+            ? const Color.fromRGBO(20, 20, 22, 0.24)
+            : const Color.fromRGBO(255, 255, 255, 0.20),
         lightIntensity: isDark ? 0.40 : 0.55,
         ambientStrength: 0.10,
         fresnelStrength: 0.35,

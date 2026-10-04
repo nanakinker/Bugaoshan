@@ -97,7 +97,7 @@ class PackageGlassDock extends StatelessWidget {
                 // 近黑纱：把玻璃压到比纯黑背景略浅一档的深灰
                 // 底纱更透明（0.78 -> 0.42）：玻璃要"透"而不是"压"，
                 // 背景内容能真正透出来。
-                glassColor: Color.fromRGBO(14, 14, 14, 0.32),
+                glassColor: Color.fromRGBO(14, 14, 14, 0.24),
                 lightIntensity: 0.22,
                 // 下面三个是把玻璃「发白」的元凶，默认值都会加光：
                 //   fresnelStrength 1.0 —— 菲涅尔边缘发光，整圈泛白
@@ -126,7 +126,7 @@ class PackageGlassDock extends StatelessWidget {
                 thickness: 12,
                 blur: 3,
                 // 亮色同样降透明度、提高色散，与暗色保持一致的玻璃语言
-                glassColor: Color.fromRGBO(255, 255, 255, 0.26),
+                glassColor: Color.fromRGBO(255, 255, 255, 0.20),
                 lightIntensity: 0.5,
                 ambientStrength: 0,
                 refractiveIndex: 1.5,
@@ -150,7 +150,7 @@ class PackageGlassDock extends StatelessWidget {
                 // 完全同色，所以看不出边界（用户反馈「又不透明了」）。
                 // 这里只留极薄一层墨纱（@0.28），靠透度差 + 边缘高光
                 // 把透镜勾出来，而不是靠实色填充。
-                glassColor: Color.fromRGBO(10, 10, 12, 0.28),
+                glassColor: Color.fromRGBO(10, 10, 12, 0.20),
                 lightIntensity: 0.30,
                 fresnelStrength: 0.45,
                 glowIntensity: 0,
@@ -171,7 +171,7 @@ class PackageGlassDock extends StatelessWidget {
                 // 浅色模式：截图里透镜是**浅灰**（约 #D5D0CE），
                 // 不是纯白。纯白在浅色药丸上看不出边界，滑动时更看不清。
                 // 用带一点灰的白纱 0.72，既能看见又不显得脏。
-                glassColor: Color.fromRGBO(236, 234, 233, 0.72),
+                glassColor: Color.fromRGBO(236, 234, 233, 0.60),
                 lightIntensity: 0.35,
                 fresnelStrength: 0.2,
                 glowIntensity: 0,

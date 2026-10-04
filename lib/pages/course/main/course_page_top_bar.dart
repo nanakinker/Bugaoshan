@@ -21,8 +21,8 @@ LiquidGlassSettings _topBarGlass(BuildContext context) {
     // 亮色 0.26 与 Dock 亮色一致。三者（Dock / 时间框 / 按钮组）
     // 必须用同一套数值，否则深色下会深浅不一（用户反馈）。
     glassColor: isDark
-        ? const Color.fromRGBO(20, 20, 22, 0.42)
-        : const Color.fromRGBO(255, 255, 255, 0.26),
+        ? const Color.fromRGBO(20, 20, 22, 0.24)
+        : const Color.fromRGBO(255, 255, 255, 0.20),
     lightIntensity: isDark ? 0.40 : 0.55,
     ambientStrength: 0.10,
     fresnelStrength: 0.35,
