@@ -62,19 +62,20 @@
 既能看出下方是课表内容，又不影响导航文字的可读性。
 
 <div align="center">
-  <img src="./screenshot/screenshot-dock-phone-dark.webp" width="30%" />
+  <img src="./screenshot/screenshot-dock-course-light.webp" width="30%" />
   &nbsp;&nbsp;&nbsp;
-  <img src="./screenshot/screenshot-dock-phone-light.webp" width="30%" />
+  <img src="./screenshot/screenshot-dock-course-dark.webp" width="30%" />
   &nbsp;&nbsp;&nbsp;
   <img src="./screenshot/screenshot-dock-campus-light.webp" width="30%" />
   &nbsp;&nbsp;&nbsp;
-  <img src="./screenshot/screenshot-dock-profile-light.webp" width="30%" />
-  &nbsp;&nbsp;&nbsp;
   <img src="./screenshot/screenshot-dock-campus-dark.webp" width="30%" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="./screenshot/screenshot-dock-profile-light.webp" width="30%" />
   &nbsp;&nbsp;&nbsp;
   <img src="./screenshot/screenshot-dock-profile-dark.webp" width="30%" />
 </div>
 
+*依次为：课表（浅色 / 深色）、校园（浅色 / 深色）、我的（浅色 / 深色）*
 ---
 
 ## ✨ 主要功能
