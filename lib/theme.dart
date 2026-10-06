@@ -610,10 +610,19 @@ DividerThemeData dividerTheme(ColorScheme scheme) {
 }
 
 /// 卡片：MD3 Expressive 圆角 + 半透明底 + 描边（裸 [Card] 也统一到玻璃族）。
+///
+/// 注意卡片底纱用**卡片专用浓度**而不是 [_controlTint]：
+/// 控件级浓度（浅色 30%）是给"输入框/标签"这类小面积控件用的，
+/// 卡片是成块的承载面，浅色下沿用 30% 会在近白页面上"消失"，
+/// 只剩一圈描边 —— 看起来就是「灰灰的框」（用户反馈）。
 CardThemeData cardTheme(Brightness brightness) {
   final stroke = _stroke(brightness);
+  final isDark = brightness == Brightness.dark;
+  final cardTint = isDark
+      ? (GlassSpec.tintDark << 24 | 0x141416)
+      : (GlassSpec.tintCardLight << 24 | 0xFFFFFF);
   return CardThemeData(
-    color: _controlTint(brightness),
+    color: Color(cardTint),
     surfaceTintColor: Colors.transparent,
     elevation: 0,
     shadowColor: Colors.transparent,

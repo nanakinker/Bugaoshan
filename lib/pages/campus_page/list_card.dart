@@ -36,7 +36,7 @@ class CampusListCard extends StatelessWidget {
         iconContainerColor ??
         (accent != null
             ? accent.withValues(
-                alpha: colorScheme.brightness == Brightness.dark ? 0.28 : 0.18,
+                alpha: colorScheme.brightness == Brightness.dark ? 0.28 : 0.22,
               )
             : colorScheme.primaryContainer);
     final foregroundColor =
@@ -69,7 +69,7 @@ class CampusListCard extends StatelessWidget {
                 color: containerColor,
                 borderRadius: BorderRadius.circular(AppShapes.large),
                 border: Border.all(
-                  color: foregroundColor.withValues(alpha: 0.35),
+                  color: foregroundColor.withValues(alpha: 0.42),
                   width: 0.8,
                 ),
               ),

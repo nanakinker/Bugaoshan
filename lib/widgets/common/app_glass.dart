@@ -82,6 +82,13 @@ class AppGlass {
     );
   }
 
+  /// 浅色主题下**卡片**的底纱浓度：90% 纯白。
+  ///
+  /// 比控件级的 [tintLight]（30%）高得多 —— 控件只承载短语、透一些更有
+  /// 玻璃感；卡片是成块的承载面，浅色下若沿用 30% 会让卡片在近白页面上
+  /// 「消失」，只剩描边（用户反馈「浅色卡片框里面灰灰的」）。
+  static const int tintCardLight = 0xE6;
+
   /// 面板底纱：深色 0xD9 ≈ 85%，浅色 0xE6 ≈ 90%。
   ///
   /// 与 [GlassSpec.tintPanelDark] / [GlassSpec.tintPanelLight] 同值 ——
@@ -179,8 +186,21 @@ class GlassSpec {
   static const double strokeFocusedAlpha = 0.75;
 
   /// 顶部高光：给玻璃厚度感的一道内高光。
+  /// 深色主题下的顶部高光：白 8%。深色底上亮线对比明显，是玻璃厚度的主要来源。
   static const int highlightLight = 0x14FFFFFF;
-  static const int highlightDark = 0x45000000;
+
+  /// 浅色主题下的顶部高光：白 65%。
+  ///
+  /// ⚠️ **浅色主题的高光也必须是「亮」的**。这里曾经叫 [highlightDark]、
+  /// 值是 0x45000000（27% 黑）—— 在浅色背景上那不是高光而是一圈**灰晕**，
+  /// 直接把卡片糊成「灰灰的框」（用户反馈）。浅色下要表现厚度，靠的是
+  /// 「更白的卡片 + 纯白高光 + 很淡的向下投影」，不是黑影。
+  static const int highlightOnLight = 0xA6FFFFFF;
+
+  /// 浅色主题下的下投影：黑 6%，只负责让卡片浮起来。
+  ///
+  /// 必须低透明度且向下偏移；大模糊的黑影会在卡片周围形成灰晕。
+  static const int liftShadow = 0x0F000000;
 
   // ==========================================================================
   // 模糊（仅组件层可用）
@@ -215,25 +235,57 @@ class GlassSpec {
     double radius = radiusField,
     bool panel = false,
   }) {
-    final tint = panel
-        ? (isDark ? tintPanelDark : tintPanelLight)
-        : (isDark ? tintDark : tintLight);
+    // 深浅色**分开构造**。此前浅色复用了深色那套思路，导致两个问题：
+    //
+    // 1. 底纱只有 30%（tintLight），色值又是近白的 #F8FAFC —— 铺在同样
+    //    近白的页面背景上几乎等于没有填充，卡片没有「身体」；
+    // 2. 「高光」在浅色下传的是深色那支（**27% 黑**，见 [highlightOnLight] 注释），
+    //    模糊 6px。在浅色背景上它不是高光，而是一圈**灰蒙蒙的晕**。
+    //
+    // 两者叠加就是用户看到的「浅色卡片框里面灰灰的」。下面按主题分开给值。
+    if (isDark) {
+      final alpha = panel ? tintPanelDark : tintDark;
+      return BoxDecoration(
+        borderRadius: BorderRadius.circular(radius),
+        color: Color(alpha << 24 | 0x141416),
+        border: Border.all(color: Color(strokeLight), width: 0.8),
+        boxShadow: const [
+          // 深色下高光=亮线，对比明显，是玻璃厚度的主要来源。
+          BoxShadow(
+            color: Color(highlightLight),
+            blurRadius: 6,
+            offset: Offset(0, -1),
+            spreadRadius: -3,
+          ),
+        ],
+      );
+    }
+
+    // 浅色：**纯白卡片**。
+    //
+    // 底纱提到 90%（面板 90%）且用纯白 #FFFFFF —— 在近白的页面上读起来是
+    // 一张清晰的白玻璃卡片，而不是「没有填充 + 一圈灰边」。
+    // 高光改成纯白（与深色同一语义，只是浅色下对比更弱），
+    // 另外补一层**很淡、向下偏移**的投影负责「浮起来」——
+    // 投影必须低透明度且向下，绝不能用大模糊的黑影（那就是灰晕的成因）。
+    final alpha = panel ? tintPanelLight : tintCardLight;
     return BoxDecoration(
       borderRadius: BorderRadius.circular(radius),
-      color: isDark
-          ? Color(tint << 24 | 0x141416)
-          : Color(tint << 24 | 0xF8FAFC),
-      border: Border.all(
-        color: Color(isDark ? strokeLight : strokeDark),
-        width: 0.8,
-      ),
-      boxShadow: [
-        // 顶部内高光：让面板读起来「浮」在内容之上。
+      color: Color(alpha << 24 | 0xFFFFFF),
+      border: Border.all(color: Color(strokeDark), width: 0.8),
+      boxShadow: const [
+        // 顶部高光：纯白，给玻璃厚度。
         BoxShadow(
-          color: Color(isDark ? highlightLight : highlightDark),
+          color: Color(highlightOnLight),
           blurRadius: 6,
-          offset: const Offset(0, -1),
+          offset: Offset(0, -1),
           spreadRadius: -3,
+        ),
+        // 下投影：仅负责让卡片浮起，不参与填充观感。
+        BoxShadow(
+          color: Color(liftShadow),
+          blurRadius: 10,
+          offset: Offset(0, 2),
         ),
       ],
     );
