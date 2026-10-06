@@ -530,17 +530,26 @@ class BindRoomDialogState extends State<BindRoomDialog> {
             ),
           ),
         const SizedBox(height: 16),
-        TextField(
-          controller: _roomNoController,
-          onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            labelText: l10n.roomNumber,
-            hintText: l10n.roomNumberHint,
-            border: const OutlineInputBorder(),
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
+        // SizedBox(width: infinity) 是必需的，不是修饰：
+        // 外层 Column 是 crossAxisAlignment.start，会给子级**松宽度约束**，
+        // 而 TextField 在松约束下按「内容固有宽度」自适应 —— 输入时
+        // onChanged 里 setState 触发重建，固有宽度随文字重算，输入框就会
+        // 突然收缩（外层玻璃边框随之包不住内容）。
+        // 撑满可用宽度后，宽度只由父级决定，输入过程中保持稳定。
+        SizedBox(
+          width: double.infinity,
+          child: TextField(
+            controller: _roomNoController,
+            onChanged: (_) => setState(() {}),
+            decoration: InputDecoration(
+              labelText: l10n.roomNumber,
+              hintText: l10n.roomNumberHint,
+              border: const OutlineInputBorder(),
+              isDense: true,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
             ),
           ),
         ),

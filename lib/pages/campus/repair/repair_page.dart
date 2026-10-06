@@ -15,6 +15,7 @@ import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/common/swipe_page_view.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 part 'repair_submit_tab.dart';
 part 'repair_widgets.dart';

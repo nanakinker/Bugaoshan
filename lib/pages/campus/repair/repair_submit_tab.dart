@@ -225,9 +225,8 @@ class _SubmitTabState extends State<_SubmitTab> {
                   )
                 : Column(
                     children: [
-                      DropdownButtonFormField<RepairAddress>(
-                        initialValue: _selectedAddress,
-                        isDense: true,
+                      AdaptiveGlassDropdown<RepairAddress>(
+                        value: _selectedAddress,
                         isExpanded: true,
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),

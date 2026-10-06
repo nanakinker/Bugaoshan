@@ -10,6 +10,7 @@ import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 class CourseCurriculumPage extends StatefulWidget {
   const CourseCurriculumPage({super.key});
@@ -215,13 +216,14 @@ class _CourseCurriculumPageState extends State<CourseCurriculumPage> {
     required TextEditingController controller,
     required String hint,
   }) {
-    return TextField(
+    // 走共享的玻璃输入框：玻璃模式下是包原生 GlassTextField
+    // （真实折射 + 聚焦发光描边），Material 模式下回退 TextField
+    // 并沿用 kFilterInputDecoration，外观与重构前一致。
+    return AdaptiveGlassTextField(
       controller: controller,
+      hint: hint,
       style: Theme.of(context).textTheme.bodyMedium,
-      decoration: kFilterInputDecoration.copyWith(
-        hintText: hint,
-        hintStyle: Theme.of(context).textTheme.bodyMedium,
-      ),
+      decoration: kFilterInputDecoration.copyWith(hintText: hint),
     );
   }
 
@@ -233,9 +235,9 @@ class _CourseCurriculumPageState extends State<CourseCurriculumPage> {
   }) {
     final hasEmptyOption = items.any((i) => i.value == '');
     final initialValue = value.isEmpty ? (hasEmptyOption ? '' : null) : value;
-    return DropdownButtonFormField<String>(
+    return AdaptiveGlassDropdown<String>(
       key: ValueKey('dropdown_$value'),
-      initialValue: initialValue,
+      value: initialValue,
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: kFilterInputDecoration,
       isExpanded: true,

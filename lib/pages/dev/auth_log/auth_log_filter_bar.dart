@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bugaoshan/utils/auth_logger.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 /// 顶部筛选条：level 多选 chip + tag 下拉。
 class AuthLogFilterBar extends StatelessWidget {
@@ -48,9 +49,8 @@ class AuthLogFilterBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          DropdownButton<String?>(
+          AdaptiveGlassDropdown<String?>(
             value: tag,
-            focusColor: Colors.transparent,
             hint: const Text('All tags'),
             onChanged: onTagChanged,
             items: <DropdownMenuItem<String?>>[

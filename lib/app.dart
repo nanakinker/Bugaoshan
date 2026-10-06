@@ -121,6 +121,11 @@ class _MyAppState extends State<MyApp> {
       useGoogleFonts: _appConfig.useGoogleFonts.value,
       textScale: textScale,
       pageTransitionDuration: _appConfig.cardSizeAnimationDuration.value,
+      // 「设置 → 样式 → 主题样式」开关：液态玻璃样式下，输入框 / 按钮 /
+      // 弹窗 / 菜单 / 标签栏 / 开关等标准控件统一改用玻璃族外观（主题层
+      // 一次覆盖全项目，无需逐页替换组件）；Material 3 样式保持 MD3 原生。
+      // 该 switch 由上方 ValueListenableBuilder 监听，切换时立即重建主题。
+      glassStyle: _appConfig.usePackageGlassDock.value,
     );
   }
 }

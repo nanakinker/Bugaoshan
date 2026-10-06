@@ -14,6 +14,7 @@ import 'package:bugaoshan/services/auth/scu_exceptions.dart';
 import 'package:bugaoshan/utils/app_log.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 enum ImportMode { share, jwxt, online }
 
@@ -266,7 +267,7 @@ class _ImportSchedulePageState extends State<ImportSchedulePage> {
         return StatefulBuilder(
           builder: (ctx, setDialogState) => AlertDialog(
             title: Text(l10n.selectSemester),
-            content: DropdownButton<String>(
+            content: AdaptiveGlassDropdown<String>(
               value: selectedValue,
               isExpanded: true,
               items: semesters

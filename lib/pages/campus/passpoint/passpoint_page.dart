@@ -14,6 +14,7 @@ import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 /// 校园网无感认证（无感设备管理）入口页。
 ///
@@ -544,8 +545,8 @@ class _AddDeviceSheetState extends State<_AddDeviceSheet> {
                   validator: _validateExpire,
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  initialValue: _exitValue,
+                AdaptiveGlassDropdown<String>(
+                  value: _exitValue,
                   decoration: InputDecoration(
                     labelText: l10n.passpointExit,
                     border: const OutlineInputBorder(),

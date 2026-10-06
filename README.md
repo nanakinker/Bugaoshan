@@ -9,6 +9,7 @@
 [![License](https://img.shields.io/badge/License-AGPL3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%E2%9C%93-34a853?logo=android&logoColor=white)](https://flutter.dev)
 [![Status](https://img.shields.io/badge/Status-Experimental-orange)](https://github.com/nanakinker/Bugaoshan/releases)
+[![Version](https://img.shields.io/badge/Version-2.5.3-blue)](https://github.com/nanakinker/Bugaoshan/releases/tag/v2.5.3)
 
 > 川大学生专属校园助手 · **液态玻璃实验版**
 
@@ -164,6 +165,15 @@ GlassScaffold
 
 本仓库 `feat/liquid-glass-dock` 分支上的**液态玻璃版本**为个人实验构建，
 仅支持**安卓手机**，不含 iOS / Windows / macOS / 安卓平板。
+
+**当前版本 v2.5.3（2026-10-06）** —— 本版把液态玻璃从导航栏扩展到**全项目界面控件**：
+
+| 内容 | 说明 |
+| --- | --- |
+| 控件玻璃化 | 输入框、下拉选择、按钮、图标按钮、弹窗、弹出菜单、标签栏、开关、滑杆、复选框、单选框、分段按钮、标签、列表项、进度条等全部统一到同一套玻璃语言，含悬停 / 按下 / 禁用反馈 |
+| 观感统一 | 圆角阶梯、底纱浓度、描边与高光集中在一份规范里（`GlassSpec`），改一处即全站同步；浅色与深色各一套浓度 |
+| 滚动性能 | 自动识别页面背景：无背景图的页面改用静态绘制的玻璃（像素等价、零滤镜开销），课表页（有自选壁纸）保留真实折射 —— 修复了卡片密集页面的滑动卡顿与描边偶发丢失 |
+| 可读性 | 下拉菜单宽度不再跟随半宽触发器（下限 300dp）、字号 15sp、高度限制在屏内并自动滚动 |
 
 - 📦 [下载 Release（仅安卓手机）](https://github.com/nanakinker/Bugaoshan/releases)
 - 安装包已用 `apksigner` 签名，**开箱即装，请勿再用第三方工具二次签名**

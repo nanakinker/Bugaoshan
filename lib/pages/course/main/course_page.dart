@@ -21,6 +21,7 @@ import 'package:bugaoshan/pages/course/widgets/course_grid.dart';
 import 'package:bugaoshan/utils/holiday_utils.dart';
 import 'package:bugaoshan/widgets/common/background_image_view.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:bugaoshan/widgets/common/live_backdrop_scope.dart';
 
 class CoursePage extends StatefulWidget {
   const CoursePage({super.key, this.demoMode = false});
@@ -150,6 +151,25 @@ class _CoursePageState extends State<CoursePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     // Column 改为 Stack：背景图需要铺满整屏（含顶栏区域），
     // 而 Column 只能按内容高度排布、无法承载 Positioned。
+    //
+    // LiveBackdropScope：课表页是全项目**唯一**有背景图的页面，
+    // 玻璃在这里的模糊/折射是真实可见的，所以要标成「实时采样」——
+    // 否则 StyledCard 会默认走静态玻璃，卡片就看不出压在壁纸上的层次。
+    // 未设置壁纸时（path 为 null）背后同样是纯色，此时关掉标记回到静态玻璃。
+    // 用 ListenableBuilder 包一层：用户换/删壁纸后标记要立刻生效。
+    return ListenableBuilder(
+      listenable: _bgImageListenable,
+      builder: (context, _) {
+        final hasWallpaper = appConfig.backgroundImagePath.value != null;
+        return LiveBackdropScope(
+          enabled: hasWallpaper,
+          child: _buildBody(context),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
     return Stack(
       children: [
         // 背景铺满整屏：原先只在课表区 Stack 内绘制，顶栏下方露出

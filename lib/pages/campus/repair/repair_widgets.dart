@@ -280,9 +280,9 @@ class _ProjectSelectorState extends State<_ProjectSelector> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 第一级：大类
-        DropdownButtonFormField<RepairProject>(
+        AdaptiveGlassDropdown<RepairProject>(
           key: ValueKey('repair_category_${widget.areaId}'),
-          initialValue: _categories.any((c) => c.value == category?.value)
+          value: _categories.any((c) => c.value == category?.value)
               ? category
               : null,
           hint: Text(l10n.repairSelectCategory),
@@ -312,9 +312,9 @@ class _ProjectSelectorState extends State<_ProjectSelector> {
           const SizedBox(height: 8),
           // 第二级：具体项目
           if (category.children.isNotEmpty)
-            DropdownButtonFormField<String>(
+            AdaptiveGlassDropdown<String>(
               key: ValueKey('repair_sub_project_${category.value}'),
-              initialValue:
+              value:
                   category.children.any((p) => p.value == widget.value)
                   ? widget.value
                   : null,
@@ -508,8 +508,8 @@ class _AddAddressSheetState extends State<_AddAddressSheet> {
                 if (_loadingTree)
                   const Center(child: CircularProgressIndicator(strokeWidth: 2))
                 else ...[
-                  DropdownButtonFormField<RepairAreaNode>(
-                    initialValue: _areaTree
+                  AdaptiveGlassDropdown<RepairAreaNode>(
+                    value: _areaTree
                         .where((n) => n.id == _selectedAreaId)
                         .firstOrNull,
                     hint: Text(l10n.repairSelectArea),

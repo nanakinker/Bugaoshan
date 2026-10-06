@@ -14,6 +14,7 @@ import 'package:bugaoshan/services/api/service_plugin_models.dart';
 import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/widgets/common/service_region_picker.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 /// 字段类型的默认图标（服务端不下发图标，按类型给 Material 默认）。
 IconData iconForServiceFieldType(ServiceFieldType type) {
@@ -124,8 +125,8 @@ class ServiceSelectField extends StatelessWidget {
       label: plugin.label,
       isRequired: isRequired,
       icon: iconForServiceFieldType(plugin.type),
-      child: DropdownButtonFormField<String>(
-        initialValue: plugin.options.any((o) => o.value == value)
+      child: AdaptiveGlassDropdown<String>(
+        value: plugin.options.any((o) => o.value == value)
             ? value
             : null,
         decoration: InputDecoration(

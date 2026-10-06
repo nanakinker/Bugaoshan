@@ -7,6 +7,7 @@ import 'package:bugaoshan/providers/grades_provider.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/stat_item.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 class SchemeScoresTab extends StatefulWidget {
   const SchemeScoresTab({super.key, this.searchQuery = ''});
@@ -283,9 +284,9 @@ class SchemeScoreSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<SchemeScoreSummary>(
+    return AdaptiveGlassDropdown<SchemeScoreSummary>(
       key: ValueKey(selectedScheme.cjlx),
-      initialValue: selectedScheme,
+      value: selectedScheme,
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.trainProgram,
         border: const OutlineInputBorder(),

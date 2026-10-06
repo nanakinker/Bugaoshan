@@ -32,12 +32,18 @@ class CampusGridCard extends StatelessWidget {
         iconContainerColor ??
         (accent != null
             ? accent.withValues(
-                alpha: colorScheme.brightness == Brightness.dark ? 0.24 : 0.14,
+                alpha: colorScheme.brightness == Brightness.dark ? 0.28 : 0.18,
               )
             : colorScheme.primaryContainer);
     final foregroundColor =
         iconColor ?? accent ?? colorScheme.onPrimaryContainer;
 
+    // 不传 staticGlass：走 [StyledCard] 的**自动判定**。
+    // 校园页背后是 `scaffoldBackgroundColor` 纯色（全项目只有课表页有
+    // 背景图），纯色被模糊后还是那个纯色 —— 实时采样在此页视觉上是空操作，
+    // 却要为每张卡付一次整屏背景采样（一屏 24 张 → 每帧 24 次），
+    // 这是滑动卡顿与「描边偶尔卡没」的根因。自动判定会选静态绘制：
+    // 像素等价，成本与普通卡片相同。
     return StyledCard(
       onTap: onTap,
       child: Column(
@@ -45,33 +51,22 @@ class CampusGridCard extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(AppShapes.medium),
+            // 图标块：**玻璃族**的半透明强调色 + 细描边。
+            //
+            // 原先这里是「不透明底色 + 上下两道光影」模拟立体 —— 视觉上
+            // 是一块贴上去的塑料片（用户反馈「自绘描边风格框太丑」）。
+            // 改为与 [GlassSpec] 同一套语言：淡色填充 + 同色系描边，
+            // 读起来是「玻璃上的一块彩色玻璃」。
+            //
+            // 不在此处再套一层 GlassCard：校园页有 20+ 个入口，每个再叠
+            // 一层折射层会在滚动时同时光栅化 40+ 层，得不偿失。
             decoration: BoxDecoration(
               color: containerColor,
               borderRadius: BorderRadius.circular(AppShapes.large),
-              // 玻璃质感：顶部高光 + 底部内阴影。底色仍不透明（保留功能
-              // 类别的可扫读性），只加厚度感——纯色块看起来像「贴纸」。
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withValues(
-                    alpha: Theme.of(context).brightness == Brightness.dark
-                        ? 0.14
-                        : 0.60,
-                  ),
-                  blurRadius: 7,
-                  offset: const Offset(0, -1),
-                  spreadRadius: -3,
-                ),
-                BoxShadow(
-                  color: Colors.black.withValues(
-                    alpha: Theme.of(context).brightness == Brightness.dark
-                        ? 0.34
-                        : 0.10,
-                  ),
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                  spreadRadius: -3,
-                ),
-              ],
+              border: Border.all(
+                color: foregroundColor.withValues(alpha: 0.35),
+                width: 0.8,
+              ),
             ),
             child: Icon(icon, color: foregroundColor, size: 28),
           ),

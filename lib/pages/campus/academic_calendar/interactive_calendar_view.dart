@@ -6,6 +6,7 @@ import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:intl/intl.dart';
 
 import 'package:bugaoshan/models/academic_calendar.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 class InteractiveCalendarView extends StatelessWidget {
   final AcademicCalendarData? data;
@@ -60,8 +61,8 @@ class InteractiveCalendarView extends StatelessWidget {
   Widget _buildInteractiveSelector(AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: DropdownButtonFormField<AcademicCalendarSemester>(
-        initialValue: selectedSemester,
+      child: AdaptiveGlassDropdown<AcademicCalendarSemester>(
+        value: selectedSemester,
         decoration: InputDecoration(
           labelText: l10n.selectAcademicYear,
           border: const OutlineInputBorder(),

@@ -10,6 +10,7 @@ import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/info_row.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 part 'train_program_detail_page.dart';
 
@@ -116,8 +117,8 @@ class _TrainProgramPageState extends State<TrainProgramPage> {
               )
             : _provider.collegesState == TrainProgramLoadState.error
             ? Text(l10n.loadFailed)
-            : DropdownButtonFormField<String>(
-                initialValue: _provider.selectedCollege,
+            : AdaptiveGlassDropdown<String>(
+                value: _provider.selectedCollege,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -163,8 +164,8 @@ class _TrainProgramPageState extends State<TrainProgramPage> {
               )
             : _provider.gradesState == TrainProgramLoadState.error
             ? Text(l10n.loadFailed)
-            : DropdownButtonFormField<String>(
-                initialValue: _provider.selectedGrade,
+            : AdaptiveGlassDropdown<String>(
+                value: _provider.selectedGrade,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,

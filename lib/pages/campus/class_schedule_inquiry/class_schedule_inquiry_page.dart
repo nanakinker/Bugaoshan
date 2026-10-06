@@ -10,6 +10,7 @@ import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 class ClassScheduleInquiryPage extends StatefulWidget {
   const ClassScheduleInquiryPage({super.key});
@@ -219,9 +220,9 @@ class _ClassScheduleInquiryPageState extends State<ClassScheduleInquiryPage> {
   }) {
     final hasEmptyOption = items.any((i) => i.value == '');
     final initialValue = value.isEmpty ? (hasEmptyOption ? '' : null) : value;
-    return DropdownButtonFormField<String>(
+    return AdaptiveGlassDropdown<String>(
       key: ValueKey('dropdown_$value'),
-      initialValue: initialValue,
+      value: initialValue,
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: kFilterInputDecoration,
       isExpanded: true,

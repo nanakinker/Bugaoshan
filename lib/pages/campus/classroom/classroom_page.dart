@@ -671,9 +671,8 @@ class _ClassroomPageState extends State<ClassroomPage> {
                 Row(
                   children: [
                     Text('${dialogL10n.periodStart}: '),
-                    DropdownButton<int>(
+                    AdaptiveGlassDropdown<int>(
                       value: start,
-                      focusColor: Colors.transparent,
                       items: List.generate(
                         12,
                         (i) => DropdownMenuItem(
@@ -694,9 +693,8 @@ class _ClassroomPageState extends State<ClassroomPage> {
                 Row(
                   children: [
                     Text('${dialogL10n.periodEnd}: '),
-                    DropdownButton<int>(
+                    AdaptiveGlassDropdown<int>(
                       value: end,
-                      focusColor: Colors.transparent,
                       items: List.generate(
                         12,
                         (i) => DropdownMenuItem(

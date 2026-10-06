@@ -11,6 +11,7 @@ import 'package:bugaoshan/pages/course/widgets/week_selector_grid.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 class CourseEditPage extends StatefulWidget {
   final ScheduleConfig scheduleConfig;
@@ -165,7 +166,13 @@ class _CourseEditPageState extends State<CourseEditPage> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            // stretch 而不是 start：`start` 会给子级**松宽度约束**，而
+            // TextField/TextFormField 在松约束下按「内容固有宽度」自适应
+            // （RenderEditable.computeMaxIntrinsicWidth = 文字最宽行），
+            // 打字时 setState 重建 → 宽度随文字重算 → 输入框会突然收缩。
+            // 表单字段本就该撑满一行，stretch 让宽度只由父级决定，
+            // 输入过程中保持稳定（此 Column 内的 Row 原本就是满宽，不受影响）。
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 16,
             children: [
               // Course name
@@ -236,8 +243,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   Expanded(child: Text(l10n.startWeek)),
                   SizedBox(
                     width: 80,
-                    child: DropdownButtonFormField<int>(
-                      initialValue: _startWeek,
+                    child: AdaptiveGlassDropdown<int>(
+                      value: _startWeek,
                       items: List.generate(totalWeeks, (i) => i + 1)
                           .map(
                             (w) =>
@@ -265,8 +272,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   Expanded(child: Text(l10n.endWeek)),
                   SizedBox(
                     width: 80,
-                    child: DropdownButtonFormField<int>(
-                      initialValue: _endWeek,
+                    child: AdaptiveGlassDropdown<int>(
+                      value: _endWeek,
                       items:
                           List.generate(
                                 totalWeeks - _startWeek + 1,
@@ -380,8 +387,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   Expanded(child: Text(l10n.startSection)),
                   SizedBox(
                     width: 80,
-                    child: DropdownButtonFormField<int>(
-                      initialValue: _startSection,
+                    child: AdaptiveGlassDropdown<int>(
+                      value: _startSection,
                       items: List.generate(sections, (i) => i + 1)
                           .map(
                             (s) =>
@@ -404,8 +411,8 @@ class _CourseEditPageState extends State<CourseEditPage> {
                   Expanded(child: Text(l10n.endSection)),
                   SizedBox(
                     width: 80,
-                    child: DropdownButtonFormField<int>(
-                      initialValue: _endSection,
+                    child: AdaptiveGlassDropdown<int>(
+                      value: _endSection,
                       items:
                           List.generate(
                                 sections - _startSection + 1,

@@ -3,6 +3,7 @@ import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/widgets/common/image_viewer.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 
 typedef OfficialCalendarImageBuilder =
     Widget Function(BuildContext context, String url);
@@ -64,8 +65,8 @@ class OfficialCalendarView extends StatelessWidget {
   Widget _buildOfficialSelector(AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: DropdownButtonFormField<CalendarEntry>(
-        initialValue: selected,
+      child: AdaptiveGlassDropdown<CalendarEntry>(
+        value: selected,
         decoration: InputDecoration(
           labelText: l10n.selectAcademicYear,
           border: const OutlineInputBorder(),
