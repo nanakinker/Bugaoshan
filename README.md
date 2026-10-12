@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/badge/License-AGPL3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%E2%9C%93-34a853?logo=android&logoColor=white)](https://flutter.dev)
 [![Status](https://img.shields.io/badge/Status-Experimental-orange)](https://github.com/nanakinker/Bugaoshan/releases)
-[![Version](https://img.shields.io/badge/Version-2.5.3-blue)](https://github.com/nanakinker/Bugaoshan/releases/tag/v2.5.3)
+[![Version](https://img.shields.io/badge/Version-2.5.4-blue)](https://github.com/nanakinker/Bugaoshan/releases)
 
 > 川大学生专属校园助手 · **液态玻璃实验版**
 
@@ -168,7 +168,10 @@ GlassScaffold
 本仓库 `feat/liquid-glass-dock` 分支上的**液态玻璃版本**为个人实验构建，
 仅支持**安卓手机**，不含 iOS / Windows / macOS / 安卓平板。
 
-**当前版本 v2.5.3（2026-10-06）** —— 本版把液态玻璃从导航栏扩展到**全项目界面控件**：
+**当前版本 v2.5.4（开发中）** —— 已并入上游 `preview` 分支的全部改动
+（官方 2.5.3 发布与 v2.5.4 预览内容：Apple 平台原生液态玻璃、通知与提醒、
+实时活动与状态栏胶囊、课表导出为图片、深色模式三选、活动筛选等），
+并在此基础上把液态玻璃从导航栏扩展到**全项目界面控件**：
 
 | 内容 | 说明 |
 | --- | --- |
