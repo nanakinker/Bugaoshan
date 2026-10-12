@@ -99,6 +99,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return _buildMainScreen();
   }
 
+  /// 个人中心项的更新红点。
+  ///
+  /// 上游把这套 Dock item 构建换成了他们的 `_buildDockDestination`，
+  /// 于是本方法在合并时被当作「随旧实现一起废弃」而删除，
+  /// 但本分支的 `_buildDockItems` 仍在调用它 → 编译报错。
+  /// 逻辑与合并前完全一致（Material `Badge`）。
+  Widget _buildUpdateBadge({required Widget child, required bool showBadge}) {
+    if (!showBadge) return child;
+    return Badge(child: child);
+  }
+
   Widget _buildMainScreen() {
     final appConfig = getIt<AppConfigProvider>();
     final authProvider = getIt<ScuAuthProvider>();
@@ -160,7 +171,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           duration: Duration.zero,
                           enableAnimation: false,
                           axis: showRail ? Axis.vertical : Axis.horizontal,
-                          pageBuilder: _buildDockPage,
+                          // 合并上游时这里被改成他们的 _buildDockPage
+                          // （含 HomeDockInsets 避让契约）。该契约是为
+                          // Material Scaffold + AdaptiveHomeDock 设计的：
+                          // 靠 removePadding 抵消 extendBody 注入的底部
+                          // padding。而 GlassScaffold 只自动加**顶部**占位、
+                          // 不给后代注入 bottom padding，所以那段逻辑对本分支
+                          // 不但无效，还会顺手抹掉系统导航栏的底部 inset。
+                          // 故保持本分支原有写法。
+                          pageBuilder: (id) => campusItemConfigById(id).page(),
                         );
                       },
                     );
