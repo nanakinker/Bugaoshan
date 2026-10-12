@@ -53,6 +53,9 @@ import 'package:bugaoshan/services/background_cache_service.dart';
 import 'package:bugaoshan/services/database_service.dart';
 import 'package:bugaoshan/services/download_manager.dart';
 import 'package:bugaoshan/services/exit_service.dart';
+import 'package:bugaoshan/services/reminder/live_activity_coordinator.dart';
+import 'package:bugaoshan/services/reminder/reminder_service.dart';
+import 'package:bugaoshan/services/reminder/reminder_transport.dart';
 import 'package:bugaoshan/services/update_service.dart';
 import 'package:bugaoshan/services/widget_update_service.dart';
 import 'package:bugaoshan/services/api/academic_calendar_service.dart';
@@ -417,6 +420,30 @@ void _configureAsyncDependencies() {
     }
 
     return service;
+  });
+
+  // 本地提醒排期服务：依赖 CourseProvider 与 AppConfigProvider，负责排期计算与原生同步。
+  getIt.registerSingletonAsync<ReminderService>(() async {
+    await getIt.isReady<CourseProvider>();
+    await getIt.isReady<AppConfigProvider>();
+    final service = ReminderService(
+      courseProvider: getIt<CourseProvider>(),
+      appConfig: getIt<AppConfigProvider>(),
+      transport: createReminderTransport(),
+    );
+    await service.start();
+    return service;
+  });
+
+  // 实时活动（Live Activity）协调器：仅在 iOS 平台执行物理调度，其他平台完成能力探测后自动停用。
+  // 异步触发 start() 而不阻塞启动流程，其内部监听课表状态并在异步就绪后自动对齐。
+  getIt.registerSingletonAsync<LiveActivityCoordinator>(() async {
+    await getIt.isReady<CourseProvider>();
+    final coordinator = LiveActivityCoordinator(
+      courseProvider: getIt<CourseProvider>(),
+    );
+    unawaited(coordinator.start());
+    return coordinator;
   });
 
   // ── Logout cleanup listener ──────────────────────────────────────

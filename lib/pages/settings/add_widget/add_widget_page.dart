@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bugaoshan/widgets/adaptive/adaptive_glass_controls.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
@@ -124,7 +125,7 @@ class _AddWidgetContentState extends State<AddWidgetContent>
     AppLocalizations localizations,
   ) {
     final appConfig = getIt<AppConfigProvider>();
-    return SwitchListTile(
+    return AdaptiveGlassSwitchListTile(
       title: Text(localizations.widgetShowTomorrowAfterEnd),
       value: appConfig.widgetShowTomorrow.value,
       onChanged: (v) async {

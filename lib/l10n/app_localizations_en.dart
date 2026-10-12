@@ -424,6 +424,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newVersionAvailable => 'New Version Available';
 
   @override
+  String get anotherVersionDownloading => 'Another version is downloading...';
+
+  @override
+  String stableVersion(String version) {
+    return 'Stable: $version';
+  }
+
+  @override
+  String previewVersion(String version) {
+    return 'Preview: $version';
+  }
+
+  @override
   String get noUpdateAvailable => 'Already on Latest Version';
 
   @override
@@ -901,6 +914,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportScheduleAsCopy => 'Copy to Clipboard';
+
+  @override
+  String get exportScheduleAsImage => 'Export as Image';
+
+  @override
+  String get generatingScheduleImage => 'Generating schedule image…';
+
+  @override
+  String get saveScheduleImageToGallery => 'Save to System Gallery';
+
+  @override
+  String get shareScheduleImage => 'System Share';
+
+  @override
+  String get exportScheduleAsImageFailed =>
+      'Failed to generate schedule image, please try later';
+
+  @override
+  String get exportScheduleAsImageEmpty => 'No courses to export as image';
+
+  @override
+  String get scheduleImageSavedToGallery => 'Saved to system gallery';
+
+  @override
+  String get scheduleImageGalleryPermissionDenied =>
+      'Gallery permission denied, cannot save';
+
+  @override
+  String get scheduleImageShareFailed => 'Share failed, please try later';
 
   @override
   String get exportScheduleAsIcs => 'Export to Calendar File';
@@ -2163,7 +2205,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eulaScrollToBottom => 'Please read the entire agreement first';
 
   @override
-  String get eulaAgreeCheckbox => 'I have read and agree to the User Agreement';
+  String get eulaAgreeCheckbox =>
+      'I have read and agree to the User Agreement and Privacy Policy';
 
   @override
   String get eulaAgree => 'Agree';
@@ -3531,4 +3574,290 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get courseCurriculumLoadMore => 'Load More';
+
+  @override
+  String get reminderHostProbeTitle => 'Host notification probe';
+
+  @override
+  String get reminderHostProbeSubtitle =>
+      'Schedules one notification N seconds from now through the real pipeline, so you can verify the host actually delivers it.';
+
+  @override
+  String get reminderHostProbeAction => 'Fire in 15s';
+
+  @override
+  String get reminderHostProbeSent =>
+      'Scheduled. Lock the screen to see the banner.';
+
+  @override
+  String get reminderHostProbeDenied =>
+      'Notification permission denied — grant it in system settings first.';
+
+  @override
+  String get reminderHostProbeFailed => 'Scheduling failed';
+
+  @override
+  String get reminderHostProbePermissionTitle => 'Notification permission';
+
+  @override
+  String get reminderHostProbePermissionUnknown => 'Checking…';
+
+  @override
+  String get reminderHostProbePermissionAuthorized => 'Authorized';
+
+  @override
+  String get reminderHostProbePermissionProvisional =>
+      'Provisional (quiet delivery)';
+
+  @override
+  String get reminderHostProbePermissionDeniedLabel =>
+      'Denied in system settings';
+
+  @override
+  String get reminderHostProbePermissionNotDetermined => 'Not requested yet';
+
+  @override
+  String get reminderHostProbeRequestPermission => 'Request';
+
+  @override
+  String get reminderHostProbeOpenSettings => 'Open Settings';
+
+  @override
+  String get reminderHostProbeOpenSettingsFailed =>
+      'Could not open system settings';
+
+  @override
+  String get reminderHostProbePermissionGranted =>
+      'Notification permission granted';
+
+  @override
+  String get reminderHostProbePermissionDenied => 'Permission denied';
+
+  @override
+  String get reminderProbeTitle => '课表提醒探针';
+
+  @override
+  String get reminderProbeBody => '这是一条 15 秒后触发的测试提醒';
+
+  @override
+  String get reminderPlanTitle => 'Scheduled reminder plan';
+
+  @override
+  String get reminderPlanEmpty => 'No plan generated yet';
+
+  @override
+  String reminderPlanSummary(int count, String end) {
+    return '$count reminders, window ends $end';
+  }
+
+  @override
+  String reminderPlanDropped(int count) {
+    return '$count dropped by the platform pending limit';
+  }
+
+  @override
+  String reminderPlanPending(int count) {
+    return 'System has $count registered';
+  }
+
+  @override
+  String reminderStatusScheduled(Object count, Object end) {
+    return '$count reminders scheduled, window ends $end';
+  }
+
+  @override
+  String reminderStatusPending(Object count) {
+    return 'The system has $count registered';
+  }
+
+  @override
+  String reminderStatusDropped(Object count) {
+    return '$count dropped by the platform limit';
+  }
+
+  @override
+  String reminderStatusError(Object error) {
+    return 'Scheduling failed: $error';
+  }
+
+  @override
+  String reminderLeadMinutes(Object count) {
+    return '$count min';
+  }
+
+  @override
+  String get reminderSettingsTitle => 'Notifications & Reminders';
+
+  @override
+  String get reminderMasterSwitch => 'Reminders';
+
+  @override
+  String get reminderMasterSwitchHint =>
+      'Turn off to cancel every scheduled reminder';
+
+  @override
+  String get reminderCourseSection => 'Class reminders';
+
+  @override
+  String get reminderLeadTime => 'Remind me before class';
+
+  @override
+  String get reminderLeadTimeHint => 'How early should a class reminder fire?';
+
+  @override
+  String get reminderLeadTimeMultiHint =>
+      'You can pick more than one. Each adds a separate notification.';
+
+  @override
+  String get reminderQuietSection => 'Quiet hours';
+
+  @override
+  String get reminderQuietEnabled => 'Quiet hours';
+
+  @override
+  String get reminderQuietHint =>
+      'Reminders inside this window are dropped, not delayed';
+
+  @override
+  String get reminderQuietStart => 'From';
+
+  @override
+  String get reminderQuietEnd => 'To';
+
+  @override
+  String get reminderStatusSection => 'Scheduling status';
+
+  @override
+  String get reminderStatusEmpty => 'No plan generated yet';
+
+  @override
+  String get reminderStatusNoUpcoming => 'No upcoming reminders in this window';
+
+  @override
+  String get reminderStatusRefresh => 'Reschedule now';
+
+  @override
+  String get reminderPermissionTitle => 'Notifications are off';
+
+  @override
+  String get reminderPermissionDeniedHint =>
+      'You denied the permission earlier, so iOS will not ask again. Enable it in system settings.';
+
+  @override
+  String get reminderPermissionNotDeterminedHint =>
+      'Grant the permission so reminders can reach you.';
+
+  @override
+  String get reminderPermissionRequest => 'Allow';
+
+  @override
+  String get reminderPermissionOpenSettings => 'Open Settings';
+
+  @override
+  String get reminderPermissionOpenFailed => 'Could not open system settings';
+
+  @override
+  String get reminderPermissionGrantedToast =>
+      'Notification permission granted';
+
+  @override
+  String get reminderPermissionDeniedToast => 'Permission denied';
+
+  @override
+  String get reminderPermissionFailed => 'Permission request failed';
+
+  @override
+  String get reminderPrivacyHint =>
+      'Reminders appear on the lock screen, so they follow your privacy switches: if you hide the teacher\'s name, it stays hidden here too.';
+
+  @override
+  String get reminderPlanCopy => 'Copy plan JSON';
+
+  @override
+  String get reminderPlanCopied => 'Copied';
+
+  @override
+  String get reminderPlanFailed => 'Plan serialization failed';
+
+  @override
+  String get liveActivityProbeTitle => 'Live Activity probe';
+
+  @override
+  String liveActivityProbeSubtitle(Object minutes) {
+    return 'Starts a Live Activity for a sample course that ends $minutes minutes from now. Live Activities can only be started while the app is in the foreground.';
+  }
+
+  @override
+  String get liveActivityProbeRunning => 'Starting…';
+
+  @override
+  String get liveActivityProbeAction => 'Start sample';
+
+  @override
+  String get liveActivityProbeStarted =>
+      'Started. Press the Home button — the Dynamic Island should appear.';
+
+  @override
+  String get liveActivityProbeEnded => 'Sample Live Activity ended';
+
+  @override
+  String get liveActivityProbeEndAction => 'End sample';
+
+  @override
+  String get liveActivityProbeFailed => 'Failed to start';
+
+  @override
+  String get liveActivityProbeUnsupported =>
+      'This device or system does not support Live Activities (requires iOS 16.1+).';
+
+  @override
+  String get liveActivityProbeNotAuthorized =>
+      'Live Activities are turned off in system settings.';
+
+  @override
+  String get liveActivityProbeForegroundRequired =>
+      'Live Activities can only be started while the app is in the foreground.';
+
+  @override
+  String get liveActivityProbeSampleCourse => 'Sample Course';
+
+  @override
+  String get liveActivityProbeSampleLocation => 'Building C · Room 407';
+
+  @override
+  String get liveActivityProbeSampleNext => 'Linear Algebra';
+
+  @override
+  String get liveActivityProbeEndNowAction => 'End now';
+
+  @override
+  String get liveActivityProbeStatusTitle => 'Live Activity status';
+
+  @override
+  String get liveActivityProbeStatusSupported => 'Supported and enabled';
+
+  @override
+  String get liveActivityProbeStatusUnsupported => 'Not supported / disabled';
+
+  @override
+  String get liveActivityProbeActive => 'A sample session is running';
+
+  @override
+  String get liveActivityProbeSentEnded => 'Session ended';
+
+  @override
+  String get liveActivityProbeNoSession =>
+      'Could not reach the host (no active session).';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get legalInfo => 'Legal Information';
+
+  @override
+  String get supportAndHelp => 'Support & Help';
+
+  @override
+  String get docLoadFailed => 'Failed to load document';
 }

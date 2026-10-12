@@ -30,11 +30,19 @@ void main() {
   });
 
   test('单页信封（抓包样本形态）一次取完', () async {
-    final api = _buildApi(pages: {
-      '1': _envelope([
-        {'KCMC': '学术英语（中级）', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
-      ], totalSize: 1, pageNumber: 1, pageSize: 12, totalPage: 1),
-    });
+    final api = _buildApi(
+      pages: {
+        '1': _envelope(
+          [
+            {'KCMC': '学术英语（中级）', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
+          ],
+          totalSize: 1,
+          pageNumber: 1,
+          pageSize: 12,
+          totalPage: 1,
+        ),
+      },
+    );
 
     final rows = await api.fetchGrades();
 
@@ -45,12 +53,24 @@ void main() {
 
   test('totalPage 指引下翻页取全（服务端 cap pageSize 也适用）', () async {
     // 服务端把 pageSize cap 到 2：请求 200 实际每页 2 行，totalPage=2。
-    final api = _buildApi(pages: {
-      '1': _envelope([_row('课程A'), _row('课程B')],
-          totalSize: 3, pageNumber: 1, pageSize: 2, totalPage: 2),
-      '2': _envelope([_row('课程C')],
-          totalSize: 3, pageNumber: 2, pageSize: 2, totalPage: 2),
-    });
+    final api = _buildApi(
+      pages: {
+        '1': _envelope(
+          [_row('课程A'), _row('课程B')],
+          totalSize: 3,
+          pageNumber: 1,
+          pageSize: 2,
+          totalPage: 2,
+        ),
+        '2': _envelope(
+          [_row('课程C')],
+          totalSize: 3,
+          pageNumber: 2,
+          pageSize: 2,
+          totalPage: 2,
+        ),
+      },
+    );
 
     final rows = await api.fetchGrades();
 
@@ -60,10 +80,12 @@ void main() {
   });
 
   test('extParams.totalPage 缺失时按 totalSize 兜底翻页', () async {
-    final api = _buildApi(pages: {
-      '1': _envelope([_row('课程A'), _row('课程B')], totalSize: 3, pageSize: 2),
-      '2': _envelope([_row('课程C')], totalSize: 3, pageSize: 2),
-    });
+    final api = _buildApi(
+      pages: {
+        '1': _envelope([_row('课程A'), _row('课程B')], totalSize: 3, pageSize: 2),
+        '2': _envelope([_row('课程C')], totalSize: 3, pageSize: 2),
+      },
+    );
 
     final rows = await api.fetchGrades();
 
@@ -72,9 +94,9 @@ void main() {
   });
 
   test('返回空页立即停，不跟谎报的 totalPage 死磕', () async {
-    final api = _buildApi(pages: {
-      '1': _envelope(const [], totalSize: 0, totalPage: 10),
-    });
+    final api = _buildApi(
+      pages: {'1': _envelope(const [], totalSize: 0, totalPage: 10)},
+    );
 
     final rows = await api.fetchGrades();
 
@@ -82,8 +104,7 @@ void main() {
     expect(rows, isEmpty);
   });
 
-  test('空 body 抛 UnauthenticatedException（走自愈重试，不再当无数据）',
-      () async {
+  test('空 body 抛 UnauthenticatedException（走自愈重试，不再当无数据）', () async {
     final api = _buildApi(pages: const {}, emptyBody: true);
 
     await expectLater(
@@ -114,11 +135,7 @@ GsApiService _buildApi({
       _pageNumbers.add(pageNumber);
       final body = pages[pageNumber];
       if (body == null) {
-        return http.Response(
-          'no page $pageNumber',
-          404,
-          request: request,
-        );
+        return http.Response('no page $pageNumber', 404, request: request);
       }
       return http.Response.bytes(
         utf8.encode(body),

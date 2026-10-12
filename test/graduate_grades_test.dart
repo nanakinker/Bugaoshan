@@ -22,9 +22,17 @@ void main() {
 
   group('GraduateGradesProvider', () {
     test('成功且非空：落 rows 与统计', () async {
-      final provider = GraduateGradesProvider(_FakeGsApi(const [
-        {'KCMC': '学术英语（中级）', 'XF': 2.0, 'DYBFZCJ': 80.0, 'SFJG': 1, 'SFYX': 1},
-      ]));
+      final provider = GraduateGradesProvider(
+        _FakeGsApi(const [
+          {
+            'KCMC': '学术英语（中级）',
+            'XF': 2.0,
+            'DYBFZCJ': 80.0,
+            'SFJG': 1,
+            'SFYX': 1,
+          },
+        ]),
+      );
 
       await provider.refresh();
 
@@ -47,10 +55,9 @@ void main() {
     });
 
     test('未登录 / 研教务会话过期 → unauthenticated', () async {
-      final provider = GraduateGradesProvider(_FakeGsApi(
-        null,
-        error: const UnauthenticatedException('研教务会话已过期'),
-      ));
+      final provider = GraduateGradesProvider(
+        _FakeGsApi(null, error: const UnauthenticatedException('研教务会话已过期')),
+      );
 
       await provider.refresh();
 
@@ -60,10 +67,9 @@ void main() {
     });
 
     test('接口异常 → failed 且带接口原文', () async {
-      final provider = GraduateGradesProvider(_FakeGsApi(
-        null,
-        error: const ServiceException('研教务返回了无法解析的数据'),
-      ));
+      final provider = GraduateGradesProvider(
+        _FakeGsApi(null, error: const ServiceException('研教务返回了无法解析的数据')),
+      );
 
       await provider.refresh();
 
@@ -92,9 +98,11 @@ void main() {
       final first = provider.refresh();
       expect(api.requests, hasLength(1));
       await provider.refresh();
-      api.requests.single.complete(_gradedRows(const [
-        {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
-      ]));
+      api.requests.single.complete(
+        _gradedRows(const [
+          {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
+        ]),
+      );
       await first;
 
       expect(api.requests, hasLength(1));
@@ -103,9 +111,11 @@ void main() {
     });
 
     test('clear 复位为 idle', () async {
-      final provider = GraduateGradesProvider(_FakeGsApi(const [
-        {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
-      ]));
+      final provider = GraduateGradesProvider(
+        _FakeGsApi(const [
+          {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
+        ]),
+      );
       await provider.refresh();
 
       provider.clear();
@@ -116,9 +126,11 @@ void main() {
     });
 
     test('ensureLoaded 与 refresh 等价', () async {
-      final provider = GraduateGradesProvider(_FakeGsApi(const [
-        {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
-      ]));
+      final provider = GraduateGradesProvider(
+        _FakeGsApi(const [
+          {'KCMC': '课程A', 'XF': 2.0, 'SFJG': 1, 'SFYX': 1},
+        ]),
+      );
 
       await provider.ensureLoaded();
 
@@ -296,11 +308,7 @@ List<GraduateGradeRow> _gradedRows(List<Map<String, dynamic>> rows) =>
 
 /// 一次性给固定结果的假 GsApiService：rows 传 null 时改抛 [error]。
 class _FakeGsApi implements GsApiService {
-  const _FakeGsApi(
-    this.rows, {
-    this.error,
-    this.rawError,
-  });
+  const _FakeGsApi(this.rows, {this.error, this.rawError});
 
   final List<Map<String, dynamic>>? rows;
   final Object? error;

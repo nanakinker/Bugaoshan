@@ -29,6 +29,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   int _currentIndex = 0;
+  bool _nativeDock = false;
 
   @override
   void initState() {
@@ -98,11 +99,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return _buildMainScreen();
   }
 
-  Widget _buildUpdateBadge({required Widget child, required bool showBadge}) {
-    if (!showBadge) return child;
-    return Badge(child: child);
-  }
-
   Widget _buildMainScreen() {
     final appConfig = getIt<AppConfigProvider>();
     final authProvider = getIt<ScuAuthProvider>();
@@ -134,7 +130,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     final theme = Theme.of(context);
                     final isWide = constraints.maxWidth >= 600;
                     final showRail = isWide && visibleIds.length >= 2;
-                    final showBar = !isWide && visibleIds.length >= 2;
+                    final showBar =
+                        !isWide &&
+                        visibleIds.length >= 2 &&
+                        (!_nativeDock ||
+                            MediaQuery.viewInsetsOf(context).bottom == 0);
+                    // 注：上游此处用 extendBehindDock = showBar && _nativeDock
+                    // 控制是否让内容延伸到系统原生底栏之后。本 fork 的底栏是
+                    // 悬浮玻璃药丸（GlassScaffold + PackageGlassDock），
+                    // 恒定需要内容延伸到玻璃之下才能透出，故不采用该开关。
                     final pageContent = ListenableBuilder(
                       listenable: Listenable.merge([
                         appConfig.cardSizeAnimationDuration,
@@ -156,7 +160,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           duration: Duration.zero,
                           enableAnimation: false,
                           axis: showRail ? Axis.vertical : Axis.horizontal,
-                          pageBuilder: (id) => campusItemConfigById(id).page(),
+                          pageBuilder: _buildDockPage,
                         );
                       },
                     );

@@ -76,13 +76,7 @@ void main() {
 
     test('「第3-17周」「3-17周(每周)」等变体也按连续区间处理（#329 遗留坑）', () {
       final courses = graduateCoursesFromJson([
-        {
-          'KCMC': '测试课程一',
-          'XQ': 1,
-          'KSJCDM': 2,
-          'JSJCDM': 3,
-          'ZCMC': '第3-17周',
-        },
+        {'KCMC': '测试课程一', 'XQ': 1, 'KSJCDM': 2, 'JSJCDM': 3, 'ZCMC': '第3-17周'},
         {
           'KCMC': '测试课程二',
           'XQ': 2,
@@ -100,10 +94,7 @@ void main() {
         courses.firstWhere((c) => c.name == '测试课程二').weekType,
         WeekType.every,
       );
-      expect(
-        courses.firstWhere((c) => c.name == '测试课程一').endWeek,
-        17,
-      );
+      expect(courses.firstWhere((c) => c.name == '测试课程一').endWeek, 17);
     });
   });
 
@@ -343,10 +334,9 @@ void main() {
 
     test('没有任何可用时刻时返回 null', () {
       expect(
-        graduateTimeSlotsFromRows(
-          const [{'XQ': 1}],
-          fallback: ScheduleConfig.wangJiangHuaXiTimeSlots,
-        ),
+        graduateTimeSlotsFromRows(const [
+          {'XQ': 1},
+        ], fallback: ScheduleConfig.wangJiangHuaXiTimeSlots),
         isNull,
       );
     });

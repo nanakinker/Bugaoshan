@@ -42,7 +42,7 @@ class DatabaseService {
     Directory dir;
     // iOS 与 macOS 使用 App Group 共享目录，让 Widget Extension 也能访问数据库。
     if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
-      const appGroupId = 'group.io.github.thebrotherhoodofscu.bugaoshan';
+      const appGroupId = 'group.io.github.thebrotherhoodofscu.bugaoshan.ios';
       try {
         final appGroupDir = await FlutterAppGroupDirectory.getAppGroupDirectory(
           appGroupId,

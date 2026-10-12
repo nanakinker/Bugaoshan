@@ -3,6 +3,11 @@ import 'package:flutter/services.dart';
 const String orgLink = "https://github.com/The-Brotherhood-of-SCU";
 const String appLink = "https://github.com/The-Brotherhood-of-SCU/Bugaoshan";
 
+/// 随应用打包的法律文档资源（pubspec.yaml → docs/legal/）
+const String kEulaAsset = 'docs/legal/eula.md';
+const String kPrivacyPolicyAsset = 'docs/legal/privacy-policy.md';
+const String kSupportAsset = 'docs/legal/support.md';
+
 const String dockIdCourse = 'course';
 const String dockIdCampus = 'campus';
 const String dockIdProfile = 'profile';

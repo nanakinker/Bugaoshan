@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show Colors, Curve, Curves, ThemeMode;
+import 'package:flutter/material.dart'
+    show Colors, Curve, Curves, ThemeMode, TimeOfDay;
 import 'package:bugaoshan/models/background_crop.dart';
+import 'package:bugaoshan/models/reminder_plan.dart';
 import 'package:bugaoshan/models/student_type.dart';
 import 'package:bugaoshan/models/widget_appearance.dart';
 import 'package:bugaoshan/utils/locale_utils.dart';
@@ -52,6 +54,13 @@ const String _keyForceCaptchaForDownload = 'forceCaptchaForDownload';
 const String _keyEnablePageTransitionAnimation =
     'enablePageTransitionAnimation';
 const String _keyStudentType = 'studentType';
+// ── 本地提醒（见 docs/decisions 与 issue #358）───────────────────────
+const String _keyReminderEnabled = 'reminder_enabled';
+const String _keyReminderLeadMinutes = 'reminder_lead_minutes';
+// 免打扰时段以「当日分钟数」存储（0..1439）；负值表示未启用。
+const String _keyReminderQuietStart = 'reminder_quiet_start';
+const String _keyReminderQuietEnd = 'reminder_quiet_end';
+const String _keyReminderWindowDays = 'reminder_window_days';
 const Curve appCurve = Curves.easeOutQuart;
 
 enum ThemeColorMode { system, backgroundImage, custom }
@@ -136,6 +145,41 @@ class AppConfigProvider {
   /// 学生身份（本科生 / 研究生），决定课表导入入口与校园页功能分区展示范围。
   final ValueNotifier<StudentType> studentType = ValueNotifier<StudentType>(
     StudentType.undergraduate,
+  );
+
+  // ── 本地提醒 ──────────────────────────────────────────────────────
+  //
+  // 提醒的**内容**由 AppConfigProvider 的隐私开关约束（showLocation /
+  // showTeacherName），这里只保存提醒自身的开关与时机。默认全部关闭：
+  // 请求通知权限属于高打扰动作，不在用户未表达意愿时替他决定。
+  final ValueNotifier<bool> reminderEnabled = ValueNotifier<bool>(false);
+
+  /// 提前量（分钟），可多选。存为升序去重的列表。
+  final ValueNotifier<List<int>> reminderLeadMinutes = ValueNotifier<List<int>>(
+    const [15],
+  );
+
+  /// 免打扰时段。两者同为 null 表示不启用。
+  final ValueNotifier<TimeOfDay?> reminderQuietStart =
+      ValueNotifier<TimeOfDay?>(null);
+  final ValueNotifier<TimeOfDay?> reminderQuietEnd = ValueNotifier<TimeOfDay?>(
+    null,
+  );
+
+  /// 排期窗口长度（天）。见 [ReminderSettings.defaultWindowDays] 的取值理由。
+  final ValueNotifier<int> reminderWindowDays = ValueNotifier<int>(
+    ReminderSettings.defaultWindowDays,
+  );
+
+  /// 汇总成构建器所需的设置对象，并保持与隐私开关同源。
+  ReminderSettings get reminderSettings => ReminderSettings(
+    courseReminderEnabled: reminderEnabled.value,
+    leadMinutes: reminderLeadMinutes.value,
+    quietStart: reminderQuietStart.value,
+    quietEnd: reminderQuietEnd.value,
+    windowDays: reminderWindowDays.value,
+    includeLocation: showLocation.value,
+    includeTeacher: showTeacherName.value,
   );
 
   Future<void> _loadPreferences() async {
@@ -224,6 +268,41 @@ class AppConfigProvider {
     studentType.value = studentTypeIndex < StudentType.values.length
         ? StudentType.values[studentTypeIndex]
         : StudentType.undergraduate;
+
+    reminderEnabled.value =
+        _sharedPreferences.getBool(_keyReminderEnabled) ?? false;
+    reminderLeadMinutes.value =
+        _decodeLeadMinutes(
+          _sharedPreferences.getStringList(_keyReminderLeadMinutes),
+        ) ??
+        const [15];
+    reminderQuietStart.value = _decodeTimeOfDay(
+      _sharedPreferences.getInt(_keyReminderQuietStart),
+    );
+    reminderQuietEnd.value = _decodeTimeOfDay(
+      _sharedPreferences.getInt(_keyReminderQuietEnd),
+    );
+    final savedWindowDays = _sharedPreferences.getInt(_keyReminderWindowDays);
+    reminderWindowDays.value = savedWindowDays != null && savedWindowDays > 0
+        ? savedWindowDays
+        : ReminderSettings.defaultWindowDays;
+  }
+
+  /// 「当日分钟数」→ [TimeOfDay]；越界或负值一律视为未设置。
+  static TimeOfDay? _decodeTimeOfDay(int? minutes) {
+    if (minutes == null || minutes < 0 || minutes >= 24 * 60) return null;
+    return TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
+  }
+
+  static int _encodeTimeOfDay(TimeOfDay? time) =>
+      time == null ? -1 : time.hour * 60 + time.minute;
+
+  /// 提前量存为字符串列表（SharedPreferences 无 int 列表），脏值一律丢弃；
+  /// 解析不出任何有效值时返回 null，由调用方回退默认。
+  static List<int>? _decodeLeadMinutes(List<String>? raw) {
+    if (raw == null) return null;
+    final values = raw.map(int.tryParse).whereType<int>().toList();
+    return values.isEmpty ? null : values;
   }
 
   void _addSaveCallback() {
@@ -385,6 +464,33 @@ class AppConfigProvider {
     });
     studentType.addListener(() {
       _sharedPreferences.setInt(_keyStudentType, studentType.value.index);
+    });
+    reminderEnabled.addListener(() {
+      _sharedPreferences.setBool(_keyReminderEnabled, reminderEnabled.value);
+    });
+    reminderLeadMinutes.addListener(() {
+      _sharedPreferences.setStringList(
+        _keyReminderLeadMinutes,
+        reminderLeadMinutes.value.map((e) => e.toString()).toList(),
+      );
+    });
+    reminderQuietStart.addListener(() {
+      _sharedPreferences.setInt(
+        _keyReminderQuietStart,
+        _encodeTimeOfDay(reminderQuietStart.value),
+      );
+    });
+    reminderQuietEnd.addListener(() {
+      _sharedPreferences.setInt(
+        _keyReminderQuietEnd,
+        _encodeTimeOfDay(reminderQuietEnd.value),
+      );
+    });
+    reminderWindowDays.addListener(() {
+      _sharedPreferences.setInt(
+        _keyReminderWindowDays,
+        reminderWindowDays.value,
+      );
     });
   }
 

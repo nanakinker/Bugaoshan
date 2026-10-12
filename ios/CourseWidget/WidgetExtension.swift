@@ -32,7 +32,7 @@ struct ScheduleConfig {
     let timeSlots: [TimeSlot]
 }
 
-let appGroupId = "group.io.github.thebrotherhoodofscu.bugaoshan"
+let appGroupId = "group.io.github.thebrotherhoodofscu.bugaoshan.ios"
 
 func widgetLocalizedString(_ key: String) -> String {
     NSLocalizedString(key, bundle: .main, comment: "")
@@ -1219,7 +1219,6 @@ struct CourseCard: View {
     }
 }
 
-@main
 struct CourseWidget: Widget {
     let kind: String = "CourseWidget"
 
@@ -1233,6 +1232,16 @@ struct CourseWidget: Widget {
         .configurationDisplayName(LocalizedStringKey("widget.configurationName"))
         .description(LocalizedStringKey("widget.configurationDescription"))
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryRectangular])
+    }
+}
+
+@main
+struct CourseWidgetBundle: WidgetBundle {
+    var body: some Widget {
+        CourseWidget()
+        if #available(iOS 16.1, *) {
+            CourseLiveActivity()
+        }
     }
 }
 

@@ -1,3 +1,4 @@
+import 'package:bugaoshan/widgets/adaptive/adaptive_glass_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
@@ -183,7 +184,8 @@ class _SetDockPageState extends State<SetDockPage> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Switch(
+                    AdaptiveGlassSwitch(
+                      semanticLabel: item.dockFullLabel(l10n),
                       value: _isVisible(item.id),
                       onChanged: isProfile
                           ? null
@@ -221,7 +223,8 @@ class _SetDockPageState extends State<SetDockPage> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    trailing: Switch(
+                    trailing: AdaptiveGlassSwitch(
+                      semanticLabel: item.dockFullLabel(l10n),
                       value: false,
                       onChanged: (_) => _toggleVisibility(item.id),
                     ),

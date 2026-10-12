@@ -13,6 +13,7 @@ import 'package:bugaoshan/pages/settings/set_course_style_page.dart';
 import 'package:bugaoshan/pages/settings/set_font_page.dart';
 import 'package:bugaoshan/pages/settings/set_student_type_page.dart';
 import 'package:bugaoshan/pages/settings/set_theme_color_page.dart';
+import 'package:bugaoshan/pages/settings/reminder_setting_page.dart';
 import 'package:bugaoshan/pages/settings/set_theme_mode_page.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
@@ -43,6 +44,12 @@ class SoftwareSettingPage extends StatelessWidget {
                 icon: Icons.language,
                 label: localizations.modifyLanguage,
                 onTap: () => popupOrNavigate(context, SetLanguagePage()),
+              ),
+              IconTile(
+                icon: Icons.notifications_active_outlined,
+                label: localizations.reminderSettingsTitle,
+                onTap: () =>
+                    popupOrNavigate(context, const ReminderSettingPage()),
               ),
               ValueListenableBuilder<StudentType>(
                 valueListenable: appConfig.studentType,

@@ -865,6 +865,24 @@ abstract class AppLocalizations {
   /// **'New Version Available'**
   String get newVersionAvailable;
 
+  /// No description provided for @anotherVersionDownloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Another version is downloading...'**
+  String get anotherVersionDownloading;
+
+  /// Stable version label.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable: {version}'**
+  String stableVersion(String version);
+
+  /// Preview version label.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview: {version}'**
+  String previewVersion(String version);
+
   /// No description provided for @noUpdateAvailable.
   ///
   /// In en, this message translates to:
@@ -1752,6 +1770,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy to Clipboard'**
   String get exportScheduleAsCopy;
+
+  /// No description provided for @exportScheduleAsImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Export as Image'**
+  String get exportScheduleAsImage;
+
+  /// No description provided for @generatingScheduleImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating schedule image…'**
+  String get generatingScheduleImage;
+
+  /// No description provided for @saveScheduleImageToGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to System Gallery'**
+  String get saveScheduleImageToGallery;
+
+  /// No description provided for @shareScheduleImage.
+  ///
+  /// In en, this message translates to:
+  /// **'System Share'**
+  String get shareScheduleImage;
+
+  /// No description provided for @exportScheduleAsImageFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to generate schedule image, please try later'**
+  String get exportScheduleAsImageFailed;
+
+  /// No description provided for @exportScheduleAsImageEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No courses to export as image'**
+  String get exportScheduleAsImageEmpty;
+
+  /// No description provided for @scheduleImageSavedToGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to system gallery'**
+  String get scheduleImageSavedToGallery;
+
+  /// No description provided for @scheduleImageGalleryPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery permission denied, cannot save'**
+  String get scheduleImageGalleryPermissionDenied;
+
+  /// No description provided for @scheduleImageShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Share failed, please try later'**
+  String get scheduleImageShareFailed;
 
   /// No description provided for @exportScheduleAsIcs.
   ///
@@ -4138,7 +4210,7 @@ abstract class AppLocalizations {
   /// No description provided for @eulaAgreeCheckbox.
   ///
   /// In en, this message translates to:
-  /// **'I have read and agree to the User Agreement'**
+  /// **'I have read and agree to the User Agreement and Privacy Policy'**
   String get eulaAgreeCheckbox;
 
   /// No description provided for @eulaAgree.
@@ -6588,6 +6660,504 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Load More'**
   String get courseCurriculumLoadMore;
+
+  /// No description provided for @reminderHostProbeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Host notification probe'**
+  String get reminderHostProbeTitle;
+
+  /// No description provided for @reminderHostProbeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedules one notification N seconds from now through the real pipeline, so you can verify the host actually delivers it.'**
+  String get reminderHostProbeSubtitle;
+
+  /// No description provided for @reminderHostProbeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire in 15s'**
+  String get reminderHostProbeAction;
+
+  /// No description provided for @reminderHostProbeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled. Lock the screen to see the banner.'**
+  String get reminderHostProbeSent;
+
+  /// No description provided for @reminderHostProbeDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission denied — grant it in system settings first.'**
+  String get reminderHostProbeDenied;
+
+  /// No description provided for @reminderHostProbeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduling failed'**
+  String get reminderHostProbeFailed;
+
+  /// No description provided for @reminderHostProbePermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission'**
+  String get reminderHostProbePermissionTitle;
+
+  /// No description provided for @reminderHostProbePermissionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking…'**
+  String get reminderHostProbePermissionUnknown;
+
+  /// No description provided for @reminderHostProbePermissionAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Authorized'**
+  String get reminderHostProbePermissionAuthorized;
+
+  /// No description provided for @reminderHostProbePermissionProvisional.
+  ///
+  /// In en, this message translates to:
+  /// **'Provisional (quiet delivery)'**
+  String get reminderHostProbePermissionProvisional;
+
+  /// No description provided for @reminderHostProbePermissionDeniedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied in system settings'**
+  String get reminderHostProbePermissionDeniedLabel;
+
+  /// No description provided for @reminderHostProbePermissionNotDetermined.
+  ///
+  /// In en, this message translates to:
+  /// **'Not requested yet'**
+  String get reminderHostProbePermissionNotDetermined;
+
+  /// No description provided for @reminderHostProbeRequestPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Request'**
+  String get reminderHostProbeRequestPermission;
+
+  /// No description provided for @reminderHostProbeOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get reminderHostProbeOpenSettings;
+
+  /// No description provided for @reminderHostProbeOpenSettingsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open system settings'**
+  String get reminderHostProbeOpenSettingsFailed;
+
+  /// No description provided for @reminderHostProbePermissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission granted'**
+  String get reminderHostProbePermissionGranted;
+
+  /// No description provided for @reminderHostProbePermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied'**
+  String get reminderHostProbePermissionDenied;
+
+  /// No description provided for @reminderProbeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'课表提醒探针'**
+  String get reminderProbeTitle;
+
+  /// No description provided for @reminderProbeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'这是一条 15 秒后触发的测试提醒'**
+  String get reminderProbeBody;
+
+  /// No description provided for @reminderPlanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled reminder plan'**
+  String get reminderPlanTitle;
+
+  /// No description provided for @reminderPlanEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan generated yet'**
+  String get reminderPlanEmpty;
+
+  /// No description provided for @reminderPlanSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reminders, window ends {end}'**
+  String reminderPlanSummary(int count, String end);
+
+  /// No description provided for @reminderPlanDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} dropped by the platform pending limit'**
+  String reminderPlanDropped(int count);
+
+  /// No description provided for @reminderPlanPending.
+  ///
+  /// In en, this message translates to:
+  /// **'System has {count} registered'**
+  String reminderPlanPending(int count);
+
+  /// No description provided for @reminderStatusScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reminders scheduled, window ends {end}'**
+  String reminderStatusScheduled(Object count, Object end);
+
+  /// No description provided for @reminderStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'The system has {count} registered'**
+  String reminderStatusPending(Object count);
+
+  /// No description provided for @reminderStatusDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} dropped by the platform limit'**
+  String reminderStatusDropped(Object count);
+
+  /// No description provided for @reminderStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduling failed: {error}'**
+  String reminderStatusError(Object error);
+
+  /// No description provided for @reminderLeadMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min'**
+  String reminderLeadMinutes(Object count);
+
+  /// No description provided for @reminderSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications & Reminders'**
+  String get reminderSettingsTitle;
+
+  /// No description provided for @reminderMasterSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminderMasterSwitch;
+
+  /// No description provided for @reminderMasterSwitchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off to cancel every scheduled reminder'**
+  String get reminderMasterSwitchHint;
+
+  /// No description provided for @reminderCourseSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Class reminders'**
+  String get reminderCourseSection;
+
+  /// No description provided for @reminderLeadTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me before class'**
+  String get reminderLeadTime;
+
+  /// No description provided for @reminderLeadTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How early should a class reminder fire?'**
+  String get reminderLeadTimeHint;
+
+  /// No description provided for @reminderLeadTimeMultiHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You can pick more than one. Each adds a separate notification.'**
+  String get reminderLeadTimeMultiHint;
+
+  /// No description provided for @reminderQuietSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get reminderQuietSection;
+
+  /// No description provided for @reminderQuietEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiet hours'**
+  String get reminderQuietEnabled;
+
+  /// No description provided for @reminderQuietHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders inside this window are dropped, not delayed'**
+  String get reminderQuietHint;
+
+  /// No description provided for @reminderQuietStart.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get reminderQuietStart;
+
+  /// No description provided for @reminderQuietEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get reminderQuietEnd;
+
+  /// No description provided for @reminderStatusSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduling status'**
+  String get reminderStatusSection;
+
+  /// No description provided for @reminderStatusEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No plan generated yet'**
+  String get reminderStatusEmpty;
+
+  /// No description provided for @reminderStatusNoUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming reminders in this window'**
+  String get reminderStatusNoUpcoming;
+
+  /// No description provided for @reminderStatusRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule now'**
+  String get reminderStatusRefresh;
+
+  /// No description provided for @reminderPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off'**
+  String get reminderPermissionTitle;
+
+  /// No description provided for @reminderPermissionDeniedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You denied the permission earlier, so iOS will not ask again. Enable it in system settings.'**
+  String get reminderPermissionDeniedHint;
+
+  /// No description provided for @reminderPermissionNotDeterminedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant the permission so reminders can reach you.'**
+  String get reminderPermissionNotDeterminedHint;
+
+  /// No description provided for @reminderPermissionRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow'**
+  String get reminderPermissionRequest;
+
+  /// No description provided for @reminderPermissionOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get reminderPermissionOpenSettings;
+
+  /// No description provided for @reminderPermissionOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open system settings'**
+  String get reminderPermissionOpenFailed;
+
+  /// No description provided for @reminderPermissionGrantedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission granted'**
+  String get reminderPermissionGrantedToast;
+
+  /// No description provided for @reminderPermissionDeniedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied'**
+  String get reminderPermissionDeniedToast;
+
+  /// No description provided for @reminderPermissionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission request failed'**
+  String get reminderPermissionFailed;
+
+  /// No description provided for @reminderPrivacyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders appear on the lock screen, so they follow your privacy switches: if you hide the teacher\'s name, it stays hidden here too.'**
+  String get reminderPrivacyHint;
+
+  /// No description provided for @reminderPlanCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy plan JSON'**
+  String get reminderPlanCopy;
+
+  /// No description provided for @reminderPlanCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get reminderPlanCopied;
+
+  /// No description provided for @reminderPlanFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan serialization failed'**
+  String get reminderPlanFailed;
+
+  /// No description provided for @liveActivityProbeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activity probe'**
+  String get liveActivityProbeTitle;
+
+  /// No description provided for @liveActivityProbeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts a Live Activity for a sample course that ends {minutes} minutes from now. Live Activities can only be started while the app is in the foreground.'**
+  String liveActivityProbeSubtitle(Object minutes);
+
+  /// No description provided for @liveActivityProbeRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting…'**
+  String get liveActivityProbeRunning;
+
+  /// No description provided for @liveActivityProbeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Start sample'**
+  String get liveActivityProbeAction;
+
+  /// No description provided for @liveActivityProbeStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Started. Press the Home button — the Dynamic Island should appear.'**
+  String get liveActivityProbeStarted;
+
+  /// No description provided for @liveActivityProbeEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample Live Activity ended'**
+  String get liveActivityProbeEnded;
+
+  /// No description provided for @liveActivityProbeEndAction.
+  ///
+  /// In en, this message translates to:
+  /// **'End sample'**
+  String get liveActivityProbeEndAction;
+
+  /// No description provided for @liveActivityProbeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start'**
+  String get liveActivityProbeFailed;
+
+  /// No description provided for @liveActivityProbeUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This device or system does not support Live Activities (requires iOS 16.1+).'**
+  String get liveActivityProbeUnsupported;
+
+  /// No description provided for @liveActivityProbeNotAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities are turned off in system settings.'**
+  String get liveActivityProbeNotAuthorized;
+
+  /// No description provided for @liveActivityProbeForegroundRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activities can only be started while the app is in the foreground.'**
+  String get liveActivityProbeForegroundRequired;
+
+  /// No description provided for @liveActivityProbeSampleCourse.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample Course'**
+  String get liveActivityProbeSampleCourse;
+
+  /// No description provided for @liveActivityProbeSampleLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Building C · Room 407'**
+  String get liveActivityProbeSampleLocation;
+
+  /// No description provided for @liveActivityProbeSampleNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Linear Algebra'**
+  String get liveActivityProbeSampleNext;
+
+  /// No description provided for @liveActivityProbeEndNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'End now'**
+  String get liveActivityProbeEndNowAction;
+
+  /// No description provided for @liveActivityProbeStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Live Activity status'**
+  String get liveActivityProbeStatusTitle;
+
+  /// No description provided for @liveActivityProbeStatusSupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Supported and enabled'**
+  String get liveActivityProbeStatusSupported;
+
+  /// No description provided for @liveActivityProbeStatusUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Not supported / disabled'**
+  String get liveActivityProbeStatusUnsupported;
+
+  /// No description provided for @liveActivityProbeActive.
+  ///
+  /// In en, this message translates to:
+  /// **'A sample session is running'**
+  String get liveActivityProbeActive;
+
+  /// No description provided for @liveActivityProbeSentEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Session ended'**
+  String get liveActivityProbeSentEnded;
+
+  /// No description provided for @liveActivityProbeNoSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not reach the host (no active session).'**
+  String get liveActivityProbeNoSession;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @legalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal Information'**
+  String get legalInfo;
+
+  /// No description provided for @supportAndHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Support & Help'**
+  String get supportAndHelp;
+
+  /// No description provided for @docLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load document'**
+  String get docLoadFailed;
 }
 
 class _AppLocalizationsDelegate

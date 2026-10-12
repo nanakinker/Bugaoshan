@@ -159,6 +159,21 @@
   "projectRepository": "Repository",
   "checkForUpdates": "Check Updates",
   "newVersionAvailable": "New Version Available",
+  "anotherVersionDownloading": "Another version is downloading...",
+  "stableVersion": "Stable: {version}",
+  "@stableVersion": {
+    "description": "Stable version label.",
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
+  "previewVersion": "Preview: {version}",
+  "@previewVersion": {
+    "description": "Preview version label.",
+    "placeholders": {
+      "version": {"type": "String"}
+    }
+  },
   "noUpdateAvailable": "Already on Latest Version",
   "goToReleases": "Go to Releases",
   "startUpdate": "Start Update",
@@ -369,6 +384,15 @@
   "exportSchedule": "Export Schedule",
   "exportExamPlan": "Export Exam Schedule",
   "exportScheduleAsCopy": "Copy to Clipboard",
+  "exportScheduleAsImage": "Export as Image",
+  "generatingScheduleImage": "Generating schedule image…",
+  "saveScheduleImageToGallery": "Save to System Gallery",
+  "shareScheduleImage": "System Share",
+  "exportScheduleAsImageFailed": "Failed to generate schedule image, please try later",
+  "exportScheduleAsImageEmpty": "No courses to export as image",
+  "scheduleImageSavedToGallery": "Saved to system gallery",
+  "scheduleImageGalleryPermissionDenied": "Gallery permission denied, cannot save",
+  "scheduleImageShareFailed": "Share failed, please try later",
   "exportScheduleAsIcs": "Export to Calendar File",
   "exportScheduleAsCopySuccess": "Schedule data copied to clipboard",
   "exportExamPlanAsCopySuccess": "Exam schedule data copied to clipboard",
@@ -812,7 +836,7 @@
   "dockLabelDownloads": "Downloads",
   "eulaTitle": "User Agreement",
   "eulaScrollToBottom": "Please read the entire agreement first",
-  "eulaAgreeCheckbox": "I have read and agree to the User Agreement",
+  "eulaAgreeCheckbox": "I have read and agree to the User Agreement and Privacy Policy",
   "eulaAgree": "Agree",
   "eulaDisagree": "Disagree",
   "revokeEula": "Revoke User Agreement",
@@ -1953,5 +1977,112 @@
   "courseCurriculumCourseCode": "Course Code",
   "courseCurriculumCourseSeq": "Course Seq",
   "courseCurriculumSearch": "Search",
-  "courseCurriculumLoadMore": "Load More"
+  "courseCurriculumLoadMore": "Load More",
+  "reminderHostProbeTitle": "Host notification probe",
+  "reminderHostProbeSubtitle": "Schedules one notification N seconds from now through the real pipeline, so you can verify the host actually delivers it.",
+  "reminderHostProbeAction": "Fire in 15s",
+  "reminderHostProbeSent": "Scheduled. Lock the screen to see the banner.",
+  "reminderHostProbeDenied": "Notification permission denied — grant it in system settings first.",
+  "reminderHostProbeFailed": "Scheduling failed",
+  "reminderHostProbePermissionTitle": "Notification permission",
+  "reminderHostProbePermissionUnknown": "Checking…",
+  "reminderHostProbePermissionAuthorized": "Authorized",
+  "reminderHostProbePermissionProvisional": "Provisional (quiet delivery)",
+  "reminderHostProbePermissionDeniedLabel": "Denied in system settings",
+  "reminderHostProbePermissionNotDetermined": "Not requested yet",
+  "reminderHostProbeRequestPermission": "Request",
+  "reminderHostProbeOpenSettings": "Open Settings",
+  "reminderHostProbeOpenSettingsFailed": "Could not open system settings",
+  "reminderHostProbePermissionGranted": "Notification permission granted",
+  "reminderHostProbePermissionDenied": "Permission denied",
+  "reminderProbeTitle": "课表提醒探针",
+  "reminderProbeBody": "这是一条 15 秒后触发的测试提醒",
+  "reminderPlanTitle": "Scheduled reminder plan",
+  "reminderPlanEmpty": "No plan generated yet",
+  "reminderPlanSummary": "{count} reminders, window ends {end}",
+  "@reminderPlanSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderPlanDropped": "{count} dropped by the platform pending limit",
+  "reminderPlanPending": "System has {count} registered",
+  "reminderStatusScheduled": "{count} reminders scheduled, window ends {end}",
+  "reminderStatusPending": "The system has {count} registered",
+  "reminderStatusDropped": "{count} dropped by the platform limit",
+  "reminderStatusError": "Scheduling failed: {error}",
+  "reminderLeadMinutes": "{count} min",
+  "reminderSettingsTitle": "Notifications & Reminders",
+  "reminderMasterSwitch": "Reminders",
+  "reminderMasterSwitchHint": "Turn off to cancel every scheduled reminder",
+  "reminderCourseSection": "Class reminders",
+  "reminderLeadTime": "Remind me before class",
+  "reminderLeadTimeHint": "How early should a class reminder fire?",
+  "reminderLeadTimeMultiHint": "You can pick more than one. Each adds a separate notification.",
+  "reminderQuietSection": "Quiet hours",
+  "reminderQuietEnabled": "Quiet hours",
+  "reminderQuietHint": "Reminders inside this window are dropped, not delayed",
+  "reminderQuietStart": "From",
+  "reminderQuietEnd": "To",
+  "reminderStatusSection": "Scheduling status",
+  "reminderStatusEmpty": "No plan generated yet",
+  "reminderStatusNoUpcoming": "No upcoming reminders in this window",
+  "reminderStatusRefresh": "Reschedule now",
+  "reminderPermissionTitle": "Notifications are off",
+  "reminderPermissionDeniedHint": "You denied the permission earlier, so iOS will not ask again. Enable it in system settings.",
+  "reminderPermissionNotDeterminedHint": "Grant the permission so reminders can reach you.",
+  "reminderPermissionRequest": "Allow",
+  "reminderPermissionOpenSettings": "Open Settings",
+  "reminderPermissionOpenFailed": "Could not open system settings",
+  "reminderPermissionGrantedToast": "Notification permission granted",
+  "reminderPermissionDeniedToast": "Permission denied",
+  "reminderPermissionFailed": "Permission request failed",
+  "reminderPrivacyHint": "Reminders appear on the lock screen, so they follow your privacy switches: if you hide the teacher's name, it stays hidden here too.",
+  "@reminderPlanPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@reminderPlanDropped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderPlanCopy": "Copy plan JSON",
+  "reminderPlanCopied": "Copied",
+  "reminderPlanFailed": "Plan serialization failed",
+  "liveActivityProbeTitle": "Live Activity probe",
+  "liveActivityProbeSubtitle": "Starts a Live Activity for a sample course that ends {minutes} minutes from now. Live Activities can only be started while the app is in the foreground.",
+  "liveActivityProbeRunning": "Starting…",
+  "liveActivityProbeAction": "Start sample",
+  "liveActivityProbeStarted": "Started. Press the Home button — the Dynamic Island should appear.",
+  "liveActivityProbeEnded": "Sample Live Activity ended",
+  "liveActivityProbeEndAction": "End sample",
+  "liveActivityProbeFailed": "Failed to start",
+  "liveActivityProbeUnsupported": "This device or system does not support Live Activities (requires iOS 16.1+).",
+  "liveActivityProbeNotAuthorized": "Live Activities are turned off in system settings.",
+  "liveActivityProbeForegroundRequired": "Live Activities can only be started while the app is in the foreground.",
+  "liveActivityProbeSampleCourse": "Sample Course",
+  "liveActivityProbeSampleLocation": "Building C · Room 407",
+  "liveActivityProbeSampleNext": "Linear Algebra",
+  "liveActivityProbeEndNowAction": "End now",
+  "liveActivityProbeStatusTitle": "Live Activity status",
+  "liveActivityProbeStatusSupported": "Supported and enabled",
+  "liveActivityProbeStatusUnsupported": "Not supported / disabled",
+  "liveActivityProbeActive": "A sample session is running",
+  "liveActivityProbeSentEnded": "Session ended",
+  "liveActivityProbeNoSession": "Could not reach the host (no active session).",
+  "privacyPolicy": "Privacy Policy",
+  "legalInfo": "Legal Information",
+  "supportAndHelp": "Support & Help",
+  "docLoadFailed": "Failed to load document"
 }

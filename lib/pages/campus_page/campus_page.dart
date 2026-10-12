@@ -1,3 +1,4 @@
+import 'package:bugaoshan/widgets/navigation/home_dock_insets.dart';
 import 'package:flutter/material.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
@@ -161,6 +162,9 @@ class _CampusPageState extends State<CampusPage>
                             ? _buildGridView(l10n, sections)
                             : _buildListView(l10n, sections),
                       ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: HomeDockInsets.bottomOf(context)),
+                    ),
                   ],
                 ),
               ),
@@ -168,7 +172,7 @@ class _CampusPageState extends State<CampusPage>
             Positioned(
               left: 0,
               right: 0,
-              bottom: 0,
+              bottom: HomeDockInsets.bottomOf(context),
               child: IgnorePointer(
                 child: AnimatedOpacity(
                   opacity: _showHint ? 1.0 : 0.0,

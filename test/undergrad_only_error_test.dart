@@ -11,9 +11,7 @@ void main() {
   group('zhjwAuthErrorType 映射', () {
     test('带 undergradOnly 标记 → undergradOnly', () {
       expect(
-        zhjwAuthErrorType(
-          const UnauthenticatedException('本科教务会话未建立', true),
-        ),
+        zhjwAuthErrorType(const UnauthenticatedException('本科教务会话未建立', true)),
         LoadErrorType.undergradOnly,
       );
     });
@@ -52,10 +50,7 @@ void main() {
     });
 
     test('空白 body 同样不打标', () {
-      final failure = ZhjwApiService.classifyZhjwSessionFailure(
-        '  \n\t',
-        200,
-      );
+      final failure = ZhjwApiService.classifyZhjwSessionFailure('  \n\t', 200);
       expect(failure, isNotNull);
       expect(failure!.undergradOnly, isFalse);
     });
@@ -111,11 +106,7 @@ void main() {
 
     test('其余类型一律走调用方通用文案', () {
       expect(
-        refreshFailureMessage(
-          LoadErrorType.loadFailed,
-          l10n,
-          fallback: '通用失败',
-        ),
+        refreshFailureMessage(LoadErrorType.loadFailed, l10n, fallback: '通用失败'),
         '通用失败',
       );
       expect(

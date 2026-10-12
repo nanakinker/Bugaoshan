@@ -406,6 +406,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newVersionAvailable => '发现新版本';
 
   @override
+  String get anotherVersionDownloading => '另一版本正在下载…';
+
+  @override
+  String stableVersion(String version) {
+    return '正式版：$version';
+  }
+
+  @override
+  String previewVersion(String version) {
+    return '预览版：$version';
+  }
+
+  @override
   String get noUpdateAvailable => '已是最新版本';
 
   @override
@@ -868,6 +881,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get exportScheduleAsCopy => '复制到剪切板';
+
+  @override
+  String get exportScheduleAsImage => '导出为图片';
+
+  @override
+  String get generatingScheduleImage => '正在生成课表图片…';
+
+  @override
+  String get saveScheduleImageToGallery => '保存到系统相册';
+
+  @override
+  String get shareScheduleImage => '系统分享';
+
+  @override
+  String get exportScheduleAsImageFailed => '生成课表图片失败，请稍后再试';
+
+  @override
+  String get exportScheduleAsImageEmpty => '课表为空，无法导出图片';
+
+  @override
+  String get scheduleImageSavedToGallery => '已保存到系统相册';
+
+  @override
+  String get scheduleImageGalleryPermissionDenied => '未获得相册权限，无法保存';
+
+  @override
+  String get scheduleImageShareFailed => '分享失败，请稍后再试';
 
   @override
   String get exportScheduleAsIcs => '导出为日历文件';
@@ -2099,7 +2139,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get eulaScrollToBottom => '请先阅读完协议内容';
 
   @override
-  String get eulaAgreeCheckbox => '我已阅读并同意《用户协议》';
+  String get eulaAgreeCheckbox => '我已阅读并同意《用户协议》与《隐私政策》';
 
   @override
   String get eulaAgree => '同意';
@@ -3422,6 +3462,273 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get courseCurriculumLoadMore => '加载更多';
+
+  @override
+  String get reminderHostProbeTitle => '宿主通知探针';
+
+  @override
+  String get reminderHostProbeSubtitle => '走真实链路排一条 N 秒后的通知，用于验证宿主能否真的投递。';
+
+  @override
+  String get reminderHostProbeAction => '15 秒后触发';
+
+  @override
+  String get reminderHostProbeSent => '已排期。锁屏即可看到横幅。';
+
+  @override
+  String get reminderHostProbeDenied => '通知权限被拒绝，请先到系统设置中开启。';
+
+  @override
+  String get reminderHostProbeFailed => '排期失败';
+
+  @override
+  String get reminderHostProbePermissionTitle => '通知权限';
+
+  @override
+  String get reminderHostProbePermissionUnknown => '查询中…';
+
+  @override
+  String get reminderHostProbePermissionAuthorized => '已授权';
+
+  @override
+  String get reminderHostProbePermissionProvisional => '临时授权（安静投递）';
+
+  @override
+  String get reminderHostProbePermissionDeniedLabel => '已被系统设置拒绝';
+
+  @override
+  String get reminderHostProbePermissionNotDetermined => '尚未请求';
+
+  @override
+  String get reminderHostProbeRequestPermission => '请求授权';
+
+  @override
+  String get reminderHostProbeOpenSettings => '去系统设置';
+
+  @override
+  String get reminderHostProbeOpenSettingsFailed => '无法打开系统设置';
+
+  @override
+  String get reminderHostProbePermissionGranted => '已获得通知权限';
+
+  @override
+  String get reminderHostProbePermissionDenied => '权限被拒绝';
+
+  @override
+  String get reminderProbeTitle => '课表提醒探针';
+
+  @override
+  String get reminderProbeBody => '这是一条 15 秒后触发的测试提醒';
+
+  @override
+  String get reminderPlanTitle => '当前排期计划';
+
+  @override
+  String get reminderPlanEmpty => '尚未生成计划';
+
+  @override
+  String reminderPlanSummary(int count, String end) {
+    return '共 $count 条，窗口截止 $end';
+  }
+
+  @override
+  String reminderPlanDropped(int count) {
+    return '因平台待投递上限被裁掉 $count 条';
+  }
+
+  @override
+  String reminderPlanPending(int count) {
+    return '系统已登记 $count 条';
+  }
+
+  @override
+  String reminderStatusScheduled(Object count, Object end) {
+    return '已排期 $count 条，窗口截止 $end';
+  }
+
+  @override
+  String reminderStatusPending(Object count) {
+    return '系统已登记 $count 条';
+  }
+
+  @override
+  String reminderStatusDropped(Object count) {
+    return '因平台上限被裁掉 $count 条';
+  }
+
+  @override
+  String reminderStatusError(Object error) {
+    return '排期失败：$error';
+  }
+
+  @override
+  String reminderLeadMinutes(Object count) {
+    return '提前 $count 分钟';
+  }
+
+  @override
+  String get reminderSettingsTitle => '通知与提醒';
+
+  @override
+  String get reminderMasterSwitch => '提醒';
+
+  @override
+  String get reminderMasterSwitchHint => '关闭后将清空所有已排期的提醒';
+
+  @override
+  String get reminderCourseSection => '课前提醒';
+
+  @override
+  String get reminderLeadTime => '提前提醒时间';
+
+  @override
+  String get reminderLeadTimeHint => '在上课前多久提醒你';
+
+  @override
+  String get reminderLeadTimeMultiHint => '可多选，每选一项会产生一条独立的提醒。';
+
+  @override
+  String get reminderQuietSection => '免打扰';
+
+  @override
+  String get reminderQuietEnabled => '免打扰时段';
+
+  @override
+  String get reminderQuietHint => '落在该时段内的提醒会被丢弃，而不是延后';
+
+  @override
+  String get reminderQuietStart => '开始';
+
+  @override
+  String get reminderQuietEnd => '结束';
+
+  @override
+  String get reminderStatusSection => '排期状态';
+
+  @override
+  String get reminderStatusEmpty => '尚未生成排期计划';
+
+  @override
+  String get reminderStatusNoUpcoming => '当前窗口内没有待提醒的课程';
+
+  @override
+  String get reminderStatusRefresh => '立即重新排期';
+
+  @override
+  String get reminderPermissionTitle => '通知未开启';
+
+  @override
+  String get reminderPermissionDeniedHint => '之前已拒绝过授权，系统不会再弹窗，请到系统设置里开启。';
+
+  @override
+  String get reminderPermissionNotDeterminedHint => '需要授予通知权限，提醒才能送达。';
+
+  @override
+  String get reminderPermissionRequest => '去授权';
+
+  @override
+  String get reminderPermissionOpenSettings => '去系统设置';
+
+  @override
+  String get reminderPermissionOpenFailed => '无法打开系统设置';
+
+  @override
+  String get reminderPermissionGrantedToast => '已获得通知权限';
+
+  @override
+  String get reminderPermissionDeniedToast => '权限被拒绝';
+
+  @override
+  String get reminderPermissionFailed => '请求权限失败';
+
+  @override
+  String get reminderPrivacyHint => '提醒会显示在锁屏上，因此与隐私开关联动：关掉了「显示教师姓名」，锁屏上也不会出现。';
+
+  @override
+  String get reminderPlanCopy => '复制计划 JSON';
+
+  @override
+  String get reminderPlanCopied => '已复制';
+
+  @override
+  String get reminderPlanFailed => '计划序列化失败';
+
+  @override
+  String get liveActivityProbeTitle => '灵动岛探针';
+
+  @override
+  String liveActivityProbeSubtitle(Object minutes) {
+    return '为一条 $minutes 分钟后下课的示例课程启动实时活动。实时活动只能在应用处于前台时启动。';
+  }
+
+  @override
+  String get liveActivityProbeRunning => '启动中…';
+
+  @override
+  String get liveActivityProbeAction => '立即触发示例';
+
+  @override
+  String get liveActivityProbeStarted => '已启动。按 Home 键回主屏，灵动岛应当出现。';
+
+  @override
+  String get liveActivityProbeEnded => '示例实时活动已结束';
+
+  @override
+  String get liveActivityProbeEndAction => '结束示例';
+
+  @override
+  String get liveActivityProbeFailed => '启动失败';
+
+  @override
+  String get liveActivityProbeUnsupported => '当前设备或系统不支持实时活动（需 iOS 16.1+）。';
+
+  @override
+  String get liveActivityProbeNotAuthorized => '系统设置中未开启实时活动。';
+
+  @override
+  String get liveActivityProbeForegroundRequired => '实时活动只能在应用处于前台时启动。';
+
+  @override
+  String get liveActivityProbeSampleCourse => '示例课程';
+
+  @override
+  String get liveActivityProbeSampleLocation => '综C407';
+
+  @override
+  String get liveActivityProbeSampleNext => '线性代数';
+
+  @override
+  String get liveActivityProbeEndNowAction => '立即结束';
+
+  @override
+  String get liveActivityProbeStatusTitle => '实时活动状态';
+
+  @override
+  String get liveActivityProbeStatusSupported => '支持且已开启';
+
+  @override
+  String get liveActivityProbeStatusUnsupported => '不支持 / 未开启';
+
+  @override
+  String get liveActivityProbeActive => '示例会话进行中';
+
+  @override
+  String get liveActivityProbeSentEnded => '会话已结束';
+
+  @override
+  String get liveActivityProbeNoSession => '未能连上宿主（无进行中的会话）。';
+
+  @override
+  String get privacyPolicy => '隐私政策';
+
+  @override
+  String get legalInfo => '法律信息';
+
+  @override
+  String get supportAndHelp => '支持与帮助';
+
+  @override
+  String get docLoadFailed => '文档加载失败';
 }
 
 /// The translations for Chinese, as used in China, using the Han script (`zh_Hans_CN`).
