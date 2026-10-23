@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/academic_calendar.dart';
 import 'package:bugaoshan/pages/campus/academic_calendar/academic_calendar_page.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -81,11 +82,11 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     final dropdownFinder = find.byWidgetPredicate(
-      (widget) => widget is DropdownButton,
+      (widget) => widget is AdaptiveGlassDropdown,
       skipOffstage: false,
     );
     expect(dropdownFinder, findsOneWidget);
-    final dropdown = tester.widget<DropdownButton<dynamic>>(dropdownFinder);
+    final dropdown = tester.widget<AdaptiveGlassDropdown<dynamic>>(dropdownFinder);
     final secondEntry = dropdown.items!.last.value;
     dropdown.onChanged!(secondEntry);
     await tester.pump();

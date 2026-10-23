@@ -39,7 +39,7 @@ iOS 侧的 [`LiquidGlassDock.swift`](../../ios/Runner/LiquidGlassDock.swift) 注
 
 非延伸模式使用原有 `SafeArea`，scope 的底部 inset 为 0；Home 以外的详情页没有此 scope 时也默认返回 0，避免改变共用组件的布局。
 
-外层整页避让的入口必须同时屏蔽掉被 `extendBody` 注入的 `padding.bottom`（`HomeDockInsets.consumed`）。这份 padding 等于整个平台视图的高度，是给 Home 自己铺内容用的；页面内部若还有自己的 `Scaffold` / `NavigationBar`，其内建 `SafeArea` 会把同一份 padding 再消费一次，把底栏抬高整整一个 Dock 高度，在底栏与浮动 Dock 之间留下一条空白（#376 第二课堂页）。已适配的三张主页通过 `HomeDockInsets.bottomOf` 自行读取该值，因此不受这次屏蔽影响。
+外层整页避让的入口必须同时屏蔽掉被 `extendBody` 注入的 `padding.bottom`（`HomeDockInsets.consumed`）。这份 padding 等于整个平台视图的高度，是给 Home 自己铺内容用的；页面内部若还有自己的 `Scaffold` / `NavigationBar`，其内建 `SafeArea` 会把同一份 padding 再消费一次，把底栏抬高整整一个 Dock 高度，在底栏与浮动 Dock 之间留下一条空白（#376，此前第二课堂页自带底栏时暴露该问题；现第二课堂已改用顶部 TabBar 将底部留给全局 Dock）。已适配的三张主页通过 `HomeDockInsets.bottomOf` 自行读取该值，因此不受这次屏蔽影响。
 
 ## Flutter 桥接契约
 

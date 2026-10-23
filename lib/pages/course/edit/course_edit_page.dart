@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/course.dart';
 import 'package:bugaoshan/pages/course/widgets/week_selector_grid.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
-import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class CourseEditPage extends StatefulWidget {
   final ScheduleConfig scheduleConfig;
@@ -162,7 +163,7 @@ class _CourseEditPageState extends State<CourseEditPage> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: withSystemBottomInset(context, EdgeInsets.all(16)),
         child: Form(
           key: _formKey,
           child: Column(

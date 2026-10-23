@@ -1,17 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:bugaoshan/pages/campus/fitness_test/models/fitness_models.dart';
-import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
+import 'package:bugaoshan/pages/campus/fitness_test/models/fitness_models.dart';
 import 'package:bugaoshan/providers/fitness_test_provider.dart';
 import 'package:bugaoshan/providers/scu_auth_provider.dart';
+import 'package:bugaoshan/theme_shape.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
+import 'package:bugaoshan/widgets/common/info_row.dart';
 import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
-import 'package:bugaoshan/widgets/common/info_row.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/common/swipe_page_view.dart';
-import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
+import 'package:flutter/material.dart';
 
 class FitnessTestPage extends StatefulWidget {
   const FitnessTestPage({super.key});
@@ -116,7 +117,7 @@ class _FitnessTestPageState extends State<FitnessTestPage>
     return RefreshIndicator(
       onRefresh: _provider.refresh,
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: withSystemBottomInset(context, EdgeInsets.all(16)),
         itemCount: notices.length,
         itemBuilder: (context, index) => _buildNoticeCard(notices[index], l10n),
       ),
@@ -243,7 +244,7 @@ class _FitnessTestPageState extends State<FitnessTestPage>
             Expanded(
               child: ListView(
                 controller: scrollController,
-                padding: const EdgeInsets.all(16),
+                padding: withSystemBottomInset(context, EdgeInsets.all(16)),
                 children: [
                   Row(
                     children: [
@@ -297,7 +298,7 @@ class _FitnessTestPageState extends State<FitnessTestPage>
     return RefreshIndicator(
       onRefresh: _provider.refresh,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: withSystemBottomInset(context, EdgeInsets.all(16)),
         children: [
           // Year selector
           StyledCard(

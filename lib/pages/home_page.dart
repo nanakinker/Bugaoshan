@@ -28,6 +28,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  static const String _tag = 'HomePageState';
+
   int _currentIndex = 0;
   bool _nativeDock = false;
 
@@ -48,8 +50,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         return;
       }
       await authProvider.autoLogin();
-    } catch (e) {
-      AppLog.w('HomePage', 'Auto login attempt error: $e');
+    } catch (e, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_attemptAutoLogin 失败',
+        error: e,
+        stackTrace: logStackTrace,
+      );
     }
   }
 
@@ -66,8 +73,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       if (result.hasUpdate) {
         appConfig.hasUpdateNotification.value = true;
       }
-    } catch (e) {
-      AppLog.w('HomePage', 'CheckForUpdateInBackground error: $e');
+    } catch (e, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_checkForUpdateInBackground 失败',
+        error: e,
+        stackTrace: logStackTrace,
+      );
     }
   }
 
@@ -88,8 +100,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!kIsWeb && (Platform.isAndroid || Platform.isIOS || Platform.isMacOS)) {
       try {
         await getIt<WidgetUpdateService>().updateWidgetData();
-      } catch (e) {
-        AppLog.e('HomePage', 'Widget update failed: $e');
+      } catch (e, logStackTrace) {
+        AppLog.e(_tag, '_updateWidget 失败', error: e, stackTrace: logStackTrace);
       }
     }
   }

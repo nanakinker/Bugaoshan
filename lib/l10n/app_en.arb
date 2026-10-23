@@ -186,6 +186,15 @@
     "description": "Toggle in the test page that makes the home/about update checks target the preview release channel."
   },
   "usePreviewUpdateSourceHint": "Affects only the automatic checks on the home and about pages. The test page always checks both channels.",
+  "networkProxy": "Network Proxy",
+  "@networkProxy": {
+    "description": "Settings entry title for GitHub mirror / proxy configuration."
+  },
+  "ghProxyMirror": "GitHub Mirror",
+  "@ghProxyMirror": {
+    "description": "Toggle that routes GitHub resource downloads through the gh-proxy mirror."
+  },
+  "ghProxyMirrorHint": "Download GitHub resources (app updates, academic calendar) via the gh-proxy mirror; falls back to direct connection on failure.",
   "forceCaptchaForDownload": "Force CAPTCHA for Download",
   "@forceCaptchaForDownload": {
     "description": "Toggle in the developer page to force the CAPTCHA dialog when downloading attachments, for testing the CAPTCHA flow."
@@ -220,10 +229,10 @@
   "environmentInfo": "Environment Info",
   "devPage": "Developer Page",
   "forceUpdate": "Update to Latest (Include Preview)",
-  "authLog": "Auth Log",
-  "viewAuthLog": "View Auth Log",
-  "authLogEmpty": "No auth log yet.",
-  "@authLogLastEntry": {
+  "appLogTitle": "Runtime Log",
+  "viewAppLog": "View Runtime Log",
+  "logEmpty": "No runtime log yet.",
+  "@logLastEntry": {
     "placeholders": {
       "time": {
         "type": "String"
@@ -236,7 +245,7 @@
       }
     }
   },
-  "authLogLastEntry": "{level} · {tag} · {time}",
+  "logLastEntry": "{level} · {tag} · {time}",
   "scheduleSetting": "Schedule Setting",
   "scheduleManagement": "Schedule Management",
   "globalSetting": "Global Setting",
@@ -934,6 +943,33 @@
   "dateMonthDay": "{month}/{day}",
   "@dateMonthDay": {
     "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dateMonthDayCompact": "{month}/{day}",
+  "@dateMonthDayCompact": {
+    "description": "Compact numeric month/day for narrow spaces such as the course grid header",
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dateYearMonthDay": "{month}/{day}/{year}",
+  "@dateYearMonthDay": {
+    "description": "Full numeric date shown in the course page header when there is room for the year",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
       "month": {
         "type": "int"
       },
@@ -1988,8 +2024,10 @@
   "reminderHostProbePermissionUnknown": "Checking…",
   "reminderHostProbePermissionAuthorized": "Authorized",
   "reminderHostProbePermissionProvisional": "Provisional (quiet delivery)",
+  "reminderHostProbePermissionEphemeral": "Ephemeral (temporary authorization)",
   "reminderHostProbePermissionDeniedLabel": "Denied in system settings",
   "reminderHostProbePermissionNotDetermined": "Not requested yet",
+  "reminderHostProbePermissionUnsupported": "Unsupported on this platform",
   "reminderHostProbeRequestPermission": "Request",
   "reminderHostProbeOpenSettings": "Open Settings",
   "reminderHostProbeOpenSettingsFailed": "Could not open system settings",
@@ -2026,7 +2064,7 @@
   "reminderLeadTimeMultiHint": "You can pick more than one. Each adds a separate notification.",
   "reminderQuietSection": "Quiet hours",
   "reminderQuietEnabled": "Quiet hours",
-  "reminderQuietHint": "Reminders inside this window are dropped, not delayed",
+  "reminderQuietHint": "Reminders inside this window are dropped",
   "reminderQuietStart": "From",
   "reminderQuietEnd": "To",
   "reminderStatusSection": "Scheduling status",
@@ -2036,13 +2074,14 @@
   "reminderPermissionTitle": "Notifications are off",
   "reminderPermissionDeniedHint": "You denied the permission earlier, so iOS will not ask again. Enable it in system settings.",
   "reminderPermissionNotDeterminedHint": "Grant the permission so reminders can reach you.",
+  "reminderPermissionUnsupportedHint": "This platform does not support local reminders.",
   "reminderPermissionRequest": "Allow",
   "reminderPermissionOpenSettings": "Open Settings",
   "reminderPermissionOpenFailed": "Could not open system settings",
   "reminderPermissionGrantedToast": "Notification permission granted",
   "reminderPermissionDeniedToast": "Permission denied",
   "reminderPermissionFailed": "Permission request failed",
-  "reminderPrivacyHint": "Reminders appear on the lock screen, so they follow your privacy switches: if you hide the teacher's name, it stays hidden here too.",
+  "reminderPrivacyHint": "Lock-screen reminders also follow the Show Teacher switch under Course Style: turn it off there and the teacher's name won't appear in reminders.",
   "@reminderPlanPending": {
     "placeholders": {
       "count": {
@@ -2084,5 +2123,44 @@
   "privacyPolicy": "Privacy Policy",
   "legalInfo": "Legal Information",
   "supportAndHelp": "Support & Help",
-  "docLoadFailed": "Failed to load document"
+  "docLoadFailed": "Failed to load document",
+  "logPersistenceSwitch": "Keep diagnostic logs on device",
+  "logPersistenceSwitchHint": "Save warnings and errors to log files on this device (about 6 MB, rotating). On by default. When off, logs stay in memory only and are lost when the app closes.",
+  "runtimeLogs": "Runtime logs",
+  "logCopyAll": "Copy all",
+  "logSaveShare": "Save and share",
+  "logCopyFolderPath": "Copy log folder path",
+  "logOpenFolder": "Open log folder",
+  "logClearMemory": "Clear memory logs",
+  "logAll": "All",
+  "logAuthentication": "Authentication",
+  "logBusinessErrors": "Business errors",
+  "logAllTags": "All tags",
+  "logNoMatches": "No matching logs",
+  "logCategoryAuthentication": "Authentication",
+  "logCategoryBusiness": "Business",
+  "logStackTrace": "Stack trace",
+  "logCopied": "Logs copied to clipboard",
+  "logCopyFailed": "Could not copy logs",
+  "logShared": "Log snapshot exported",
+  "logSaveFailed": "Could not save logs",
+  "logShareFailed": "Could not share logs. The saved snapshot is still available.",
+  "logClearTitle": "Clear logs in memory?",
+  "logClearHint": "Only logs from the current process will be cleared. Saved log files are kept.",
+  "logPersistenceOff": "Logs stay in memory and are lost when the app closes",
+  "logPersistenceActive": "Warnings and errors are saved to bugaoshan.log (about 6 MB, rotating)",
+  "logPersistenceRetryHint": "Turn this off and on to retry. If it still fails, check available storage.",
+  "logPersistenceUnavailable": "Log file writing is unavailable{reason}",
+  "@logPersistenceUnavailable": {"placeholders": {"reason": {"type": "String"}}},
+  "logDroppedEntries": "Queued log entries dropped: {count}",
+  "@logDroppedEntries": {"placeholders": {"count": {"type": "int"}}},
+  "logDirectoryCopied": "Folder path copied: {path}\nUse Save and share to export logs.",
+  "@logDirectoryCopied": {"placeholders": {"path": {"type": "String"}}},
+  "logSaved": "Log snapshot saved to: {path}",
+  "@logSaved": {"placeholders": {"path": {"type": "String"}}},
+  "logDirectoryOpenFailed": "Could not open the log folder",
+  "logStartupTitle": "Bugaoshan could not start",
+  "logCopy": "Copy logs",
+  "logSave": "Save logs",
+  "logShare": "Share logs"
 }

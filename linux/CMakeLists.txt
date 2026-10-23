@@ -74,11 +74,6 @@ set_target_properties(${BINARY_NAME}
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
-# WPE WebKit is supplied by the host distribution (or Flatpak's /app prefix).
-# Keep the native WebView plugin, but do not copy WPE itself into the app bundle.
-list(FILTER PLUGIN_BUNDLED_LIBRARIES EXCLUDE REGEX
-  "lib(WPEWebKit-2\\.0|WPEBackend-fdo-1\\.0|wpe-1\\.0)\\.so")
-
 
 # === Installation ===
 # By default, "installing" just makes a relocatable bundle in the build

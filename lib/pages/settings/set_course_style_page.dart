@@ -12,6 +12,7 @@ import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/widgets/common/styled_widget.dart';
 import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/providers/set_theme_color_provider.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:system_theme/system_theme.dart';
@@ -69,9 +70,9 @@ class SetCourseStylePage extends StatelessWidget {
                   // Settings section
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
+                      padding: withSystemBottomInset(
+                        context,
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                       child: Column(
                         spacing: 16,

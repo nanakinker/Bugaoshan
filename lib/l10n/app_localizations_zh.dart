@@ -446,6 +446,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get usePreviewUpdateSourceHint => '仅影响首页和关于页面的自动检查；测试页面始终同时检查两个渠道。';
 
   @override
+  String get networkProxy => '网络代理';
+
+  @override
+  String get ghProxyMirror => 'GitHub 加速';
+
+  @override
+  String get ghProxyMirrorHint =>
+      '通过 gh-proxy 镜像下载 GitHub 资源（软件更新、校历），失败时自动回退直连。';
+
+  @override
   String get forceCaptchaForDownload => '强制下载验证码';
 
   @override
@@ -501,16 +511,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get forceUpdate => '更新到最新版本（含预览版）';
 
   @override
-  String get authLog => '认证日志';
+  String get appLogTitle => '运行日志';
 
   @override
-  String get viewAuthLog => '查看认证日志';
+  String get viewAppLog => '查看运行日志';
 
   @override
-  String get authLogEmpty => '暂无认证日志。';
+  String get logEmpty => '暂无运行日志。';
 
   @override
-  String authLogLastEntry(String time, String level, String tag) {
+  String logLastEntry(String time, String level, String tag) {
     return '$level · $tag · $time';
   }
 
@@ -2355,6 +2365,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String dateMonthDayCompact(int month, int day) {
+    return '$month/$day';
+  }
+
+  @override
+  String dateYearMonthDay(int year, int month, int day) {
+    return '$year/$month/$day';
+  }
+
+  @override
   String get holidayLabel => '假';
 
   @override
@@ -3494,10 +3514,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reminderHostProbePermissionProvisional => '临时授权（安静投递）';
 
   @override
+  String get reminderHostProbePermissionEphemeral => '临时授权（Ephemeral）';
+
+  @override
   String get reminderHostProbePermissionDeniedLabel => '已被系统设置拒绝';
 
   @override
   String get reminderHostProbePermissionNotDetermined => '尚未请求';
+
+  @override
+  String get reminderHostProbePermissionUnsupported => '当前平台不支持';
 
   @override
   String get reminderHostProbeRequestPermission => '请求授权';
@@ -3594,7 +3620,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reminderQuietEnabled => '免打扰时段';
 
   @override
-  String get reminderQuietHint => '落在该时段内的提醒会被丢弃，而不是延后';
+  String get reminderQuietHint => '落在该时段内的提醒会被丢弃';
 
   @override
   String get reminderQuietStart => '开始';
@@ -3624,6 +3650,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reminderPermissionNotDeterminedHint => '需要授予通知权限，提醒才能送达。';
 
   @override
+  String get reminderPermissionUnsupportedHint => '当前平台暂不支持本地提醒。';
+
+  @override
   String get reminderPermissionRequest => '去授权';
 
   @override
@@ -3642,7 +3671,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reminderPermissionFailed => '请求权限失败';
 
   @override
-  String get reminderPrivacyHint => '提醒会显示在锁屏上，因此与隐私开关联动：关掉了「显示教师姓名」，锁屏上也不会出现。';
+  String get reminderPrivacyHint =>
+      '锁屏上的提醒也遵循「课程表样式」里的「显示教师」开关：在那里关掉后，提醒里就不会出现老师名字。';
 
   @override
   String get reminderPlanCopy => '复制计划 JSON';
@@ -3729,6 +3759,120 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get docLoadFailed => '文档加载失败';
+
+  @override
+  String get logPersistenceSwitch => '在本机保留诊断日志';
+
+  @override
+  String get logPersistenceSwitchHint =>
+      '将警告与错误保存为本机日志文件（约 6 MB，自动轮转）。默认开启；关闭后日志仅存于内存，应用退出即丢失。';
+
+  @override
+  String get runtimeLogs => '运行日志';
+
+  @override
+  String get logCopyAll => '复制全部';
+
+  @override
+  String get logSaveShare => '保存并分享';
+
+  @override
+  String get logCopyFolderPath => '复制日志目录路径';
+
+  @override
+  String get logOpenFolder => '打开日志目录';
+
+  @override
+  String get logClearMemory => '清空内存日志';
+
+  @override
+  String get logAll => '全部';
+
+  @override
+  String get logAuthentication => '认证日志';
+
+  @override
+  String get logBusinessErrors => '业务错误';
+
+  @override
+  String get logAllTags => '全部 tag';
+
+  @override
+  String get logNoMatches => '没有符合条件的日志';
+
+  @override
+  String get logCategoryAuthentication => '认证';
+
+  @override
+  String get logCategoryBusiness => '业务';
+
+  @override
+  String get logStackTrace => '错误堆栈';
+
+  @override
+  String get logCopied => '已复制日志到剪贴板';
+
+  @override
+  String get logCopyFailed => '复制日志失败';
+
+  @override
+  String get logShared => '日志快照已导出';
+
+  @override
+  String get logSaveFailed => '保存日志失败';
+
+  @override
+  String get logShareFailed => '分享日志失败，已保存的快照仍可使用。';
+
+  @override
+  String get logClearTitle => '清空内存中的日志？';
+
+  @override
+  String get logClearHint => '仅清空当前进程的内存日志，磁盘上已保存的文件不受影响。';
+
+  @override
+  String get logPersistenceOff => '日志仅保留在内存，应用退出即丢失';
+
+  @override
+  String get logPersistenceActive => '警告与错误会写入 bugaoshan.log（约 6 MB，自动轮转）';
+
+  @override
+  String get logPersistenceRetryHint => '请关闭后重新开启；若仍失败，请检查设备剩余存储空间。';
+
+  @override
+  String logPersistenceUnavailable(String reason) {
+    return '落盘不可用$reason';
+  }
+
+  @override
+  String logDroppedEntries(int count) {
+    return '已丢弃 $count 条待写日志';
+  }
+
+  @override
+  String logDirectoryCopied(String path) {
+    return '已复制目录路径：$path\n点「保存并分享」可导出日志。';
+  }
+
+  @override
+  String logSaved(String path) {
+    return '日志快照已保存至：$path';
+  }
+
+  @override
+  String get logDirectoryOpenFailed => '打开日志目录失败';
+
+  @override
+  String get logStartupTitle => 'Bugaoshan 启动失败';
+
+  @override
+  String get logCopy => '复制日志';
+
+  @override
+  String get logSave => '保存日志';
+
+  @override
+  String get logShare => '分享日志';
 }
 
 /// The translations for Chinese, as used in China, using the Han script (`zh_Hans_CN`).

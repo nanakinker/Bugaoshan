@@ -125,7 +125,7 @@ public struct CourseLiveActivity: Widget {
             .monospacedDigit()
             .font(.title3.weight(.bold))
             .foregroundColor(.orange)
-            Text("后下课")
+            Text(widgetLocalizedString("liveActivity.untilClassEnds"))
               .font(.caption2)
               .foregroundColor(.secondary)
           }
@@ -138,7 +138,7 @@ public struct CourseLiveActivity: Widget {
               Image(systemName: "arrow.forward.circle.fill")
                 .foregroundColor(.blue)
                 .font(.caption)
-              Text("下节: \(nextCourse)")
+              Text(widgetLocalizedFormat("liveActivity.nextCourse", nextCourse))
                 .font(.caption)
                 .foregroundColor(.secondary)
                 .lineLimit(1)
@@ -154,7 +154,7 @@ public struct CourseLiveActivity: Widget {
           } else {
             HStack {
               Spacer()
-              Text("预计 \(formatEndTime(context.state.endAt)) 下课")
+              Text(widgetLocalizedFormat("liveActivity.classEndsAt", formatEndTime(context.state.endAt)))
                 .font(.caption2)
                 .foregroundColor(.secondary)
             }
@@ -234,7 +234,7 @@ private struct CourseLockScreenView: View {
             .lineLimit(1)
         }
         Spacer()
-        Text("预计 \(formatEndTime(context.state.endAt)) 下课")
+        Text(widgetLocalizedFormat("liveActivity.classEndsAt", formatEndTime(context.state.endAt)))
           .font(.caption2)
           .foregroundColor(.secondary)
       }
@@ -247,7 +247,7 @@ private struct CourseLockScreenView: View {
           Image(systemName: "arrow.forward.circle.fill")
             .font(.caption2)
             .foregroundColor(.blue)
-          Text("下节: \(nextCourse)")
+          Text(widgetLocalizedFormat("liveActivity.nextCourse", nextCourse))
             .font(.caption)
             .foregroundColor(.secondary)
             .lineLimit(1)

@@ -566,8 +566,8 @@ void main() {
   testWidgets(
     'nested Scaffold with its own bottom bar is not inflated by the dock inset',
     (tester) async {
-      // #376：第二课堂这类自带 NavigationBar 的 dock 入口，被外层整页避让的
-      // 同时，其内层 Scaffold 不应再消费一次注入的底部 padding。
+      // #376：此前第二课堂自带 NavigationBar（现已改为顶部 TabBar）；此处针对此类
+      // 自带底栏的 dock 入口进行回归防护，验证其内层 Scaffold 不应再消费一次注入的底部 padding。
       Widget build({required bool consumed}) => MaterialApp(
         theme: ThemeData(
           navigationBarTheme: const NavigationBarThemeData(height: 64),

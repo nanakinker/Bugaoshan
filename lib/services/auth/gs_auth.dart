@@ -4,7 +4,7 @@ import 'package:bugaoshan/services/auth/scu_auth.dart';
 import 'package:bugaoshan/services/auth/cookie_client.dart';
 import 'package:bugaoshan/services/auth/scu_exceptions.dart';
 import 'package:bugaoshan/services/auth/subsystem_auth.dart';
-import 'package:bugaoshan/utils/auth_logger.dart';
+import 'package:bugaoshan/utils/app_logger.dart';
 import 'package:bugaoshan/utils/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,14 +21,14 @@ class GsAuth extends ChangeNotifier implements SubsystemAuth {
   static const String _tag = 'GsAuth';
 
   final ScuAuth _scuAuth;
-  final AuthLogger _log;
+  final AppLogger _log;
   CookieClient? _cachedClient;
   CookieClient? _lastScuClient;
   Future<CookieClient>? _loginFuture;
   CookieClient? _webClient;
 
-  GsAuth(this._scuAuth, {AuthLogger? logger})
-    : _log = logger ?? getIt<AuthLogger>() {
+  GsAuth(this._scuAuth, {AppLogger? logger})
+    : _log = logger ?? getIt<AppLogger>() {
     _scuAuth.addListener(notifyListeners);
   }
 
@@ -74,7 +74,7 @@ class GsAuth extends ChangeNotifier implements SubsystemAuth {
     }
 
     _log.i(_tag, 'getClient: starting SSO login');
-    _loginFuture = _login(scuClient);
+    _loginFuture = _log.guard(_tag, '研究生教务 SSO 登录', () => _login(scuClient));
     try {
       return await _loginFuture!;
     } finally {
@@ -90,7 +90,14 @@ class GsAuth extends ChangeNotifier implements SubsystemAuth {
       // 只有 Web 端的 BrowserClient 有该属性；动态设置避免平台分支的
       // 类型依赖。原生平台不会走到这里。
       (inner as dynamic).withCredentials = true;
-    } catch (_) {}
+    } catch (logError, logStackTrace) {
+      _log.e(
+        _tag,
+        '_buildWebClient 失败',
+        error: logError,
+        stackTrace: logStackTrace,
+      );
+    }
     return CookieClient(inner: inner);
   }
 
@@ -114,8 +121,8 @@ class GsAuth extends ChangeNotifier implements SubsystemAuth {
         headers: ssoHeaders,
       );
       _log.d(_tag, 'gsapp SSO: status=${gsappResponse.statusCode}');
-    } catch (e) {
-      _log.w(_tag, 'gsapp 域 SSO 预热失败（占位域名，忽略）：$e');
+    } catch (e, logStackTrace) {
+      _log.e(_tag, '_login 失败', error: e, stackTrace: logStackTrace);
     }
 
     // ehall 域会话预热：课表接口实测部署在 ehall 域（kGsScheduleEndpointPath，
@@ -147,8 +154,8 @@ class GsAuth extends ChangeNotifier implements SubsystemAuth {
           headers: ssoHeaders,
         );
         _log.d(_tag, 'app index: $appIndex -> ${appIndexResponse.statusCode}');
-      } catch (e) {
-        _log.w(_tag, 'app index 预热失败（忽略）：$appIndex $e');
+      } catch (e, logStackTrace) {
+        _log.e(_tag, '_login 失败', error: e, stackTrace: logStackTrace);
       }
     }
 

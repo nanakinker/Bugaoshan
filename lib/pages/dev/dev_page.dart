@@ -1,14 +1,16 @@
 import 'package:bugaoshan/widgets/adaptive/adaptive_glass_controls.dart';
 import 'package:bugaoshan/pages/dev/ui/ui_tile.dart';
+import 'package:bugaoshan/utils/app_log.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
-import 'package:bugaoshan/pages/dev/auth_log/auth_log_tile.dart';
+import 'package:bugaoshan/pages/dev/logs/log_tile.dart';
+import 'package:bugaoshan/pages/dev/logs/log_persistence_tile.dart';
 import 'package:bugaoshan/pages/dev/changelog/changelog_tile.dart';
 import 'package:bugaoshan/pages/dev/environment_info_tile.dart';
-import 'package:bugaoshan/pages/dev/live_activity_probe_tile.dart';
-import 'package:bugaoshan/pages/dev/reminder_probe_tile.dart';
+import 'package:bugaoshan/pages/dev/probe_tile.dart';
+import 'package:bugaoshan/pages/dev/log_stress_tile.dart';
 import 'package:bugaoshan/pages/dev/update_card.dart';
 import 'package:bugaoshan/pages/dev/wizard_reset_tile.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
@@ -16,6 +18,7 @@ import 'package:bugaoshan/providers/update_provider.dart';
 import 'package:bugaoshan/services/update_service.dart';
 import 'package:bugaoshan/widgets/dialog/download_progress_dialog.dart';
 import 'package:bugaoshan/widgets/dialog/update_dialog.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 
 class DevPage extends StatefulWidget {
   const DevPage({super.key});
@@ -25,6 +28,8 @@ class DevPage extends StatefulWidget {
 }
 
 class _DevPageState extends State<DevPage> {
+  static const String _tag = 'DevPageState';
+
   final _appConfig = getIt<AppConfigProvider>();
   final _updateProvider = getIt<UpdateProvider>();
 
@@ -34,7 +39,13 @@ class _DevPageState extends State<DevPage> {
     if (!_supportsUpdate) return;
     try {
       await _updateProvider.getAllLatestReleases();
-    } catch (_) {
+    } catch (logError, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_checkForUpdates 失败',
+        error: logError,
+        stackTrace: logStackTrace,
+      );
       // provider 已将 error 状态填充到 stableResult/previewResult,此处仅吞异常
     }
   }
@@ -133,17 +144,19 @@ class _DevPageState extends State<DevPage> {
     return Scaffold(
       appBar: AppBar(title: Text(localizations.devPage)),
       body: ListView(
-        padding: const EdgeInsets.all(24),
+        padding: withSystemBottomInset(context, const EdgeInsets.all(24)),
         children: [
           const EnvironmentInfoTile(),
           const Divider(),
           const WizardResetTile(),
           const Divider(),
-          const AuthLogTile(),
+          const LogTile(),
           const Divider(),
-          const ReminderProbeTile(),
+          const LogPersistenceTile(),
           const Divider(),
-          const LiveActivityProbeTile(),
+          const LogStressTile(),
+          const Divider(),
+          const ProbeTile(),
           const Divider(),
           const UiTile(),
           const Divider(),

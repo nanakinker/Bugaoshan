@@ -25,7 +25,7 @@ dependencies:
   path_provider: ^2.1.5
   path: ^1.9.0
   dart_sm: ^0.1.4
-  flutter_secure_storage: ^10.0.0
+  flutter_secure_storage: ^11.2.0
   scu_ocr_lite:
     git:
       url: https://github.com/The-Brotherhood-of-SCU/scu_ocr_lite_dart.git
@@ -50,7 +50,7 @@ dependencies:
   flutter_inappwebview:
     git:
       url: https://github.com/The-Brotherhood-of-SCU/flutter_inappwebview.git
-      ref: 666bc33f776285076327e4a94aafc103c693e17a
+      ref: edd0663cf09cf5e8882dd2f4d22ba6855fdbac5e
       path: flutter_inappwebview
   tyme: ^1.4.4
   json_annotation: ^4.12.0

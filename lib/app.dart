@@ -4,7 +4,7 @@ import 'dart:async';
 // ignore: unnecessary_import
 import 'package:flutter/cupertino.dart';
 
-import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/pages/home_page.dart';
 import 'package:bugaoshan/pages/wizard/eula_gate_page.dart';
@@ -14,13 +14,15 @@ import 'package:bugaoshan/services/background_cache_service.dart';
 import 'package:bugaoshan/services/reminder/live_activity_coordinator.dart';
 import 'package:bugaoshan/services/reminder/reminder_service.dart';
 import 'package:bugaoshan/theme.dart';
+import 'package:bugaoshan/utils/app_logger.dart';
 import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/widgets/common/session_expired_listener.dart';
 import 'package:bugaoshan/widgets/eula_content.dart';
 import 'package:bugaoshan/widgets/route/mouse_back_handler.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:system_theme/system_theme.dart';
-import 'l10n/app_localizations.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -32,6 +34,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final AppConfigProvider _appConfig = getIt<AppConfigProvider>();
   late final BackgroundCacheService _bgCache = getIt<BackgroundCacheService>();
+  late final void Function() _logPersistenceListener;
 
   @override
   void initState() {
@@ -41,11 +44,35 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       if (!mounted) return;
       _bgCache.precache();
     });
+    _bindLogPersistence();
+  }
+
+  /// 按用户开关启停 warn/error 日志落盘。
+  ///
+  /// 默认开启（`AppConfigProvider.logPersistenceEnabled`）：落盘是崩溃现场的
+  /// 唯一后手，默认关闭等于要求用户在出问题前就去设置里翻开关。用户关闭时
+  /// 同时清理可能残留的旧文件。
+  void _bindLogPersistence() {
+    final logger = getIt<AppLogger>();
+    final notifier = _appConfig.logPersistenceEnabled;
+    void apply(bool enabled) {
+      if (kIsWeb) return;
+      if (enabled) {
+        unawaited(logger.enableFileSink());
+      } else {
+        unawaited(logger.deletePersistedFiles());
+      }
+    }
+
+    _logPersistenceListener = () => apply(notifier.value);
+    notifier.addListener(_logPersistenceListener);
+    apply(notifier.value);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _appConfig.logPersistenceEnabled.removeListener(_logPersistenceListener);
     _bgCache.dispose();
     super.dispose();
   }

@@ -53,7 +53,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -63,6 +63,19 @@ jobs:
           INPUT_CHANNEL: ${{ github.event.inputs.channel || 'auto' }}
           INPUT_VERSION_OVERRIDE: ${{ github.event.inputs.version_override || '' }}
         run: python3 .github/scripts/resolve_release_version.py
+
+      - name: Require main or preview for protected macOS signing
+        if: vars.MACOS_SIGNING_ENABLED == 'true' && steps.resolve.outputs.should_release == 'true'
+        env:
+          RELEASE_REF: ${{ github.ref }}
+        run: |
+          case "$RELEASE_REF" in
+            refs/heads/main|refs/heads/preview) ;;
+            *)
+              echo "::error::macOS signing requires main or preview. Run Release Pipeline on that branch to create the next release."
+              exit 1
+              ;;
+          esac
 
       - name: Tag commit in repository (if new branch release)
         if: steps.resolve.outputs.should_release == 'true' && github.ref_type != 'tag'
@@ -100,18 +113,28 @@ jobs:
       build_name: ${{ needs.resolve-metadata.outputs.build_version }}
       build_number: ${{ needs.resolve-metadata.outputs.build_number }}
 
+  build-linux:
+    name: Linux Build
+    needs: resolve-metadata
+    if: needs.resolve-metadata.outputs.should_release == 'true' || needs.resolve-metadata.outputs.build_only == 'true'
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      version: ${{ needs.resolve-metadata.outputs.tag }}
+
   build-macos:
-    name: macOS Build Validation
+    name: macOS Build
     needs: resolve-metadata
     if: needs.resolve-metadata.outputs.should_release == 'true' || needs.resolve-metadata.outputs.build_only == 'true'
     uses: ./.github/workflows/build-macos.yml
     with:
       build_name: ${{ needs.resolve-metadata.outputs.build_version }}
       build_number: ${{ needs.resolve-metadata.outputs.build_number }}
+      release_tag: ${{ needs.resolve-metadata.outputs.tag }}
+      signed_release: ${{ vars.MACOS_SIGNING_ENABLED == 'true' && needs.resolve-metadata.outputs.should_release == 'true' }}
 
   publish-release:
     name: Publish Release
-    needs: [resolve-metadata, build-android, build-windows, build-macos]
+    needs: [resolve-metadata, build-android, build-windows, build-linux, build-macos]
     if: needs.resolve-metadata.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -133,8 +156,21 @@ jobs:
           name: windows-release
           path: windows-release
 
+      - name: Download Linux Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-release
+          path: linux-release
+
+      - name: Download verified notarized macOS DMG
+        if: vars.MACOS_SIGNING_ENABLED == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-release
+          path: macos-release
+
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -199,11 +235,13 @@ jobs:
           REPO: ${{ github.server_url }}/${{ github.repository }}
           CHANGELOG: ${{ steps.changelog.outputs.changelog }}
           PREV: ${{ steps.vars.outputs.prev }}
+          MACOS_SIGNED: ${{ vars.MACOS_SIGNING_ENABLED }}
 
       - name: Prepare release files
         run: python .github/scripts/release_prepare.py
         env:
           VERSION: ${{ steps.vars.outputs.tag }}
+          MACOS_SIGNED: ${{ vars.MACOS_SIGNING_ENABLED }}
 
       - name: Create Release and Upload Assets
         run: |
@@ -227,7 +265,11 @@ jobs:
             --draft \
             "${GOPTS[@]}"
 
-          gh release upload "$TAG" bugaoshan_*.apk bugaoshan_*.zip
+          assets=(bugaoshan_*.apk bugaoshan_*.zip bugaoshan_*.tar.gz)
+          if [ "$MACOS_SIGNED" = true ]; then
+            assets+=(bugaoshan_*.dmg macos-manifest.json)
+          fi
+          gh release upload "$TAG" "${assets[@]}"
 
           if [ "$IS_PRERELEASE" = "true" ]; then
             gh release edit "$TAG" --draft=false --prerelease
@@ -237,3 +279,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BODY: ${{ steps.release_body.outputs.body }}
+          MACOS_SIGNED: ${{ vars.MACOS_SIGNING_ENABLED }}

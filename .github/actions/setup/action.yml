@@ -35,6 +35,16 @@ runs:
       run: git config --global --add safe.directory "$FLUTTER_ROOT"
       shell: bash
 
+    - name: Enable git long paths (Windows)
+      # flutter_inappwebview 的 fork 源码树很深：pub 把 git 依赖检出到 pub cache 后，
+      # flutter_inappwebview_android 里最深的文件路径超过 Windows 的 260 字符
+      # MAX_PATH（默认 pub cache 根下实测 268 字符）。不开长路径时 checkout 会中途
+      # 失败，pub 随后把整组子包判为「不再被依赖」，flutter 工具的 package_graph
+      # 校验再以缺包报错，表现为 setup 阶段 `flutter pub get` 退出码 1。
+      if: runner.os == 'Windows'
+      run: git config --global core.longpaths true
+      shell: bash
+
     - name: Get dependencies
       run: flutter pub get
       shell: bash

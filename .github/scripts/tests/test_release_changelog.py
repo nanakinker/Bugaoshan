@@ -44,7 +44,8 @@ class ReleaseChangelogTest(unittest.TestCase):
             output.unlink()
         os.environ["GITHUB_OUTPUT"] = str(output)
         stdout = io.StringIO()
-        with contextlib.redirect_stdout(stdout):
+        self.stderr = io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(self.stderr):
             release_changelog.main()
         return output.read_text(encoding="utf-8"), stdout.getvalue()
 
@@ -91,12 +92,20 @@ class ReleaseChangelogTest(unittest.TestCase):
         with self.assertRaises(SystemExit) as ctx:
             self.run_extract("v9.9.9")
         self.assertEqual(ctx.exception.code, 1)
+        self.assertIn(
+            "::error::No changelog entry found for release version 9.9.9.",
+            self.stderr.getvalue(),
+        )
 
     def test_formal_empty_section_fails(self):
         self.write_changelog("## [Unreleased]\n\n## [2.5.1] - 2026-09-11\n")
         with self.assertRaises(SystemExit) as ctx:
             self.run_extract("v2.5.1")
         self.assertEqual(ctx.exception.code, 1)
+        self.assertIn(
+            "::error::Changelog entry for 2.5.1 is empty.",
+            self.stderr.getvalue(),
+        )
 
 
 if __name__ == "__main__":

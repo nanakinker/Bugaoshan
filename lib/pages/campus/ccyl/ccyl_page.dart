@@ -12,6 +12,7 @@ import 'package:bugaoshan/providers/scu_auth_provider.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
+import 'package:bugaoshan/widgets/common/swipe_page_view.dart';
 
 class CcylPage extends StatefulWidget {
   const CcylPage({super.key});
@@ -20,10 +21,12 @@ class CcylPage extends StatefulWidget {
   State<CcylPage> createState() => _CcylPageState();
 }
 
-class _CcylPageState extends State<CcylPage> {
-  int _currentIndex = 0;
+class _CcylPageState extends State<CcylPage>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
-  // 固定实例，配合 IndexedStack 保持各 Tab 滚动位置与数据
+  // 固定实例，配合 SwipePageView 的 keepPagesAlive 保持各 Tab 的
+  // 滚动位置与已加载数据，翻页不丢状态。页签数量以本列表为准。
   final _tabs = const [
     ActivitiesTab(),
     MyActivitiesTab(),
@@ -31,8 +34,16 @@ class _CcylPageState extends State<CcylPage> {
     CreditListPage(),
   ];
 
-  void _onTabTapped(int index) {
-    setState(() => _currentIndex = index);
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: _tabs.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,8 +98,9 @@ class _CcylPageState extends State<CcylPage> {
                             builder: (_) => const CcylBindPage(),
                           ),
                         );
-                        // ActivitiesTab 会在绑定成功后的新 IndexedStack 中自行加载
-                        // 并保存结果；这里预拉且丢弃返回值只会造成重复请求。
+                        // 绑定成功后本页会随 CcylProvider 重建进入正常态，
+                        // ActivitiesTab 那时自行加载；这里预拉且丢弃返回值
+                        // 只会造成重复请求。
                       },
                       icon: const Icon(Icons.login),
                       label: Text(l10n.ccylDoBind),
@@ -100,7 +112,7 @@ class _CcylPageState extends State<CcylPage> {
           );
         }
 
-        // 正常态：底部导航
+        // 正常态：顶部页签
         return Scaffold(
           appBar: AppBar(
             title: LiquidTitle(text: l10n.ccylTitle, index: _currentIndex),

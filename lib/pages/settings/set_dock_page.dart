@@ -1,14 +1,16 @@
-import 'package:bugaoshan/widgets/adaptive/adaptive_glass_controls.dart';
-import 'package:flutter/material.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/campus_item_config.dart';
 import 'package:bugaoshan/models/student_type.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
+import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/utils/constants.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
+import 'package:bugaoshan/widgets/adaptive/adaptive_glass_controls.dart';
+import 'package:bugaoshan/widgets/common/frosted_glass_dock.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
-import 'package:bugaoshan/widgets/common/frosted_glass_dock.dart';
+import 'package:flutter/material.dart';
 
 class SetDockPage extends StatefulWidget {
   const SetDockPage({super.key});
@@ -243,7 +245,10 @@ class _SetDockPageState extends State<SetDockPage> {
               // Items list
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: withSystemBottomInset(
+                    context,
+                    EdgeInsets.symmetric(horizontal: 16),
+                  ),
                   children: [
                     // Visible items (reorderable)
                     visibleItems,

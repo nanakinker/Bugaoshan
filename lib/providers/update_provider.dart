@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:bugaoshan/utils/app_log.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/release_info.dart';
 import 'package:bugaoshan/providers/app_info_provider.dart';
@@ -19,6 +20,8 @@ import 'package:bugaoshan/widgets/route/router_utils.dart';
 /// 直接返回之前缓存的 Future,await 得到第一次的结果。任务完成(finally)后置空,
 /// 允许下次调用。
 class UpdateProvider {
+  static const String _tag = 'UpdateProvider';
+
   UpdateProvider(this._service, this._appInfo, this._notification);
 
   final UpdateService _service;
@@ -116,7 +119,13 @@ class UpdateProvider {
           ? UpdateCheckResult.hasUpdate(preview)
           : UpdateCheckResult.noUpdate();
       return (stable, preview);
-    } catch (e) {
+    } catch (e, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_doGetAllLatestReleases 失败',
+        error: e,
+        stackTrace: logStackTrace,
+      );
       final error = UpdateCheckResult.error(e.toString());
       stableResult.value = error;
       previewResult.value = error;
@@ -226,7 +235,13 @@ class UpdateProvider {
       // 用户取消(通知栏按钮或 App 内取消按钮)→ 关闭通知,异常继续向上抛
       await _notification.cancel();
       rethrow;
-    } catch (e) {
+    } catch (e, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_doDownloadAndInstall 失败',
+        error: e,
+        stackTrace: logStackTrace,
+      );
       // 其他错误 → 显示错误通知,异常继续向上抛由 dialog 处理
       await _notification.showError(
         content:

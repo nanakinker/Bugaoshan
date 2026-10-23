@@ -1,18 +1,34 @@
 import 'dart:async';
 
 import 'package:bugaoshan/models/version_info.dart';
+import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/providers/app_info_provider.dart';
 import 'package:bugaoshan/providers/update_provider.dart';
 import 'package:bugaoshan/services/download_notification_service.dart';
+import 'package:bugaoshan/services/github_resource_service.dart';
 import 'package:bugaoshan/services/update_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// downloadAndInstall 被覆写，注入的 resource 不会真正发请求；
+/// 用空 MockClient 构造以避免触碰网络。
+final _stubResourceClient = MockClient((_) async => http.Response('', 404));
 
 /// 可控的 UpdateService 替身：downloadAndInstall 挂起在 Completer 上，
 /// 由测试主动 complete / 注入错误。
 class _ControllableUpdateService extends UpdateService {
-  _ControllableUpdateService(SharedPreferences prefs) : super(prefs, '2.5.3');
+  _ControllableUpdateService(SharedPreferences prefs)
+    : super(
+        prefs,
+        '2.5.3',
+        GithubResourceService(
+          AppConfigProvider(prefs),
+          client: _stubResourceClient,
+        ),
+      );
 
   Completer<void>? _downloadCompleter;
   Object? nextError;

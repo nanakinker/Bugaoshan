@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/pages/campus/course_curriculum/course_curriculum_detail_page.dart';
@@ -6,11 +5,13 @@ import 'package:bugaoshan/pages/campus/filter_input_decoration.dart';
 import 'package:bugaoshan/pages/campus/models/course_curriculum_model.dart';
 import 'package:bugaoshan/providers/course_curriculum_provider.dart';
 import 'package:bugaoshan/providers/scu_auth_provider.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
+import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
-import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
+import 'package:flutter/material.dart';
 
 class CourseCurriculumPage extends StatefulWidget {
   const CourseCurriculumPage({super.key});
@@ -278,7 +279,7 @@ class _CourseCurriculumPageState extends State<CourseCurriculumPage> {
     return RefreshIndicator(
       onRefresh: _provider.refresh,
       child: ListView.builder(
-        padding: const EdgeInsets.all(12),
+        padding: withSystemBottomInset(context, EdgeInsets.all(12)),
         itemCount: _provider.courses.length + (_provider.hasMore ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == _provider.courses.length) {

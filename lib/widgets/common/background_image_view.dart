@@ -1,18 +1,20 @@
 import 'dart:io';
-import 'dart:ui' as ui;
+import 'package:bugaoshan/utils/app_log.dart';
 
 import 'package:flutter/material.dart';
 import 'package:bugaoshan/models/background_crop.dart';
-import 'package:bugaoshan/utils/app_log.dart';
+import 'package:bugaoshan/widgets/common/image_error_log.dart';
 
 /// 课程页背景图渲染组件：按 [crop] 裁剪参数把原图缩放/平移进容器，超出部分裁掉。
 ///
 /// [crop] 为 null（或等于默认值）时走 `fit: BoxFit.cover` 分支，与旧版渲染
 /// 完全一致，保证旧用户没有裁剪参数时背景显示不发生变化。
 ///
-/// 像素尺寸经`ui.instantiateImageCodec` 降采样解码取得（不整图解码进内存），
-/// 再用 [BackgroundCropParams.resolveLayout] 计算布局 —— 课程页与裁剪编辑器
-/// 共用同一套渲染数学，保证预览与实际一致。图片渲染由 ResizeImage 限宽解码。
+/// 像素尺寸通过监听同一个 `FileImage` 的 [ImageStreamListener] 取得 ——
+/// 与 Image widget 内部的解析**共享 ImageCache**，不产生二次解码，
+/// 也不会把原图整张解码进内存。拿到尺寸后用
+/// [BackgroundCropParams.resolveLayout] 计算布局，课程页与裁剪编辑器共用
+/// 同一套渲染数学，保证预览与实际一致。
 class BackgroundImageView extends StatefulWidget {
   const BackgroundImageView({
     super.key,
@@ -37,7 +39,14 @@ class BackgroundImageView extends StatefulWidget {
 }
 
 class _BackgroundImageViewState extends State<BackgroundImageView> {
+  static const String _tag = 'BackgroundImageViewState';
+
+  static const Duration _fadeInDuration = Duration(milliseconds: 300);
+
+  ImageStream? _stream;
+  ImageStreamListener? _listener;
   Size? _imageSize;
+  final _imageErrors = ImageErrorReporter();
 
   bool get _hasCustomCrop => widget.crop != null && !widget.crop!.isCover;
 
@@ -51,57 +60,78 @@ class _BackgroundImageViewState extends State<BackgroundImageView> {
   void didUpdateWidget(covariant BackgroundImageView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.path != widget.path) {
+      _imageErrors.reset();
       _imageSize = null;
       _resolveImageSize();
     }
   }
 
-  /// 读取图片的像素尺寸，用于自定义裁剪分支的布局换算。
-  ///
-  /// 刻意**不**走 `ImageProvider.resolve`：那会把整张图解码进内存，一张
-  /// 4000x3000 的照片约 48MB，在 release（AOT + Impeller，内存策略更紧）
-  /// 下极易解码失败；一旦失败，`onError` 只会静默移除监听，`_imageSize`
-  /// 永远为 null，背景图就永久空白（且不报任何错）。
-  ///
-  /// 改为用 `instantiateImageCodec` 配合 `targetWidth` 做**降采样解码**：
-  /// 引擎只解出缩小后的位图，峰值内存降到几 MB，尺寸信息依然准确。
-  /// 解码失败同样只记录日志 —— build() 已保证尺寸未知时照常显示。
-  Future<void> _resolveImageSize() async {
+  /// 监听同一个 FileImage 缓存条目拿到图片尺寸；Image widget 内部的解析
+  /// 与这里共享 ImageCache，不产生二次解码。
+  void _resolveImageSize() {
+    _removeListener();
+    final path = widget.path;
     try {
-      final bytes = await File(widget.path).readAsBytes();
-      if (!mounted) return;
-      final codec = await ui.instantiateImageCodec(
-        bytes,
-        targetWidth: _targetDecodeWidth(),
+      final stream = FileImage(
+        File(widget.path),
+      ).resolve(ImageConfiguration.empty);
+      final listener = ImageStreamListener(
+        (info, _) {
+          if (!mounted) return;
+          final size = Size(
+            info.image.width.toDouble(),
+            info.image.height.toDouble(),
+          );
+          if (size != _imageSize) {
+            setState(() => _imageSize = size);
+            widget.onImageSize?.call(size);
+          }
+        },
+        onError: (error, stackTrace) {
+          _imageErrors.report(
+            path,
+            _tag,
+            '背景图片解码失败',
+            error: error,
+            stackTrace: stackTrace,
+          );
+          // 解码失败保持空显示，与 Image.errorBuilder 行为一致。
+          _removeListener();
+        },
       );
-      final frame = await codec.getNextFrame();
-      // 拿到的是降采样后的尺寸，按比例还原原始像素尺寸，
-      // 否则裁剪换算会基于缩小后的图算错。
-      final scale = _targetDecodeWidth() ?? frame.image.width;
-      final ratio = scale > 0 ? frame.image.width / scale : 1.0;
-      final size = Size(
-        (frame.image.width / ratio).toDouble(),
-        (frame.image.height / ratio).toDouble(),
+      _stream = stream;
+      _listener = listener;
+      stream.addListener(listener);
+    } catch (logError, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_resolveImageSize 失败',
+        error: logError,
+        stackTrace: logStackTrace,
       );
-      frame.image.dispose();
-      codec.dispose();
-      if (!mounted) return;
-      if (size != _imageSize) {
-        setState(() => _imageSize = size);
-        widget.onImageSize?.call(size);
-      }
-    } catch (e) {
-      AppLog.w('BackgroundImageView', 'Failed to read image size: $e');
+      // 文件不存在等同步异常：保持空显示。
     }
   }
 
-  /// 降采样解码的目标宽度：屏幕物理宽度的 2 倍，旋转屏幕留余量。
-  int? _targetDecodeWidth() {
-    final size = MediaQuery.maybeSizeOf(context);
-    if (size == null || !size.isFinite || size.isEmpty) return null;
-    final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 1.0;
-    final w = size.width * (dpr <= 0 ? 1.0 : dpr) * 2;
-    return w > 0 ? w.round() : null;
+  void _removeListener() {
+    try {
+      _stream?.removeListener(_listener!);
+    } catch (logError, logStackTrace) {
+      AppLog.e(
+        _tag,
+        '_removeListener 失败',
+        error: logError,
+        stackTrace: logStackTrace,
+      );
+    }
+    _stream = null;
+    _listener = null;
+  }
+
+  @override
+  void dispose() {
+    _removeListener();
+    super.dispose();
   }
 
   @override
@@ -175,7 +205,16 @@ class _BackgroundImageViewState extends State<BackgroundImageView> {
         (widget.overlayOpacity.clamp(0.0, 1.0) * 255).round(),
       ),
       colorBlendMode: BlendMode.modulate,
-      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+      errorBuilder: (_, error, stackTrace) {
+        _imageErrors.report(
+          widget.path,
+          _tag,
+          '背景图片渲染失败',
+          error: error,
+          stackTrace: stackTrace,
+        );
+        return const SizedBox.shrink();
+      },
     );
   }
 }

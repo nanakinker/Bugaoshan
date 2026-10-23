@@ -16,7 +16,7 @@ class HomeDockInsets extends InheritedWidget {
   /// `MediaQuery.padding.bottom`。未逐页适配的入口由 Home 在外层做整页避让，
   /// 页面内部的嵌套 Scaffold / `NavigationBar` 不应再消费同一份 padding：
   /// 否则会被各自的 `SafeArea` 撑高，在内层底栏与 Dock 之间留出空白
-  /// （见 #376：第二课堂页）。已适配的三张主页自行读取 [bottomOf]，不受影响。
+  /// （见 #376：曾自带底栏的第二课堂页，现已改用顶部 TabBar）。已适配的三张主页自行读取 [bottomOf]，不受影响。
   static Widget consumed({
     required BuildContext context,
     required Widget child,

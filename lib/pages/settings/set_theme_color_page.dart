@@ -5,6 +5,7 @@ import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/providers/set_theme_color_provider.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 import 'package:system_theme/system_theme.dart';
 
 class SetThemeColorPage extends StatefulWidget {
@@ -147,9 +148,9 @@ class _SetThemeColorPageState extends State<SetThemeColorPage> {
               ],
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
+              padding: withSystemBottomInset(
+                context,
+                EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               ),
               child: Column(
                 children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/widgets/common/third_center.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 
 /// 无课表时的通用空状态占位。
 /// 用于 [CourseEditPage] / [CourseScheduleSetting] 等需先有课表才有意义的页面，
@@ -14,7 +15,10 @@ class EmptySchedulePlaceholder extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return ThirdCenter(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        padding: withSystemBottomInset(
+          context,
+          EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        ),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 360),
           child: Column(

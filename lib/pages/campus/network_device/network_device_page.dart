@@ -11,6 +11,7 @@ import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 
 class NetworkDevicePage extends StatefulWidget {
   const NetworkDevicePage({super.key});
@@ -74,7 +75,7 @@ class _NetworkDevicePageState extends State<NetworkDevicePage> {
     return RefreshIndicator(
       onRefresh: devices.refresh,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: withSystemBottomInset(context, EdgeInsets.all(16)),
         children: [
           // 已有列表但刷新失败时，保留旧数据并给出可见的错误提示。
           if (devices.state == NetworkDeviceLoadState.error &&

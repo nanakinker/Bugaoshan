@@ -937,6 +937,24 @@ abstract class AppLocalizations {
   /// **'Affects only the automatic checks on the home and about pages. The test page always checks both channels.'**
   String get usePreviewUpdateSourceHint;
 
+  /// Settings entry title for GitHub mirror / proxy configuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Network Proxy'**
+  String get networkProxy;
+
+  /// Toggle that routes GitHub resource downloads through the gh-proxy mirror.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub Mirror'**
+  String get ghProxyMirror;
+
+  /// No description provided for @ghProxyMirrorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Download GitHub resources (app updates, academic calendar) via the gh-proxy mirror; falls back to direct connection on failure.'**
+  String get ghProxyMirrorHint;
+
   /// Toggle in the developer page to force the CAPTCHA dialog when downloading attachments, for testing the CAPTCHA flow.
   ///
   /// In en, this message translates to:
@@ -1039,29 +1057,29 @@ abstract class AppLocalizations {
   /// **'Update to Latest (Include Preview)'**
   String get forceUpdate;
 
-  /// No description provided for @authLog.
+  /// No description provided for @appLogTitle.
   ///
   /// In en, this message translates to:
-  /// **'Auth Log'**
-  String get authLog;
+  /// **'Runtime Log'**
+  String get appLogTitle;
 
-  /// No description provided for @viewAuthLog.
+  /// No description provided for @viewAppLog.
   ///
   /// In en, this message translates to:
-  /// **'View Auth Log'**
-  String get viewAuthLog;
+  /// **'View Runtime Log'**
+  String get viewAppLog;
 
-  /// No description provided for @authLogEmpty.
+  /// No description provided for @logEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No auth log yet.'**
-  String get authLogEmpty;
+  /// **'No runtime log yet.'**
+  String get logEmpty;
 
-  /// No description provided for @authLogLastEntry.
+  /// No description provided for @logLastEntry.
   ///
   /// In en, this message translates to:
   /// **'{level} · {tag} · {time}'**
-  String authLogLastEntry(String time, String level, String tag);
+  String logLastEntry(String time, String level, String tag);
 
   /// No description provided for @scheduleSetting.
   ///
@@ -4615,6 +4633,18 @@ abstract class AppLocalizations {
   /// **'{month}/{day}'**
   String dateMonthDay(int month, int day);
 
+  /// Compact numeric month/day for narrow spaces such as the course grid header
+  ///
+  /// In en, this message translates to:
+  /// **'{month}/{day}'**
+  String dateMonthDayCompact(int month, int day);
+
+  /// Full numeric date shown in the course page header when there is room for the year
+  ///
+  /// In en, this message translates to:
+  /// **'{month}/{day}/{year}'**
+  String dateYearMonthDay(int year, int month, int day);
+
   /// Short label for statutory holiday displayed in course grid date header
   ///
   /// In en, this message translates to:
@@ -6721,6 +6751,12 @@ abstract class AppLocalizations {
   /// **'Provisional (quiet delivery)'**
   String get reminderHostProbePermissionProvisional;
 
+  /// No description provided for @reminderHostProbePermissionEphemeral.
+  ///
+  /// In en, this message translates to:
+  /// **'Ephemeral (temporary authorization)'**
+  String get reminderHostProbePermissionEphemeral;
+
   /// No description provided for @reminderHostProbePermissionDeniedLabel.
   ///
   /// In en, this message translates to:
@@ -6732,6 +6768,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not requested yet'**
   String get reminderHostProbePermissionNotDetermined;
+
+  /// No description provided for @reminderHostProbePermissionUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported on this platform'**
+  String get reminderHostProbePermissionUnsupported;
 
   /// No description provided for @reminderHostProbeRequestPermission.
   ///
@@ -6892,7 +6934,7 @@ abstract class AppLocalizations {
   /// No description provided for @reminderQuietHint.
   ///
   /// In en, this message translates to:
-  /// **'Reminders inside this window are dropped, not delayed'**
+  /// **'Reminders inside this window are dropped'**
   String get reminderQuietHint;
 
   /// No description provided for @reminderQuietStart.
@@ -6949,6 +6991,12 @@ abstract class AppLocalizations {
   /// **'Grant the permission so reminders can reach you.'**
   String get reminderPermissionNotDeterminedHint;
 
+  /// No description provided for @reminderPermissionUnsupportedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This platform does not support local reminders.'**
+  String get reminderPermissionUnsupportedHint;
+
   /// No description provided for @reminderPermissionRequest.
   ///
   /// In en, this message translates to:
@@ -6988,7 +7036,7 @@ abstract class AppLocalizations {
   /// No description provided for @reminderPrivacyHint.
   ///
   /// In en, this message translates to:
-  /// **'Reminders appear on the lock screen, so they follow your privacy switches: if you hide the teacher\'s name, it stays hidden here too.'**
+  /// **'Lock-screen reminders also follow the Show Teacher switch under Course Style: turn it off there and the teacher\'s name won\'t appear in reminders.'**
   String get reminderPrivacyHint;
 
   /// No description provided for @reminderPlanCopy.
@@ -7158,6 +7206,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load document'**
   String get docLoadFailed;
+
+  /// No description provided for @logPersistenceSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep diagnostic logs on device'**
+  String get logPersistenceSwitch;
+
+  /// No description provided for @logPersistenceSwitchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save warnings and errors to log files on this device (about 6 MB, rotating). On by default. When off, logs stay in memory only and are lost when the app closes.'**
+  String get logPersistenceSwitchHint;
+
+  /// No description provided for @runtimeLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Runtime logs'**
+  String get runtimeLogs;
+
+  /// No description provided for @logCopyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy all'**
+  String get logCopyAll;
+
+  /// No description provided for @logSaveShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and share'**
+  String get logSaveShare;
+
+  /// No description provided for @logCopyFolderPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy log folder path'**
+  String get logCopyFolderPath;
+
+  /// No description provided for @logOpenFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Open log folder'**
+  String get logOpenFolder;
+
+  /// No description provided for @logClearMemory.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear memory logs'**
+  String get logClearMemory;
+
+  /// No description provided for @logAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get logAll;
+
+  /// No description provided for @logAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get logAuthentication;
+
+  /// No description provided for @logBusinessErrors.
+  ///
+  /// In en, this message translates to:
+  /// **'Business errors'**
+  String get logBusinessErrors;
+
+  /// No description provided for @logAllTags.
+  ///
+  /// In en, this message translates to:
+  /// **'All tags'**
+  String get logAllTags;
+
+  /// No description provided for @logNoMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching logs'**
+  String get logNoMatches;
+
+  /// No description provided for @logCategoryAuthentication.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication'**
+  String get logCategoryAuthentication;
+
+  /// No description provided for @logCategoryBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get logCategoryBusiness;
+
+  /// No description provided for @logStackTrace.
+  ///
+  /// In en, this message translates to:
+  /// **'Stack trace'**
+  String get logStackTrace;
+
+  /// No description provided for @logCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs copied to clipboard'**
+  String get logCopied;
+
+  /// No description provided for @logCopyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not copy logs'**
+  String get logCopyFailed;
+
+  /// No description provided for @logShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Log snapshot exported'**
+  String get logShared;
+
+  /// No description provided for @logSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save logs'**
+  String get logSaveFailed;
+
+  /// No description provided for @logShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not share logs. The saved snapshot is still available.'**
+  String get logShareFailed;
+
+  /// No description provided for @logClearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear logs in memory?'**
+  String get logClearTitle;
+
+  /// No description provided for @logClearHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Only logs from the current process will be cleared. Saved log files are kept.'**
+  String get logClearHint;
+
+  /// No description provided for @logPersistenceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Logs stay in memory and are lost when the app closes'**
+  String get logPersistenceOff;
+
+  /// No description provided for @logPersistenceActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Warnings and errors are saved to bugaoshan.log (about 6 MB, rotating)'**
+  String get logPersistenceActive;
+
+  /// No description provided for @logPersistenceRetryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn this off and on to retry. If it still fails, check available storage.'**
+  String get logPersistenceRetryHint;
+
+  /// No description provided for @logPersistenceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Log file writing is unavailable{reason}'**
+  String logPersistenceUnavailable(String reason);
+
+  /// No description provided for @logDroppedEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'Queued log entries dropped: {count}'**
+  String logDroppedEntries(int count);
+
+  /// No description provided for @logDirectoryCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder path copied: {path}\nUse Save and share to export logs.'**
+  String logDirectoryCopied(String path);
+
+  /// No description provided for @logSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Log snapshot saved to: {path}'**
+  String logSaved(String path);
+
+  /// No description provided for @logDirectoryOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the log folder'**
+  String get logDirectoryOpenFailed;
+
+  /// No description provided for @logStartupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bugaoshan could not start'**
+  String get logStartupTitle;
+
+  /// No description provided for @logCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy logs'**
+  String get logCopy;
+
+  /// No description provided for @logSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save logs'**
+  String get logSave;
+
+  /// No description provided for @logShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share logs'**
+  String get logShare;
 }
 
 class _AppLocalizationsDelegate

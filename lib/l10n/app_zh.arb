@@ -182,6 +182,9 @@
   "updateToPreview": "更新到最新版（包括预览版）",
   "usePreviewUpdateSource": "软件更新使用预览版源",
   "usePreviewUpdateSourceHint": "仅影响首页和关于页面的自动检查；测试页面始终同时检查两个渠道。",
+  "networkProxy": "网络代理",
+  "ghProxyMirror": "GitHub 加速",
+  "ghProxyMirrorHint": "通过 gh-proxy 镜像下载 GitHub 资源（软件更新、校历），失败时自动回退直连。",
   "forceCaptchaForDownload": "强制下载验证码",
   "forceCaptchaForDownloadHint": "开启后点击附件下载将直接弹出验证码弹窗，用于测试验证码流程。",
   "captchaDialogTitle": "请输入验证码",
@@ -199,10 +202,10 @@
   "environmentInfo": "环境信息",
   "devPage": "开发者页面",
   "forceUpdate": "更新到最新版本（含预览版）",
-  "authLog": "认证日志",
-  "viewAuthLog": "查看认证日志",
-  "authLogEmpty": "暂无认证日志。",
-  "@authLogLastEntry": {
+  "appLogTitle": "运行日志",
+  "viewAppLog": "查看运行日志",
+  "logEmpty": "暂无运行日志。",
+  "@logLastEntry": {
     "placeholders": {
       "time": {
         "type": "String"
@@ -215,7 +218,7 @@
       }
     }
   },
-  "authLogLastEntry": "{level} · {tag} · {time}",
+  "logLastEntry": "{level} · {tag} · {time}",
   "scheduleSetting": "课表设置",
   "scheduleManagement": "课表管理",
   "globalSetting": "全局设置",
@@ -906,6 +909,33 @@
   "dateMonthDay": "{month}月{day}日",
   "@dateMonthDay": {
     "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dateMonthDayCompact": "{month}/{day}",
+  "@dateMonthDayCompact": {
+    "description": "紧凑数字月/日：课表表头等窄空间使用，避免「10月19日」在低分辨率屏上挤成一团",
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "dateYearMonthDay": "{year}/{month}/{day}",
+  "@dateYearMonthDay": {
+    "description": "带年份的数字日期：宽屏顶栏日期用，窄屏省掉年份只留月/日",
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
       "month": {
         "type": "int"
       },
@@ -1918,8 +1948,10 @@
   "reminderHostProbePermissionUnknown": "查询中…",
   "reminderHostProbePermissionAuthorized": "已授权",
   "reminderHostProbePermissionProvisional": "临时授权（安静投递）",
+  "reminderHostProbePermissionEphemeral": "临时授权（Ephemeral）",
   "reminderHostProbePermissionDeniedLabel": "已被系统设置拒绝",
   "reminderHostProbePermissionNotDetermined": "尚未请求",
+  "reminderHostProbePermissionUnsupported": "当前平台不支持",
   "reminderHostProbeRequestPermission": "请求授权",
   "reminderHostProbeOpenSettings": "去系统设置",
   "reminderHostProbeOpenSettingsFailed": "无法打开系统设置",
@@ -1946,7 +1978,7 @@
   "reminderLeadTimeMultiHint": "可多选，每选一项会产生一条独立的提醒。",
   "reminderQuietSection": "免打扰",
   "reminderQuietEnabled": "免打扰时段",
-  "reminderQuietHint": "落在该时段内的提醒会被丢弃，而不是延后",
+  "reminderQuietHint": "落在该时段内的提醒会被丢弃",
   "reminderQuietStart": "开始",
   "reminderQuietEnd": "结束",
   "reminderStatusSection": "排期状态",
@@ -1956,13 +1988,14 @@
   "reminderPermissionTitle": "通知未开启",
   "reminderPermissionDeniedHint": "之前已拒绝过授权，系统不会再弹窗，请到系统设置里开启。",
   "reminderPermissionNotDeterminedHint": "需要授予通知权限，提醒才能送达。",
+  "reminderPermissionUnsupportedHint": "当前平台暂不支持本地提醒。",
   "reminderPermissionRequest": "去授权",
   "reminderPermissionOpenSettings": "去系统设置",
   "reminderPermissionOpenFailed": "无法打开系统设置",
   "reminderPermissionGrantedToast": "已获得通知权限",
   "reminderPermissionDeniedToast": "权限被拒绝",
   "reminderPermissionFailed": "请求权限失败",
-  "reminderPrivacyHint": "提醒会显示在锁屏上，因此与隐私开关联动：关掉了「显示教师姓名」，锁屏上也不会出现。",
+  "reminderPrivacyHint": "锁屏上的提醒也遵循「课程表样式」里的「显示教师」开关：在那里关掉后，提醒里就不会出现老师名字。",
   "reminderPlanCopy": "复制计划 JSON",
   "reminderPlanCopied": "已复制",
   "reminderPlanFailed": "计划序列化失败",
@@ -1990,5 +2023,40 @@
   "privacyPolicy": "隐私政策",
   "legalInfo": "法律信息",
   "supportAndHelp": "支持与帮助",
-  "docLoadFailed": "文档加载失败"
+  "docLoadFailed": "文档加载失败",
+  "logPersistenceSwitch": "在本机保留诊断日志",
+  "logPersistenceSwitchHint": "将警告与错误保存为本机日志文件（约 6 MB，自动轮转）。默认开启；关闭后日志仅存于内存，应用退出即丢失。",
+  "runtimeLogs": "运行日志",
+  "logCopyAll": "复制全部",
+  "logSaveShare": "保存并分享",
+  "logCopyFolderPath": "复制日志目录路径",
+  "logOpenFolder": "打开日志目录",
+  "logClearMemory": "清空内存日志",
+  "logAll": "全部",
+  "logAuthentication": "认证日志",
+  "logBusinessErrors": "业务错误",
+  "logAllTags": "全部 tag",
+  "logNoMatches": "没有符合条件的日志",
+  "logCategoryAuthentication": "认证",
+  "logCategoryBusiness": "业务",
+  "logStackTrace": "错误堆栈",
+  "logCopied": "已复制日志到剪贴板",
+  "logCopyFailed": "复制日志失败",
+  "logShared": "日志快照已导出",
+  "logSaveFailed": "保存日志失败",
+  "logShareFailed": "分享日志失败，已保存的快照仍可使用。",
+  "logClearTitle": "清空内存中的日志？",
+  "logClearHint": "仅清空当前进程的内存日志，磁盘上已保存的文件不受影响。",
+  "logPersistenceOff": "日志仅保留在内存，应用退出即丢失",
+  "logPersistenceActive": "警告与错误会写入 bugaoshan.log（约 6 MB，自动轮转）",
+  "logPersistenceRetryHint": "请关闭后重新开启；若仍失败，请检查设备剩余存储空间。",
+  "logPersistenceUnavailable": "落盘不可用{reason}",
+  "logDroppedEntries": "已丢弃 {count} 条待写日志",
+  "logDirectoryCopied": "已复制目录路径：{path}\n点「保存并分享」可导出日志。",
+  "logSaved": "日志快照已保存至：{path}",
+  "logDirectoryOpenFailed": "打开日志目录失败",
+  "logStartupTitle": "Bugaoshan 启动失败",
+  "logCopy": "复制日志",
+  "logSave": "保存日志",
+  "logShare": "分享日志"
 }

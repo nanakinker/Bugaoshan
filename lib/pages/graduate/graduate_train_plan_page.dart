@@ -12,6 +12,7 @@ import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/retryable_error_widget.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 import 'package:flutter/material.dart';
 
 /// 研究生培养进度页。
@@ -69,11 +70,11 @@ class _GraduateTrainPlanPageState extends State<GraduateTrainPlanPage> {
     setState(() => _recoveringSession = true);
     try {
       await getIt<ScuAuth>().refresh();
-    } catch (e) {
+    } catch (e, logStackTrace) {
+      AppLog.e(_tag, '_recoverSession 失败', error: e, stackTrace: logStackTrace);
       // 自愈失败：这个 Future 由 listener 回调 fire-and-forget 触发、没人接，
       // 不 catch 会变成 unhandled async error。留在未登录分支，由
       // _buildBody 的「请先登录」引导承接。
-      AppLog.w(_tag, '会话自愈失败，转登录引导：$e');
     } finally {
       if (mounted) setState(() => _recoveringSession = false);
     }
@@ -221,7 +222,10 @@ class TrainPlanContentView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+      padding: withSystemBottomInset(
+        context,
+        EdgeInsets.fromLTRB(16, 12, 16, 32),
+      ),
       children: [
         _Card(
           child: Column(

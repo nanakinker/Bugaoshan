@@ -158,7 +158,9 @@ class GridHeaderRow extends StatelessWidget {
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                l10n.dateMonthDay(date.month, date.day),
+                                // 窄列宽下用「10/19」而非「10月19日」：低分辨率屏上
+                                // 5~7 列平摊后每列只有 60px 左右，中文格式会被压缩得很难看。
+                                l10n.dateMonthDayCompact(date.month, date.day),
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   fontSize: 10,
                                   fontWeight: isToday

@@ -6,10 +6,12 @@ import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/reminder_plan.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/services/reminder/reminder_service.dart';
+import 'package:bugaoshan/services/reminder/reminder_transport.dart';
 import 'package:bugaoshan/widgets/common/info_card.dart';
 import 'package:bugaoshan/widgets/common/section_title.dart';
 import 'package:bugaoshan/widgets/common/styled_card.dart';
 import 'package:bugaoshan/widgets/common/styled_tile.dart';
+import 'package:bugaoshan/utils/system_insets.dart';
 import 'package:flutter/material.dart';
 
 /// 「通知与提醒」设置页面。
@@ -28,8 +30,8 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
   final _appConfig = getIt<AppConfigProvider>();
   final _service = getIt<ReminderService>();
 
-  /// 系统通知权限状态标识，为 null 时表示尚未完成查询。取值与原生平台返回枚举一致。
-  String? _permissionStatus;
+  /// 系统通知权限状态，为 null 时表示尚未完成查询。
+  ReminderPermissionStatus? _permissionStatus;
   bool _requestingPermission = false;
   int? _pendingCount;
   bool _refreshing = false;
@@ -64,10 +66,15 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
   }
 
   Future<void> _refreshStatus() async {
-    // 先强制重排再查询：否则 pendingCount 读到的是上一轮同步的结果，
-    // 用户刚改完设置、返回本页时看到的仍是改动前的状态。
-    await _service.reschedule(force: true);
     final status = await _service.permissionStatus();
+    if (status.isGranted && !_isGranted) {
+      // Returning from system settings must restore requests even if the plan
+      // itself has not changed since permission was revoked.
+      await _service.onPermissionGranted();
+    } else {
+      await _service.reschedule(force: true);
+    }
+    // Query pending requests after scheduling, so the count is current.
     final pending = await _service.pendingCount();
     if (!mounted) return;
     setState(() {
@@ -76,13 +83,18 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
     });
   }
 
-  bool get _isGranted =>
-      _permissionStatus == 'authorized' || _permissionStatus == 'provisional';
+  bool get _isGranted => _permissionStatus?.isGranted ?? false;
+
+  /// 当前平台不具备本地提醒投递能力，授权引导无意义。
+  bool get _isPermissionUnsupported =>
+      _permissionStatus == ReminderPermissionStatus.unsupported;
 
   Future<void> _toggleMaster(bool enabled) async {
     _appConfig.reminderEnabled.value = enabled;
     // 开启主开关且处于未决定授权状态时，主动请求系统权限以完成引导流程。
-    if (enabled && !_isGranted && _permissionStatus == 'notDetermined') {
+    if (enabled &&
+        !_isGranted &&
+        _permissionStatus == ReminderPermissionStatus.notDetermined) {
       await _requestPermission();
       return;
     }
@@ -93,7 +105,7 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
     final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     // 权限被系统明确拒绝后无法重复触发授权弹窗，直接引导跳转系统设置页面。
-    if (_permissionStatus == 'denied') {
+    if (_permissionStatus == ReminderPermissionStatus.denied) {
       final opened = await _service.openNotificationSettings();
       if (!opened && mounted) {
         messenger.showSnackBar(
@@ -116,6 +128,7 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
         ),
       );
     } catch (e) {
+      if (!mounted) return;
       messenger.showSnackBar(
         SnackBar(content: Text('${l10n.reminderPermissionFailed}: $e')),
       );
@@ -163,7 +176,10 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
     return Scaffold(
       appBar: AppBar(title: Text(l10n.reminderSettingsTitle)),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: withSystemBottomInset(
+          context,
+          EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        ),
         children: [
           // 权限状态卡片置顶展示：未授权状态下优先引导用户完成权限配置。
           if (!_isGranted) ...[
@@ -190,9 +206,16 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
 
   Widget _buildPermissionCard(AppLocalizations l10n) {
     final theme = Theme.of(context);
-    final denied = _permissionStatus == 'denied';
+    final denied = _permissionStatus == ReminderPermissionStatus.denied;
     // 采用中性背景容器搭配错误强调色，避免深色模式下大面积高饱和容器过度强调。
     final accent = theme.colorScheme.error;
+    final hint = switch (_permissionStatus) {
+      ReminderPermissionStatus.denied => l10n.reminderPermissionDeniedHint,
+      // 平台不支持投递时给出说明，但不提供无法生效的授权入口。
+      ReminderPermissionStatus.unsupported =>
+        l10n.reminderPermissionUnsupportedHint,
+      _ => l10n.reminderPermissionNotDeterminedHint,
+    };
     return StyledCard(
       backgroundColor: theme.colorScheme.surfaceContainerHighest,
       child: Padding(
@@ -214,30 +237,30 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    denied
-                        ? l10n.reminderPermissionDeniedHint
-                        : l10n.reminderPermissionNotDeterminedHint,
+                    hint,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  FilledButton.tonal(
-                    onPressed: _requestingPermission
-                        ? null
-                        : _requestPermission,
-                    child: _requestingPermission
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(
-                            denied
-                                ? l10n.reminderPermissionOpenSettings
-                                : l10n.reminderPermissionRequest,
-                          ),
-                  ),
+                  if (!_isPermissionUnsupported) ...[
+                    const SizedBox(height: 10),
+                    FilledButton.tonal(
+                      onPressed: _requestingPermission
+                          ? null
+                          : _requestPermission,
+                      child: _requestingPermission
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(
+                              denied
+                                  ? l10n.reminderPermissionOpenSettings
+                                  : l10n.reminderPermissionRequest,
+                            ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -253,7 +276,8 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
     return ValueListenableBuilder<bool>(
       valueListenable: _appConfig.reminderEnabled,
       builder: (context, enabled, _) => AdaptiveGlassSwitchListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+        // 与卡片内 IconTile 的 20 水平内边距对齐，避免内容贴住卡片边缘。
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         title: Text(l10n.reminderMasterSwitch),
         subtitle: Text(
           l10n.reminderMasterSwitchHint,
@@ -389,8 +413,9 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
                             return Column(
                               children: [
                                 AdaptiveGlassSwitchListTile(
+                                  // 与下方 IconTile 的 20 水平内边距对齐，保持同一卡片内视觉一致。
                                   contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
+                                    horizontal: 20,
                                   ),
                                   title: Text(l10n.reminderQuietEnabled),
                                   subtitle: Text(
@@ -576,24 +601,28 @@ class _ReminderSettingPageState extends State<ReminderSettingPage>
 
   Widget _buildPrivacyHint(AppLocalizations l10n) {
     final theme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(
-          Icons.lock_outline,
-          size: 16,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            l10n.reminderPrivacyHint,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+    // 与上方卡片内容的 16 水平内边距对齐，避免提示文字比卡片内容更靠左。
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.lock_outline,
+            size: 16,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              l10n.reminderPrivacyHint,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

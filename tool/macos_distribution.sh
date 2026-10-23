@@ -1,5 +1,5 @@
 #!/bin/bash
-# Local signed archive/export; CI only compiles an unsigned validation bundle.
+# Local App Store archive/export and unsigned CI input for Developer ID signing.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -16,7 +16,7 @@ if [ "$mode" = export ]; then
     -exportPath build/macos/appstore \
     -exportOptionsPlist macos/ExportOptions-AppStore.plist \
     -allowProvisioningUpdates
-  python3 tool/verify_macos_bundle.py build/macos/appstore/Bugaoshan.pkg --package
+  python3 tool/verify_macos_bundle.py build/macos/appstore/不高山上.pkg --package
   exit
 fi
 
@@ -27,8 +27,10 @@ flutter gen-l10n
 
 args=(--release --config-only)
 if [ "$mode" = archive ]; then
-  : "${MACOS_BUILD_NAME:?Set the App Store version, e.g. 2.5.3}"
-  : "${MACOS_BUILD_NUMBER:?Set an unused, increasing App Store build number}"
+  # Share the release pair with the notarized DMG; Android preview numbering is
+  # independent and must not downgrade an already released Mac store version.
+  MACOS_BUILD_NAME="${MACOS_BUILD_NAME:-$(python3 -c 'import json; print(json.load(open(".github/macos-signing.json"))["version"])')}"
+  MACOS_BUILD_NUMBER="${MACOS_BUILD_NUMBER:-$(python3 -c 'import json; print(json.load(open(".github/macos-signing.json"))["build"])')}"
 fi
 if [ -n "${MACOS_BUILD_NAME:-}" ]; then args+=(--build-name "$MACOS_BUILD_NAME"); fi
 if [ -n "${MACOS_BUILD_NUMBER:-}" ]; then args+=(--build-number "$MACOS_BUILD_NUMBER"); fi
@@ -43,15 +45,15 @@ if [ "$mode" = unsigned ]; then
   xcodebuild -workspace macos/Runner.xcworkspace -scheme Runner \
     -configuration Release -destination 'generic/platform=macOS' \
     -derivedDataPath build/macos CODE_SIGNING_ALLOWED=NO build
-  python3 tool/verify_macos_bundle.py build/macos/Build/Products/Release/Bugaoshan.app
+  python3 tool/verify_macos_bundle.py build/macos/Build/Products/Release/不高山上.app
   mkdir -p build/macos/validation
   ditto -c -k --sequesterRsrc --keepParent \
-    build/macos/Build/Products/Release/Bugaoshan.app \
+    build/macos/Build/Products/Release/不高山上.app \
     build/macos/validation/Bugaoshan-unsigned.zip
 else
   xcodebuild -workspace macos/Runner.xcworkspace -scheme Runner \
     -configuration Release -destination 'generic/platform=macOS' \
     -derivedDataPath build/macos -archivePath "$archive" -allowProvisioningUpdates archive
-  python3 tool/verify_macos_bundle.py "$archive/Products/Applications/Bugaoshan.app" \
+  python3 tool/verify_macos_bundle.py "$archive/Products/Applications/不高山上.app" \
     --signed --version "$MACOS_BUILD_NAME" --build "$MACOS_BUILD_NUMBER"
 fi
