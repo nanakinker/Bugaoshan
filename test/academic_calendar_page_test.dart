@@ -86,8 +86,19 @@ void main() {
       skipOffstage: false,
     );
     expect(dropdownFinder, findsOneWidget);
-    final dropdown = tester.widget<AdaptiveGlassDropdown<dynamic>>(dropdownFinder);
-    final secondEntry = dropdown.items!.last.value;
+    // 本分支已换成泛型组件 AdaptiveGlassDropdown<T>，测试里不再写死 T：
+    // 若强转成 <dynamic>，其 onChanged 为 ValueChanged<T?>?，函数参数逆变
+    // 会导致运行期 "_TypeError: (CalendarEntry?) => void is not a subtype
+    // of ((dynamic) => void)?"。用 dynamic 取字段即可。
+    // tester.widget<T> 的 T 必须 extends Widget，不能直接写 dynamic；
+    // 先按 Widget 取出再赋给 dynamic 变量，靠动态派发读 items/onChanged，
+    // 绕开泛型逆变（否则 ValueChanged<CalendarEntry?> 与 ValueChanged<dynamic>
+    // 不兼容，运行期抛 _TypeError）。
+    final dynamic dropdown = tester.widget<Widget>(dropdownFinder);
+    final secondEntry =
+        ((dropdown.items as List).last as DropdownMenuItem).value;
+    // 不做显式 cast：函数参数逆变会让 `as void Function(dynamic)?` 本身
+    // 抛 TypeError。dropdown 是 dynamic，直接动态调用即可（只校验实参类型）。
     dropdown.onChanged!(secondEntry);
     await tester.pump();
 

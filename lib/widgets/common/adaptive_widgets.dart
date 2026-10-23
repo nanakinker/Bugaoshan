@@ -371,6 +371,15 @@ const double _fieldHeight = 48;
 /// 字段的统一水平内边距（与 [GlassTextField] 内部的 16 对齐）。
 const double _fieldPaddingH = 16;
 
+/// 父级宽度无界时的兜底宽度。
+///
+/// 下拉要求**有界宽度**：Material 回退分支内部是 `InputDecorator`
+/// （会抛 "InputDecorator cannot have an unbounded width"），
+/// 玻璃分支的触发器是一个含 `Expanded` 的 Row（会撞 RenderFlex 无界约束）。
+/// 筛选栏经常把下拉直接塞进 Row 而不套 `Expanded`，此时宽度就是无界的 ——
+/// Material 3 样式下会直接白屏，故统一兜底。
+const double _unboundedFieldWidth = 200;
+
 /// 玻璃下拉菜单的单行高度。44 是「15sp 文字 + 上下各 14dp」的舒适值，
 /// 比包默认（约 52）更紧凑，一屏能多看两条。
 const double _menuItemHeight = 44;
@@ -434,13 +443,29 @@ class AdaptiveGlassDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 统一在这里兜底无界宽度（见 [_unboundedFieldWidth]）。
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.hasBoundedWidth) return _buildField(context);
+        // 无界时必须让下拉**自己撑满兜底宽度**（isExpanded: true），
+        // 否则 DropdownButton 内部 Row 按内容自然宽度排布，
+        // 长 tag 名会把这一行撑出 SizedBox 边界 → RenderFlex overflow。
+        return SizedBox(
+          width: _unboundedFieldWidth,
+          child: _buildField(context, forceExpanded: true),
+        );
+      },
+    );
+  }
+
+  Widget _buildField(BuildContext context, {bool forceExpanded = false}) {
     if (!useLiquidGlass(context)) {
       return DropdownButtonFormField<T>(
         // 传 initialValue 而非已弃用的 value（SDK v3.33 起 value 标记
         // @Deprecated，用它会刷警告）。
         initialValue: value,
         decoration: decoration ?? const InputDecoration(),
-        isExpanded: isExpanded,
+        isExpanded: isExpanded || forceExpanded,
         hint: hint,
         items: items,
         onChanged: onChanged,
