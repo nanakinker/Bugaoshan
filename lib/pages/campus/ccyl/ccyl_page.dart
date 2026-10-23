@@ -21,9 +21,14 @@ class CcylPage extends StatefulWidget {
   State<CcylPage> createState() => _CcylPageState();
 }
 
-class _CcylPageState extends State<CcylPage>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+class _CcylPageState extends State<CcylPage> {
+  /// 当前页签索引。
+  ///
+  /// 合并上游时状态类一度改成 `TabController`（上游用 TabBar + TabBarView），
+  /// 但本分支的顶部页签是自绘玻璃行 + IndexedStack（保持各页状态与滚动位置），
+  /// 不消费 TabController —— 两者并存会有两套索引。故保留 int 索引这一套，
+  /// 移除只创建未使用的 TabController。
+  int _currentIndex = 0;
 
   // 固定实例，配合 SwipePageView 的 keepPagesAlive 保持各 Tab 的
   // 滚动位置与已加载数据，翻页不丢状态。页签数量以本列表为准。
@@ -34,16 +39,10 @@ class _CcylPageState extends State<CcylPage>
     CreditListPage(),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  /// 点击页签：切换 IndexedStack 的当前页。
+  void _onTabTapped(int index) {
+    if (index == _currentIndex) return;
+    setState(() => _currentIndex = index);
   }
 
   @override

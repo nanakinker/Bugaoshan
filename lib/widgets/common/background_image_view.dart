@@ -175,6 +175,20 @@ class _BackgroundImageViewState extends State<BackgroundImageView> {
     );
   }
 
+  /// 解码目标宽度：屏幕宽 × devicePixelRatio × 2（旋转/放大留余量）。
+  ///
+  /// 合并上游时本方法与上游的尺寸探测实现一起被替换掉了，但 `_buildImage`
+  /// 里的 ResizeImage 限制仍在用它 —— 补回原实现。这是一项**防 OOM 措施**：
+  /// 4000x3000 的照片按原分辨率解码约 48MB 位图，release 下容易解码失败，
+  /// 而失败时 onError 只静默移除监听，表现为「背景图永久空白」。
+  int? _targetDecodeWidth() {
+    final size = MediaQuery.maybeSizeOf(context);
+    if (size == null || !size.isFinite || size.isEmpty) return null;
+    final dpr = MediaQuery.maybeDevicePixelRatioOf(context) ?? 1.0;
+    final w = size.width * (dpr <= 0 ? 1.0 : dpr) * 2;
+    return w > 0 ? w.round() : null;
+  }
+
   Widget _buildImage({required BoxFit fit}) {
     // 用 ResizeImage 限制解码目标宽度（注意：Image 部件本身没有 cacheWidth
     // 参数，只有 ResizeImage / FileImage.resize() 这条路）。
