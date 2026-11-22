@@ -6,6 +6,7 @@ import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/providers/grades_provider.dart';
 import 'package:bugaoshan/providers/scu_auth_provider.dart';
+import 'package:bugaoshan/services/course_teacher_index.dart';
 import 'package:bugaoshan/widgets/common/loading_widgets.dart';
 import 'package:bugaoshan/widgets/common/login_required_widget.dart';
 import 'package:bugaoshan/widgets/common/swipe_page_view.dart';
@@ -14,7 +15,10 @@ import 'passing_scores_tab.dart';
 import 'custom_stats_tab.dart';
 
 class GradesPage extends StatefulWidget {
-  const GradesPage({super.key});
+  const GradesPage({super.key, @visibleForTesting this.initialTeacherIndex});
+
+  @visibleForTesting
+  final CourseTeacherIndex? initialTeacherIndex;
 
   @override
   State<GradesPage> createState() => _GradesPageState();
@@ -29,15 +33,20 @@ class _GradesPageState extends State<GradesPage>
   final _searchFocusNode = FocusNode();
 
   late final TabController _tabController;
+  late final CourseTeacherIndexController _teacherIndexController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _teacherIndexController = CourseTeacherIndexController(
+      initialIndex: widget.initialTeacherIndex,
+    );
   }
 
   @override
   void dispose() {
+    _teacherIndexController.dispose();
     _tabController.dispose();
     _searchController.dispose();
     _searchFocusNode.dispose();
@@ -45,8 +54,14 @@ class _GradesPageState extends State<GradesPage>
   }
 
   List<Widget> get _pages => [
-    SchemeScoresTab(searchQuery: _searchQuery),
-    PassingScoresTab(searchQuery: _searchQuery),
+    SchemeScoresTab(
+      searchQuery: _searchQuery,
+      teacherIndexController: _teacherIndexController,
+    ),
+    PassingScoresTab(
+      searchQuery: _searchQuery,
+      teacherIndexController: _teacherIndexController,
+    ),
     CustomStatsTab(searchQuery: _searchQuery),
   ];
 
@@ -120,9 +135,14 @@ class _GradesPageState extends State<GradesPage>
                 ),
               if (isDesktop && auth.isLoggedIn)
                 IconButton(
-                  onPressed: _currentIndex == 0 || _currentIndex == 2
-                      ? gradesProvider.refreshSchemeScores
-                      : gradesProvider.refreshPassingScores,
+                  onPressed: () {
+                    _teacherIndexController.retryIfNeeded();
+                    if (_currentIndex == 0 || _currentIndex == 2) {
+                      gradesProvider.refreshSchemeScores();
+                    } else {
+                      gradesProvider.refreshPassingScores();
+                    }
+                  },
                   icon: const Icon(Icons.refresh),
                 ),
             ],

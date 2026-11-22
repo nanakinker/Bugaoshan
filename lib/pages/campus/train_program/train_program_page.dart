@@ -1,6 +1,7 @@
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
-import 'package:bugaoshan/pages/campus/train_program/models/train_program.dart';
+import 'package:bugaoshan/scu_backend/zhjw/models/train_program.dart';
+import 'package:bugaoshan/providers/train_program_provider.dart';
 import 'package:bugaoshan/providers/scu_auth_provider.dart';
 import 'package:bugaoshan/providers/train_program_provider.dart';
 import 'package:bugaoshan/theme_shape.dart';

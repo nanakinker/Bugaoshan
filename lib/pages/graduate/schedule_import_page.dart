@@ -6,12 +6,12 @@ import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/course.dart';
 import 'package:bugaoshan/providers/course_provider.dart';
 import 'package:bugaoshan/pages/auth/scu_login_page.dart';
-import 'package:bugaoshan/services/api/gs_api_service.dart';
-import 'package:bugaoshan/services/auth/scu_exceptions.dart';
-import 'package:bugaoshan/services/graduate_schedule_capture.dart';
+import 'package:bugaoshan/scu_backend/gs/gs_api_service.dart';
+import 'package:bugaoshan/scu_backend/core/scu_exceptions.dart';
+import 'package:bugaoshan/scu_backend/gs/graduate_schedule_capture.dart';
 import 'package:bugaoshan/utils/app_log.dart';
 import 'package:bugaoshan/utils/constants.dart';
-import 'package:bugaoshan/utils/graduate_schedule_parser.dart';
+import 'package:bugaoshan/scu_backend/gs/graduate_schedule_parser.dart';
 import 'package:bugaoshan/widgets/dialog/dialog.dart';
 import 'package:bugaoshan/widgets/route/router_utils.dart';
 import 'package:bugaoshan/widgets/webview/webview_unsupported_page.dart';
@@ -307,14 +307,16 @@ class _GraduateScheduleImportPageState
     }
 
     try {
-      if (existingId != null) {
-        await provider.replaceScheduleCourses(existingId, courses);
-        await provider.switchSchedule(existingId);
-      } else {
-        await provider.addSchedule(config);
-        await provider.replaceScheduleCourses(config.id, courses);
-        await provider.switchSchedule(config.id);
-      }
+      await provider.runBatch(() async {
+        if (existingId != null) {
+          await provider.replaceScheduleCourses(existingId, courses);
+          await provider.switchSchedule(existingId);
+        } else {
+          await provider.addSchedule(config);
+          await provider.replaceScheduleCourses(config.id, courses);
+          await provider.switchSchedule(config.id);
+        }
+      });
       AppLog.i(_tag, '导入完成：${courses.length} 门课程 → $scheduleName');
       if (!mounted) return;
       setState(() => _importing = false);
@@ -323,7 +325,7 @@ class _GraduateScheduleImportPageState
           content: Text(l10n.graduateScheduleImportDoneTo(scheduleName)),
         ),
       );
-      Navigator.of(context).pop();
+      popDialog(context: context);
     } catch (e, logStackTrace) {
       AppLog.e(_tag, '_import 失败', error: e, stackTrace: logStackTrace);
 
@@ -456,7 +458,7 @@ class _GraduateScheduleImportPageState
       leading: IconButton(
         icon: const Icon(Icons.close),
         tooltip: l10n.close,
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => popDialog(context: context),
       ),
       actions: [
         IconButton(

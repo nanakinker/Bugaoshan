@@ -9,7 +9,9 @@
 [![License](https://img.shields.io/badge/License-AGPL3.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%E2%9C%93-34a853?logo=android&logoColor=white)](https://flutter.dev)
 [![Status](https://img.shields.io/badge/Status-Experimental-orange)](https://github.com/nanakinker/Bugaoshan/releases)
-[![Version](https://img.shields.io/badge/Version-2.5.4-blue)](https://github.com/nanakinker/Bugaoshan/releases)
+[![Version](https://img.shields.io/badge/Version-2.6.1-blue)](https://github.com/nanakinker/Bugaoshan/releases)
+[![Downloads](https://img.shields.io/github/downloads/The-Brotherhood-of-SCU/Bugaoshan/total?style=flat-square&logo=github&label=Downloads)](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases)
+[![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS-blue)](https://flutter.dev)
 
 > 川大学生专属校园助手 · **液态玻璃实验版**
 
@@ -23,8 +25,6 @@
 </div>
 
 </div>
-
----
 
 ## 📖 背景
 
@@ -134,6 +134,7 @@ GlassScaffold
 - **培养方案** — 查询各年级学院的培养方案详情
 - **在线报修** — 在 App 内提交宿舍报修工单（选地址/维修项目、上传照片、预约时间），随时查看处理进度，支持撤回与评价工单
 - **校园网无感认证** — 绑定设备 MAC 地址后接入校园网自动认证，告别手动登录
+- **图书馆打印与扫描** — 批量上传文档，统一或逐文件设置纸型、颜色、双面、份数与页范围；查看打印任务，批量下载、打开和分享扫描件
 - **第二课堂** — 查看、参与和预约第二课堂活动
 - **考表查询** — 查询个人考试信息，了解考试安排
 - **体测查询** — 查询个人体测记录，了解体测结果
@@ -159,18 +160,36 @@ GlassScaffold
 
 ## 📥 下载
 
-**前往 [Release 页面](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases/latest) 下载最新版本**
+|最新稳定版|最新预览版|
+|--|--|
+|[![GitHub Release](https://img.shields.io/github/v/release/The-Brotherhood-of-SCU/Bugaoshan?style=flat-square&logo=github&label=Release)](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases)|[![GitHub Pre-release](https://img.shields.io/github/v/release/The-Brotherhood-of-SCU/Bugaoshan?include_prereleases&style=flat-square&logo=github&label=Preview)](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases)|
 
-> 📱 **iOS 与鸿蒙版本正在邀测中**，欢迎加入官方QQ群（1102483776）参与测试
+
+
+<div align="left">
+
+<a href="https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases/latest"><img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" alt="Get it on GitHub" width="217" align="middle"></a> &nbsp;&nbsp;&nbsp; <a href="https://apps.apple.com/cn/app/%E4%B8%8D%E9%AB%98%E5%B1%B1%E4%B8%8A/id6813305962"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/zh-cn?size=250x83" alt="Download on the App Store" width="153" align="middle"></a> &nbsp;&nbsp;&nbsp; <a href="https://f-droid.org/packages/io.github.the_brotherhood_of_scu.bugaoshan"><img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" width="217" align="middle"></a>
+
+</div>
+
+按平台选择下载：
+
+- Android: [GitHub Releases](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases)、[F-Droid](https://f-droid.org/packages/io.github.the_brotherhood_of_scu.bugaoshan)
+- iOS: [App Store](https://apps.apple.com/cn/app/%E4%B8%8D%E9%AB%98%E5%B1%B1%E4%B8%8A/id6813305962)、[AltStore/SideStore](https://wjj-8283.github.io/Bugaoshan-sidestore/)
+- macOS: [App Store](https://apps.apple.com/cn/app/%E4%B8%8D%E9%AB%98%E5%B1%B1%E4%B8%8A/id6813305962)、[macOS Releases](https://github.com/wjlfish/Bugaoshan-macos/releases)
+- Windows / Linux: [GitHub Releases](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/releases)
+- HarmonyOS: 正在邀测中，[AppGallery 应用测试](https://appgallery.huawei.com/apptest/4R0ngHwSmNP) 或加入官方 QQ 群（1102483776）讨论反馈
+
 
 ### 🧪 液态玻璃实验版（个人构建）
 
 本仓库 `feat/liquid-glass-dock` 分支上的**液态玻璃版本**为个人实验构建，
 仅支持**安卓手机**，不含 iOS / Windows / macOS / 安卓平板。
 
-**当前版本 v2.5.4（开发中）** —— 已并入上游 `preview` 分支的全部改动
-（官方 2.5.3 发布与 v2.5.4 预览内容：Apple 平台原生液态玻璃、通知与提醒、
-实时活动与状态栏胶囊、课表导出为图片、深色模式三选、活动筛选等），
+**当前版本 v2.6.1** —— 已并入上游 `preview` 分支的全部改动
+（内容对应上游 2.6.1-preview.5：图书馆打印与扫描、望江研究生活动室预约、
+诊断日志本机保留、课表数字日期与格式设置、第二课堂顶部页签与左右滑动、
+「网络加速」、Windows/Linux 图标修复等），
 并在此基础上把液态玻璃从导航栏扩展到**全项目界面控件**：
 
 | 内容 | 说明 |
@@ -236,7 +255,6 @@ Release 资产已由 `zipalign` + `apksigner` 处理，**开箱即装**。
 
 [![Contributors](https://contrib.rocks/image?repo=The-Brotherhood-of-SCU/Bugaoshan)](https://github.com/The-Brotherhood-of-SCU/Bugaoshan/graphs/contributors)
 
----
 
 ## 📜️ 许可证
 

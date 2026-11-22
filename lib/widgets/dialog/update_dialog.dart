@@ -66,7 +66,7 @@ class UpdateDialogContent extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: screenWidth * 0.7 > 400 ? 400 : screenWidth * 0.7,
-          maxHeight: screenHeight * (hasReleaseNotes ? 0.6 : 0.4),
+          maxHeight: screenHeight * (hasReleaseNotes ? 0.7 : 0.4),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -82,11 +82,13 @@ class UpdateDialogContent extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                l10n.newVersionAvailable,
+                isPreview
+                    ? l10n.newTestVersionAvailable
+                    : l10n.newVersionAvailable,
                 style: textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 4),
               // Body text
               ListTile(
                 title: Text(
@@ -105,16 +107,7 @@ class UpdateDialogContent extends StatelessWidget {
                       }
                     : null,
               ),
-              if (isPreview) ...[
-                const SizedBox(height: 8),
-                Text(
-                  l10n.preReleaseWarning,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.error,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
               const Divider(height: 1),
               const SizedBox(height: 12),
               if (releaseNotes != null && releaseNotes!.isNotEmpty) ...[

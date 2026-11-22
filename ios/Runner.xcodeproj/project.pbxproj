@@ -15,7 +15,8 @@
 		32A1DE733010E68D00E054EA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32A1DE1A3010D84A00E054EA /* SwiftUI.framework */; };
 		32A1DE7A3010E68D00E054EA /* WidgetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32A1DE793010E68D00E054EA /* WidgetExtension.swift */; };
 		E1F2A3B4C5D60718293A4B02 /* CourseLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F2A3B4C5D60718293A4B01 /* CourseLiveActivity.swift */; };
-		E1F2A3B4C5D60718293A4B03 /* CourseLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F2A3B4C5D60718293A4B01 /* CourseLiveActivity.swift */; };
+		E1F2A3B4C5D60718293A4B12 /* CourseLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F2A3B4C5D60718293A4B11 /* CourseLiveActivityAttributes.swift */; };
+		E1F2A3B4C5D60718293A4B13 /* CourseLiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F2A3B4C5D60718293A4B11 /* CourseLiveActivityAttributes.swift */; };
 		32A1DE7C3010E68E00E054EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32A1DE7B3010E68E00E054EA /* Assets.xcassets */; };
 		A8C9D0E1F2A3456789BCDEF0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = B9D0E1F2A3B4567890CDEF12 /* Localizable.xcstrings */; };
 		32A1DE803010E68E00E054EA /* CourseWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 32A1DE713010E68D00E054EA /* CourseWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -31,6 +32,7 @@
 		F627A009C48B40519E038204 /* LiquidGlassDock.swift in Sources */ = {isa = PBXBuildFile; fileRef = F627A009C48B40519E038205 /* LiquidGlassDock.swift */; };
 		F627A009C48B40519E038206 /* LiquidGlassControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = F627A009C48B40519E038207 /* LiquidGlassControls.swift */; };
 		A6F4B5C83E9D4B6FA8217C10 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D8E9F01234567890ABCDEF /* SceneDelegate.swift */; };
+		E2F3A4B5C6D708193A4B6C02 /* CourseIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F3A4B5C6D708193A4B6C01 /* CourseIntents.swift */; };
 		B4C25D8A7E6F4A31B09C8D72 /* academic_calendar.json in Resources */ = {isa = PBXBuildFile; fileRef = D9E8F7A6B5C4123098ABCDEF /* academic_calendar.json */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -90,6 +92,7 @@
 		32A1DE713010E68D00E054EA /* CourseWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CourseWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		32A1DE793010E68D00E054EA /* WidgetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetExtension.swift; sourceTree = "<group>"; };
 		E1F2A3B4C5D60718293A4B01 /* CourseLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseLiveActivity.swift; sourceTree = "<group>"; };
+		E1F2A3B4C5D60718293A4B11 /* CourseLiveActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseLiveActivityAttributes.swift; sourceTree = "<group>"; };
 		32A1DE7B3010E68E00E054EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		32A1DE7D3010E68E00E054EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9D0E1F2A3B4567890CDEF12 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -108,6 +111,7 @@
 		F627A009C48B40519E038205 /* LiquidGlassDock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassDock.swift; sourceTree = "<group>"; };
 		F627A009C48B40519E038207 /* LiquidGlassControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassControls.swift; sourceTree = "<group>"; };
 		C7D8E9F01234567890ABCDEF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		E2F3A4B5C6D708193A4B6C01 /* CourseIntents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseIntents.swift; sourceTree = "<group>"; };
 		D9E8F7A6B5C4123098ABCDEF /* academic_calendar.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = academic_calendar.json; path = ../assets/academic_calendar.json; sourceTree = SOURCE_ROOT; };
 		798F7789FBBE95BE1ACA94A5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		7AD0D5738F6D48199C972A33 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,6 +166,7 @@
 				32E5A21A3010F48500D73941 /* CourseWidgetExtension.entitlements */,
 				32A1DE793010E68D00E054EA /* WidgetExtension.swift */,
 				E1F2A3B4C5D60718293A4B01 /* CourseLiveActivity.swift */,
+				E1F2A3B4C5D60718293A4B11 /* CourseLiveActivityAttributes.swift */,
 				32A1DE7B3010E68E00E054EA /* Assets.xcassets */,
 				32A1DE7D3010E68E00E054EA /* Info.plist */,
 				561B1DB7945C4AADB04CE4FD /* InfoPlist.xcstrings */,
@@ -245,6 +250,7 @@
 				F627A009C48B40519E038205 /* LiquidGlassDock.swift */,
 				F627A009C48B40519E038207 /* LiquidGlassControls.swift */,
 				C7D8E9F01234567890ABCDEF /* SceneDelegate.swift */,
+				E2F3A4B5C6D708193A4B6C01 /* CourseIntents.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 			);
 			path = Runner;
@@ -506,6 +512,7 @@
 			files = (
 				32A1DE7A3010E68D00E054EA /* WidgetExtension.swift in Sources */,
 				E1F2A3B4C5D60718293A4B02 /* CourseLiveActivity.swift in Sources */,
+				E1F2A3B4C5D60718293A4B12 /* CourseLiveActivityAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,11 +530,12 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				B2C3D4E5F60718293A4B5C6D /* ReminderChannel.swift in Sources */,
-				E1F2A3B4C5D60718293A4B03 /* CourseLiveActivity.swift in Sources */,
+				E1F2A3B4C5D60718293A4B13 /* CourseLiveActivityAttributes.swift in Sources */,
 				E1F2A3B4C5D60718293A4B05 /* LiveActivityChannel.swift in Sources */,
 				F627A009C48B40519E038204 /* LiquidGlassDock.swift in Sources */,
 				F627A009C48B40519E038206 /* LiquidGlassControls.swift in Sources */,
 				A6F4B5C83E9D4B6FA8217C10 /* SceneDelegate.swift in Sources */,
+				E2F3A4B5C6D708193A4B6C02 /* CourseIntents.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

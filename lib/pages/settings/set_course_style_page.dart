@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bugaoshan/injection/injector.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
+import 'package:bugaoshan/models/date_display_format.dart';
 import 'package:bugaoshan/pages/course/main/course_page.dart';
 import 'package:bugaoshan/pages/settings/background_crop_editor_page.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
@@ -19,6 +20,9 @@ import 'package:system_theme/system_theme.dart';
 
 class SetCourseStylePage extends StatelessWidget {
   const SetCourseStylePage({super.key});
+
+  /// 日期格式下拉框的示例日期（月≠日），保证四种格式的显示文本互不相同。
+  static final DateTime dateFormatSample = DateTime(2026, 10, 26);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +43,7 @@ class SetCourseStylePage extends StatelessWidget {
         appConfig.showCourseWeeks,
         appConfig.showWeekend,
         appConfig.showNonCurrentWeekCourses,
+        appConfig.dateDisplayFormat,
       ]),
       builder: (context, _) {
         return Scaffold(
@@ -229,6 +234,29 @@ class SetCourseStylePage extends StatelessWidget {
         value: appConfig.showNonCurrentWeekCourses.value,
         onChanged: (v) => appConfig.showNonCurrentWeekCourses.value = v,
         contentPadding: EdgeInsets.zero,
+      ),
+      // 日期格式：顶栏完整日期，表头只取月与日。未设置时跟随系统语言。
+      DropdownButtonFormField<DateDisplayFormat>(
+        initialValue: DateDisplayFormat.resolve(
+          context,
+          appConfig.dateDisplayFormat.value,
+        ),
+        isExpanded: true,
+        decoration: InputDecoration(
+          labelText: localizations.dateFormatSetting,
+          border: const OutlineInputBorder(),
+        ),
+        // 用固定日期做示例（月≠日），避免月==日当天多个格式显示相同文本。
+        items: [
+          for (final format in DateDisplayFormat.values)
+            DropdownMenuItem(
+              value: format,
+              child: Text(format.formatFull(dateFormatSample)),
+            ),
+        ],
+        onChanged: (value) {
+          if (value != null) appConfig.dateDisplayFormat.value = value;
+        },
       ),
       const Divider(),
       // Background image settings

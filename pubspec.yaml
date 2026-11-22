@@ -1,7 +1,7 @@
 name: bugaoshan
 description: Explore everything, all on the Bugaoshan.
 publish_to: none
-version: 2.5.4+20504
+version: 2.6.1+20601
 environment:
   sdk: ^3.10.4
 dependencies:
@@ -98,11 +98,12 @@ flutter_launcher_icons:
     image_path: assets/icon.png
   windows:
     generate: true
-    image_path: assets/icon.png
+    image_path: assets/icon-desktop.png
+    icon_size: 256
   macos:
     generate: true
     image_path: assets/icon.png
   linux:
     generate: true
-    image_path: assets/icon.png
+    image_path: assets/icon-desktop.png
   image_path: assets/icon.png

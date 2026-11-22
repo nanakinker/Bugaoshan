@@ -1,5 +1,6 @@
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/utils/app_log.dart';
+import 'package:bugaoshan/utils/platform_utils.dart';
 import 'package:bugaoshan/widgets/common/image_error_log.dart';
 import 'package:bugaoshan/services/dynamic_icon_service.dart';
 import 'package:bugaoshan/theme_shape.dart';
@@ -57,7 +58,11 @@ class _SetAppIconPageState extends State<SetAppIconPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l.switchAppIcon),
-        content: Text(l.switchAppIconConfirm(iconLabel)),
+        content: Text(
+          isOhos
+              ? l.switchAppIconConfirmWithoutRestart(iconLabel)
+              : l.switchAppIconConfirm(iconLabel),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -124,7 +129,6 @@ class _SetAppIconPageState extends State<SetAppIconPage> {
                 _IconOption(
                   iconAsset: 'assets/icon.png',
                   label: l.defaultIcon,
-                  subtitle: l.newIconSubtitle,
                   isSelected: _currentIcon == null,
                   onTap: _currentIcon == null
                       ? null
@@ -136,7 +140,6 @@ class _SetAppIconPageState extends State<SetAppIconPage> {
                   _IconOption(
                     iconAsset: 'assets/icon_old.png',
                     label: l.oldIcon,
-                    subtitle: l.oldIconSubtitle,
                     isSelected: _currentIcon == 'old',
                     onTap: _currentIcon == 'old'
                         ? null
@@ -166,7 +169,6 @@ class _IconOption extends StatelessWidget {
 
   final String iconAsset;
   final String label;
-  final String subtitle;
   final bool isSelected;
   final VoidCallback? onTap;
   final bool isLoading;
@@ -174,7 +176,6 @@ class _IconOption extends StatelessWidget {
   const _IconOption({
     required this.iconAsset,
     required this.label,
-    required this.subtitle,
     required this.isSelected,
     this.onTap,
     required this.isLoading,
@@ -233,23 +234,11 @@ class _IconOption extends StatelessWidget {
               const SizedBox(width: 16),
               // 文字说明
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  label,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               // 选中标记

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bugaoshan/l10n/app_localizations.dart';
 import 'package:bugaoshan/models/course.dart';
+import 'package:bugaoshan/models/date_display_format.dart';
 import 'package:bugaoshan/providers/app_config_provider.dart';
 import 'package:bugaoshan/theme_shape.dart';
 import 'package:bugaoshan/widgets/common/adaptive_widgets.dart';
@@ -47,6 +48,9 @@ class CoursePageTopBar extends StatelessWidget {
   final ValueChanged<String> onSwitchSchedule;
   final VoidCallback onOpenScheduleManagement;
 
+  /// 左上角日期的排列与分隔符，由调用方从全局设置解析后传入。
+  final DateDisplayFormat dateFormat;
+
   const CoursePageTopBar({
     super.key,
     required this.visibleWeek,
@@ -68,14 +72,12 @@ class CoursePageTopBar extends StatelessWidget {
     this.currentScheduleId,
     required this.onSwitchSchedule,
     required this.onOpenScheduleManagement,
+    this.dateFormat = DateDisplayFormat.monthDayYear,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    // 大文字缩放时同样需要更多宽度：阈值随缩放放大，避免「第 N 周」被压缩。
-    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
-
     final weekNav = _buildWeekNav(context, l10n);
     final actions = _buildActions(context, l10n);
 
@@ -83,11 +85,9 @@ class CoursePageTopBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // 日期长度跟着宽度走：窄屏省掉年份只留「10/18」，
-          // 宽屏保留「2026/10/18」。
-          final narrow =
-              constraints.maxWidth < _kSingleRowMinWidth * textScale;
-          final date = _buildDate(context, l10n, compact: narrow);
+          // 日期由全局「课程表样式 → 日期格式」决定（上游改为 dateFormat），
+          // 不再按宽度切换年份；窄屏靠省略号兜底。
+          final date = _buildDate(context);
 
           // 时间 / 周次区整块玻璃（本分支材质）。
           //
@@ -132,18 +132,11 @@ class CoursePageTopBar extends StatelessWidget {
     );
   }
 
-
-  /// 左上角日期：窄屏 `10/18`，宽屏 `2026/10/18`（年份不值得占用窄屏那点宽度）。
-  Widget _buildDate(
-    BuildContext context,
-    AppLocalizations l10n, {
-    required bool compact,
-  }) {
+  /// 左上角日期：完整日期（如 `2026/10/18`），排列与分隔符由全局设置决定。
+  Widget _buildDate(BuildContext context) {
     final now = DateTime.now();
     return Text(
-      compact
-          ? l10n.dateMonthDayCompact(now.month, now.day)
-          : l10n.dateYearMonthDay(now.year, now.month, now.day),
+      dateFormat.formatFull(now),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: Theme.of(
